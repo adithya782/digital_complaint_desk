@@ -8,3 +8,6 @@ class User(db.Model):
     fullname = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(300), nullable = False)
     phone = db.Column(db.String(20), nullable=False)
+
+class Complaint(db.Model):
+    __tablename__ = 'complaints'
