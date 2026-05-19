@@ -1,0 +1,22 @@
+# Custom Environment Variables (Crucial!)
+.env
+
+# Python Virtual Environments
+venv/
+.venv/
+env/
+
+# Python Cache files
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Database Files (if you ever switch back to SQLite for quick testing)
+*.sqlite3
+instance/
+
+# IDE and System Files
+.vscode/
+.idea/
+.DS_Store
