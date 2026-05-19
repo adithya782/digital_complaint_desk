@@ -181,12 +181,12 @@ body{
 }
 
 .shield{
-  width:75px;
-  height:75px;
+  width:70px;
+  height:70p;
   background:#6d52ff;
 
-  top:90px;   /* moved down */
-  right:110px;
+  top: 190px;/*moves the box down*/
+  left:100px;
 
   font-size:28px;
 }
@@ -195,7 +195,7 @@ body{
   width:70px;
   height:70px;
   background:#28c76f;
-  top:30px;
+  top:90px;
   right:0;
   font-size:28px;
 }
@@ -203,7 +203,6 @@ body{
 /* FEATURES */
 .features{
   padding:0 45px 40px;
-
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:20px;
