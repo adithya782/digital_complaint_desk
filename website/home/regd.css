@@ -1,0 +1,305 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:#f4f7ff;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  min-height:100vh;
+
+  padding:20px;
+}
+
+/* CONTAINER */
+
+.container{
+  width:1150px;
+  height:760px;
+
+  background:#fff;
+
+  border-radius:28px;
+
+  overflow:hidden;
+
+  display:flex;
+
+  box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* LEFT PANEL */
+
+.left-panel{
+  width:45%;
+
+  background:linear-gradient(135deg,#03113f,#071b64);
+
+  padding:30px;
+
+  color:#fff;
+}
+
+/* LOGO */
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  font-size:22px;
+  font-weight:600;
+}
+
+.logo i{
+  font-size:28px;
+}
+
+/* LEFT CONTENT */
+
+.left-content{
+  width:100%;
+  height:90%;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  text-align:center;
+}
+
+.left-content h1{
+  font-size:48px;
+
+  margin-bottom:15px;
+}
+
+.left-content p{
+  color:#d8deff;
+
+  line-height:1.7;
+
+  margin-bottom:25px;
+}
+
+/* FLOAT ICONS */
+
+.floating-icons{
+  width:100%;
+  height:90px;
+
+  position:relative;
+
+  margin-bottom:20px;
+}
+
+.sos,
+.shield,
+.message{
+  position:absolute;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  color:#fff;
+
+  box-shadow:0 8px 18px rgba(0,0,0,0.18);
+}
+
+.sos{
+  width:58px;
+  height:58px;
+
+  border-radius:50%;
+
+  background:#ff4f5e;
+
+  left:100px;
+  top:15px;
+}
+
+.shield{
+  width:78px;
+  height:78px;
+
+  border-radius:18px;
+
+  background:#6d52ff;
+
+  left:220px;
+  top:0;
+
+  font-size:30px;
+}
+
+.message{
+  width:58px;
+  height:58px;
+
+  border-radius:18px;
+
+  background:#2ecc71;
+
+  right:100px;
+  top:15px;
+}
+
+/* IMAGE */
+
+.left-content img{
+  width:320px;
+}
+
+/* RIGHT PANEL */
+
+.right-panel{
+  width:55%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  padding:40px;
+}
+
+/* REGISTER BOX */
+
+.register-box{
+  width:100%;
+  max-width:500px;
+}
+
+/* TITLE */
+
+.register-box h1{
+  text-align:center;
+
+  font-size:40px;
+
+  color:#111;
+
+  margin-bottom:8px;
+}
+
+/* SUBTITLE */
+
+.subtitle{
+  text-align:center;
+
+  color:#666;
+
+  margin-bottom:25px;
+}
+
+/* ROW */
+
+.row{
+  display:flex;
+  gap:12px;
+}
+
+/* INPUT BOX */
+
+.input-box{
+  width:100%;
+  height:58px;
+
+  border:2px solid #e7ebff;
+
+  border-radius:14px;
+
+  display:flex;
+  align-items:center;
+
+  padding:0 15px;
+
+  margin-bottom:18px;
+}
+
+.input-box i{
+  color:#7a84a8;
+
+  font-size:18px;
+}
+
+.input-box input{
+  width:100%;
+
+  border:none;
+  outline:none;
+
+  background:transparent;
+
+  padding-left:12px;
+
+  font-size:15px;
+}
+
+.eye{
+  cursor:pointer;
+}
+
+/* GENDER */
+
+.gender-box{
+  display:flex;
+  gap:25px;
+
+  margin-bottom:20px;
+
+  padding-left:5px;
+}
+
+.gender-box label{
+  font-size:15px;
+
+  color:#444;
+}
+
+/* BUTTON */
+
+.register-btn{
+  width:100%;
+  height:58px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:linear-gradient(90deg,#6d52ff,#4d2fff);
+
+  color:#fff;
+
+  font-size:18px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  margin-top:10px;
+}
+
+/* LOGIN */
+
+.login-text{
+  text-align:center;
+
+  margin-top:20px;
+
+  font-size:14px;
+}
+
+.login-text a{
+  text-decoration:none;
+
+  color:#6d52ff;
+
+  font-weight:600;
+}
