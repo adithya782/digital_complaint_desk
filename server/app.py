@@ -9,7 +9,10 @@ from models import db, User, Complaint, Resolution, Staff, Department, UserRole
 from dotenv import load_dotenv
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
+from pathlib import Path
 
+# env_path = Path(__file__).resolve().parent / '.env'
+# load_dotenv(dotenv_path=env_path)
 load_dotenv()
 
 app = Flask(__name__)
@@ -43,13 +46,31 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/api/auth/google', methods=['POST'])
 def google_auth():
-    data = request.get_json()
+    data = request.get_json() or {}
     token = data.get('id_token')
     if not token:
         return jsonify({'error': 'Missing Google ID token'}), 400
     try:
         client_id = os.environ.get('GOOGLE_CLIENT_ID')
-        id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+        # id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+        '''
+        Uncomment the above lines and comment the mock oauth part below during actual production!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+        '''
+        # ---- MOCK OAUTH FOR LOCAL POSTMAN TESTING ----
+        if token.startswith("mock_google_token_"):
+            # Simulate what Google normally sends back after verification
+            mock_id = token.replace("mock_google_token_", "")
+            id_info = {
+                'sub': f'google_sub_{mock_id}',
+                'email': f'mockuser_{mock_id}@gmail.com',
+                'name': f'Mock User {mock_id.capitalize()}'
+            }
+        else:
+            # Fall back to real verification when you link Google Cloud Console
+            client_id = os.environ.get('GOOGLE_CLIENT_ID')
+            id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+        # ----------------------------------------------
+
         google_id = id_info.get('sub')
         email = id_info.get('email').lower()
         full_name = id_info.get('name')
@@ -62,7 +83,7 @@ def google_auth():
             db.session.add(user)
             db.session.commit()
         
-        access_token = create_access_token(identity=str(user.id))
+        access_token = create_access_token(identity=str(user.user_id), additional_claims={'role': user.role})
         
         if not user.phone:
             return jsonify({
@@ -76,10 +97,10 @@ def google_auth():
             'registration_incomplete': False,
             'access_token': access_token,
             'user': {
-                'id': user.id,
+                'id': user.user_id,
                 'email': user.email,
                 'phone': user.phone,
-                'full_name': user.fullname,
+                'fullname': user.fullname,
                 'role': user.role
             }
         }),200
@@ -100,24 +121,26 @@ def complete_profile():
         help='Phone number is required and cannot be blank'
     )
     args = profile_parser.parse_args()
-    phone_number = args['phone_number']
-    user_id = get_jwt_identity()
-    user = User.query.get(int(user_id))
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    user.phone = phone_number
-    db.session.commit()
-    return jsonify({
-        'message': 'Profile completed successfully!',
-        'user': {
-            'id': user.id,
-            'email': user.email,
-            'full_name': user.fullname,
-            'phone_number': user.phone,
-            'role': user.role
-            }
-    }), 200
-
+    phone_number = args['phone_number'].strip()
+    try:
+        user_id = get_jwt_identity()
+        user = db.session.get(User,int(user_id))
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        user.phone = phone_number
+        db.session.commit()
+        return jsonify({
+            'message': 'Profile completed successfully!',
+            'user': {
+                'id': user.user_id,
+                'email': user.email,
+                'fullname': user.fullname,
+                'phone_number': user.phone,
+                'role': user.role
+                }
+        }), 200
+    except (ValueError, TypeError):
+        return jsonify({'error':'Invalid Token Identity structure'}),422
 
 @auth_bp.route('/api/auth/login', methods=['POST'])
 def login():
@@ -125,7 +148,7 @@ def login():
     parser.add_argument('email', required = True, help='Please enter email')
     parser.add_argument('password', required = True, help='Please enter Password')
     data = parser.parse_args()
-    email = data['email']
+    email = data['email'].strip().lower()
     password = data['password']
 
     user = User.query.filter_by(email=email).first()
@@ -139,7 +162,7 @@ def login():
         return jsonify({'message': "Seems you've registered through google signin, please sign-in using google"}), 400
 
     if check_password_hash(user.password,password):
-        access_token = create_access_token(identity=str(user.id))
+        access_token = create_access_token(identity=str(user.user_id), additional_claims={'role': user.role})
         if user.role == UserRole.STAFF.value:
             if user.staff:
                 return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': user.role, 'staff_id': user.staff.staff_id}),200
@@ -149,24 +172,164 @@ def login():
     return jsonify({'error': 'incorrect password!'}), 400
 
 @auth_bp.route('/api/auth/register', methods=['POST'])
-def  register():
+def register():
     parser = reqparse.RequestParser()
-    parser.add_argument('name', required=True)
+    parser.add_argument('fullname', required=True)
     parser.add_argument('email', required=True)
     parser.add_argument('password', required=True)
     parser.add_argument('phone', required=True)
     data = parser.parse_args()
-    fullname = data['name']
-    email = data['email']
+    fullname = data['fullname']
+    email = data['email'].strip().lower()
     password = generate_password_hash(data['password'])
-    phone = data['phone']
+    phone = data['phone'].strip()
     user = User.query.filter_by(email=email).first()
     if user:
         return jsonify({'error': 'user with the same email already exists'}), 409
-    user = User(fullname=fullname, email=email, password = password, phone=phone,auth_provider='manual')
+    user = User(fullname=fullname, email=email, password = password, phone=phone,auth_provider='manual', role=UserRole.USER.value)
     db.session.add(user)
     db.session.commit()
     return jsonify({'success': 'registration successful'}),200
+
+@auth_bp.route('/api/auth/register_staff', methods=['POST'])
+@jwt_required()
+def register_staff():
+    identity = get_jwt_identity()
+    claims = get_jwt()
+    role = claims.get('role')
+    if not identity:
+        return jsonify({"Unauthorized": 'Please login first'}), 401
+    if role != UserRole.ADMIN.value:
+        return jsonify({"Forbidden": 'Only Admins can create staff'}), 403
+    
+    admin_user = db.session.get(User,int(identity))
+    if admin_user.role != UserRole.ADMIN.value:
+        return jsonify({"Forbidden": 'Only Admins can create staff'}), 403
+    
+    parser = reqparse.RequestParser()
+    parser.add_argument('fullname', required=True, help='Fullname is required')
+    parser.add_argument('email', required=True, help='Email is required')
+    parser.add_argument('password', required=True, help='Password is required')
+    parser.add_argument('phone', required=True, help='Phone is required')
+    parser.add_argument('department_id', type=int, required=True, help='Department ID is required')
+    parser.add_argument('office_id', type=int, required=True, help='Office ID is required')
+    parser.add_argument('confirm_upgrade', type=bool, default=False)
+    data = parser.parse_args()
+
+    existing_user = User.query.filter_by(email=data['email'].strip().lower()).first()
+    if existing_user:
+        # return jsonify({'error': 'An account with this email already exists'}), 409
+        if existing_user.role == UserRole.STAFF.value:
+            return jsonify({'error': 'A staff account with this email exists already'}), 409
+        
+        if not data['confirm_upgrade']:
+            return jsonify({
+                'requires_confirmation': True,
+                'message': f"'{existing_user.fullname}' already has a basic user account. Do you want to upgrade them to Staff?"
+            }), 200
+        
+        try:
+            existing_user.role=UserRole.STAFF.value
+            staff = Staff(user_id = existing_user.user_id, department_id = data['department_id'], office_id = data['office_id'])
+            db.session.add(staff)
+            db.session.commit()
+            return jsonify({'success':True, 'message': f"Existing user '{existing_user.fullname}' has been successfully upgraded to Staff."}),200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Failed to upgrade user profile: {str(e)}'}), 500
+    
+    try:
+        new_user = User(
+            fullname=data['fullname'].strip(),
+            email=data['email'].strip().lower(),
+            password=generate_password_hash(data['password']),
+            phone=data['phone'].strip(),
+            auth_provider='manual',
+            role=UserRole.STAFF.value
+        )
+        db.session.add(new_user)
+        db.session.flush() # Flushes record to grab the new primary key ID
+
+        new_staff = Staff(
+            user_id=new_user.user_id,
+            department_id=data['department_id'],
+            office_id=data['office_id']
+        )
+        db.session.add(new_staff)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'New staff account provisioned successfully.'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Database creation failed: {str(e)}'}), 500
+
+@auth_bp.route('/api/auth/register_admin', methods=['POST'])
+@jwt_required()
+def register_admin():
+    identity = get_jwt_identity()
+    claims = get_jwt()
+    role = claims.get('role')
+    if not identity:
+        return jsonify({"Unauthorized": 'Please login first'}), 401
+    if role != UserRole.ADMIN.value:
+        return jsonify({"Forbidden": 'Only Admins can create other admins'}), 403
+    
+    try:
+        admin_user = db.session.get(User,int(identity))
+        if admin_user.role != UserRole.ADMIN.value:
+            return jsonify({"Forbidden": 'Only Admins can create other admins'}), 403
+    except (ValueError, TypeError):
+        return jsonify({'error': 'Invalid admin token identity'}), 422
+    parser = reqparse.RequestParser()
+    parser.add_argument('fullname')
+    parser.add_argument('email')
+    parser.add_argument('password')
+    parser.add_argument('phone')
+    
+
+    parser.add_argument('confirm_upgrade', type=bool,default=False)
+    data = parser.parse_args()
+
+    existing_user = User.query.filter_by(email=data['email'].strip().lower()).first()
+    if existing_user:
+        # return jsonify({'error': 'An account with this email already exists'}), 409
+        if existing_user.role == UserRole.ADMIN.value:
+            return jsonify({'error': 'An admin account with this email exists already'}), 409
+        
+        if not data['confirm_upgrade']:
+            return jsonify({
+                'requires_confirmation': True,
+                'message': f"'{existing_user.fullname}' already has a basic user account. Do you want to upgrade them to admin?"
+            }), 200
+        
+        try:
+            existing_user.role=UserRole.ADMIN.value
+            db.session.commit()
+            return jsonify({'success':True, 'message': f"Existing user '{existing_user.fullname}' has been successfully upgraded to Admin."}),200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Failed to upgrade user profile: {str(e)}'}), 500
+    
+    try:
+        new_user = User(
+            fullname=data['fullname'].strip(),
+            email=data['email'].strip().lower(),
+            password=generate_password_hash(data['password']),
+            phone=data['phone'].strip(),
+            auth_provider='manual',
+            role=UserRole.ADMIN.value
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'New admin account provisioned successfully.'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Database creation failed: {str(e)}'}), 500
+    
+    
 
 app.register_blueprint(auth_bp)
 
