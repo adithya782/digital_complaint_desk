@@ -5,6 +5,8 @@
   font-family:'Poppins',sans-serif;
 }
 
+/* BODY */
+
 body{
   background:#f4f7ff;
 
@@ -17,13 +19,14 @@ body{
   padding:20px;
 }
 
-/* CONTAINER */
+/* MAIN FRAME */
 
 .container{
-  width:1150px;
-  height:760px;
+  width:1100px;
 
-  background:#fff;
+  height:730px;
+
+  background:#ffffff;
 
   border-radius:28px;
 
@@ -44,6 +47,8 @@ body{
   padding:30px;
 
   color:#fff;
+
+  position:relative;
 }
 
 /* LOGO */
@@ -69,6 +74,7 @@ body{
 
   display:flex;
   flex-direction:column;
+
   justify-content:center;
   align-items:center;
 
@@ -76,7 +82,7 @@ body{
 }
 
 .left-content h1{
-  font-size:48px;
+  font-size:46px;
 
   margin-bottom:15px;
 }
@@ -114,6 +120,8 @@ body{
   box-shadow:0 8px 18px rgba(0,0,0,0.18);
 }
 
+/* SOS */
+
 .sos{
   width:58px;
   height:58px;
@@ -122,9 +130,13 @@ body{
 
   background:#ff4f5e;
 
-  left:100px;
+  left:90px;
   top:15px;
+
+  font-weight:600;
 }
+
+/* SHIELD */
 
 .shield{
   width:78px;
@@ -134,11 +146,13 @@ body{
 
   background:#6d52ff;
 
-  left:220px;
+  left:190px;
   top:0;
 
   font-size:30px;
 }
+
+/* MESSAGE */
 
 .message{
   width:58px;
@@ -148,8 +162,10 @@ body{
 
   background:#2ecc71;
 
-  right:100px;
+  right:90px;
   top:15px;
+
+  font-size:22px;
 }
 
 /* IMAGE */
@@ -174,7 +190,7 @@ body{
 
 .register-box{
   width:100%;
-  max-width:500px;
+  max-width:460px;
 }
 
 /* TITLE */
@@ -184,9 +200,9 @@ body{
 
   font-size:40px;
 
-  color:#111;
-
   margin-bottom:8px;
+
+  color:#111827;
 }
 
 /* SUBTITLE */
@@ -199,17 +215,11 @@ body{
   margin-bottom:25px;
 }
 
-/* ROW */
-
-.row{
-  display:flex;
-  gap:12px;
-}
-
 /* INPUT BOX */
 
 .input-box{
   width:100%;
+
   height:58px;
 
   border:2px solid #e7ebff;
@@ -222,13 +232,19 @@ body{
   padding:0 15px;
 
   margin-bottom:18px;
+
+  background:#fff;
 }
+
+/* ICON */
 
 .input-box i{
   color:#7a84a8;
 
   font-size:18px;
 }
+
+/* INPUT */
 
 .input-box input{
   width:100%;
@@ -243,38 +259,24 @@ body{
   font-size:15px;
 }
 
+/* EYE */
+
 .eye{
   cursor:pointer;
-}
-
-/* GENDER */
-
-.gender-box{
-  display:flex;
-  gap:25px;
-
-  margin-bottom:20px;
-
-  padding-left:5px;
-}
-
-.gender-box label{
-  font-size:15px;
-
-  color:#444;
 }
 
 /* BUTTON */
 
 .register-btn{
   width:100%;
+
   height:58px;
 
   border:none;
 
   border-radius:14px;
 
-  background:linear-gradient(90deg,#6d52ff,#4d2fff);
+  background:#6d52ff;
 
   color:#fff;
 
@@ -284,9 +286,17 @@ body{
   cursor:pointer;
 
   margin-top:10px;
+
+  transition:0.3s;
 }
 
-/* LOGIN */
+.register-btn:hover{
+  opacity:0.9;
+
+  transform:translateY(-2px);
+}
+
+/* LOGIN TEXT */
 
 .login-text{
   text-align:center;
