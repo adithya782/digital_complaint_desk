@@ -53,7 +53,9 @@ def google_auth():
     try:
         client_id = os.environ.get('GOOGLE_CLIENT_ID')
         # id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
-
+        '''
+        Uncomment the above lines and comment the mock oauth part below during actual production!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+        '''
         # ---- MOCK OAUTH FOR LOCAL POSTMAN TESTING ----
         if token.startswith("mock_google_token_"):
             # Simulate what Google normally sends back after verification
