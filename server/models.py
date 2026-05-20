@@ -1,6 +1,6 @@
 import datetime
 from flask_sqlalchemy import SQLAlchemy
-from geoalchemy2 import Geometry
+# from geoalchemy2 import Geometry
 import enum
 class UserRole(enum.Enum):
     USER = 'user'
