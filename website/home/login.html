@@ -1,162 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SafeCity Home</title>
 
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Font Awesome -->
+  <title>SafeCity Login</title>
+
+  <link rel="stylesheet" href="auth.css">
+
+  <!-- FONT AWESOME -->
+
   <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <!-- MAIN CONTAINER -->
   <div class="container">
 
-    <!-- NAVBAR -->
-    <header class="navbar">
+    <!-- LEFT SIDE -->
+
+    <div class="left-panel">
 
       <div class="logo">
-        <div class="logo-icon">
-          <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        <h2>SafeCity</h2>
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+        <span>SafeCity</span>
+
       </div>
 
-      <nav>
-        <ul class="nav-links">
-          <li><a class="active" href="#">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">How It Works</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </nav>
+      <div class="left-content">
 
-      <div class="nav-btns">
-        <button class="login-btn">Login</button>
-        <button class="register-btn">Register</button>
-      </div>
-
-      <div class="nav-btns">
-
-  <button id="darkModeToggle" class="dark-btn">
-    <i class="fa-solid fa-moon"></i>
-  </button>
-
-  <button class="login-btn">Login</button>
-  <button class="register-btn">Register</button>
-
-</div>
-
-    </header>
-
-    <!-- HERO SECTION -->
-    <section class="hero">
-
-      <!-- LEFT -->
-      <div class="hero-left">
-
-        <h1>
-          Together for a <br>
-          Safer Community
-        </h1>
+        <h1>Welcome Back!</h1>
 
         <p>
-          Report issues, get help, and stay informed.
-          <br>
-          We are here to help you 24/7.
+          Login to continue and make
+          your community safer.
         </p>
 
-        <div class="hero-buttons">
-          <button class="outline-btn">Login</button>
-          <button class="purple-btn">Register</button>
-        </div>
+        <!-- FLOATING ICONS -->
 
-      </div>
+        <div class="floating-icons">
 
-      <!-- RIGHT -->
-      <div class="hero-right">
+          <div class="sos">
+            SOS
+          </div>
 
-        <!-- SOS -->
-        <div class="floating sos">
-          SOS
-        </div>
+          <div class="shield">
+            <i class="fa-solid fa-shield"></i>
+          </div>
 
-        <!-- SHIELD -->
-        <div class="floating shield">
-          <i class="fa-solid fa-shield"></i>
-        </div>
+          <div class="message">
+            <i class="fa-solid fa-message"></i>
+          </div>
 
-        <!-- MESSAGE -->
-        <div class="floating msg">
-          <i class="fa-solid fa-message"></i>
         </div>
 
         <!-- IMAGE -->
-        <img src="https://img.officer.com/files/base/cygnus/ofcr/image/2022/05/16x9/raptorconnect.6283cc00d79b4.png?auto=format,compress&fit=fill&fill=blur&w=1200&h=630" alt="community">
+
+        <img src="https://cdn-icons-png.flaticon.com/512/4230/4230550.png">
 
       </div>
 
-    </section>
+    </div>
 
-    <!-- FEATURE BOXES -->
-    <section class="features">
+    <!-- RIGHT SIDE -->
 
-      <div class="feature-card">
-        <div class="icon purple">
-          <i class="fa-regular fa-file-lines"></i>
+    <div class="right-panel">
+
+      <div class="login-box">
+
+        <h1>Login</h1>
+
+        <p class="subtitle">
+          Enter your details to login
+        </p>
+
+        <!-- EMAIL -->
+
+        <div class="input-box">
+
+          <i class="fa-regular fa-envelope"></i>
+
+          <input
+          type="email"
+          id="email"
+          placeholder="Enter Email">
+
         </div>
 
-        <div>
-          <h3>Report Issues</h3>
-          <p>Report problems in your area</p>
+        <!-- PASSWORD -->
+
+        <div class="input-box">
+
+          <i class="fa-solid fa-lock"></i>
+
+          <input
+          type="password"
+          id="password"
+          placeholder="Enter Password">
+
+          <i class="fa-regular fa-eye eye"
+          id="togglePassword"></i>
+
         </div>
+
+        <!-- OPTIONS -->
+
+        <div class="options">
+
+          <div class="remember">
+
+            <input type="checkbox">
+
+            <span>Remember me</span>
+
+          </div>
+
+          <a href="#">
+            Forgot Password?
+          </a>
+
+        </div>
+
+        <!-- LOGIN BUTTON -->
+
+        <button class="login-btn" id="loginBtn">
+          Login
+        </button>
+
+        <!-- SOCIAL LOGIN -->
+
+        <div class="divider">
+
+          <span>Or login with</span>
+
+        </div>
+
+        <div class="social-login">
+
+          <button>
+            <i class="fa-brands fa-google"></i>
+          </button>
+
+          <button>
+            <i class="fa-brands fa-facebook-f"></i>
+          </button>
+
+          <button>
+            <i class="fa-brands fa-apple"></i>
+          </button>
+
+        </div>
+
+        <!-- REGISTER -->
+
+        <p class="register">
+
+          Don't have an account?
+
+          <a href="#">
+            Register
+          </a>
+
+        </p>
+
       </div>
 
-      <div class="feature-card">
-        <div class="icon blue">
-          <i class="fa-solid fa-location-dot"></i>
-        </div>
-
-        <div>
-          <h3>Track Status</h3>
-          <p>Track the status of your complaints</p>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="icon red">
-          <i class="fa-solid fa-bell"></i>
-        </div>
-
-        <div>
-          <h3>Emergency Help</h3>
-          <p>Get help in emergency</p>
-        </div>
-      </div>
-
-      <div class="feature-card">
-        <div class="icon green">
-          <i class="fa-solid fa-users"></i>
-        </div>
-
-        <div>
-          <h3>Safe Community</h3>
-          <p>Together we build a safer community</p>
-        </div>
-      </div>
-
-    </section>
+    </div>
 
   </div>
 
   <script src="script.js"></script>
+
 </body>
 </html>
