@@ -1,6 +1,11 @@
 import datetime
 from flask_sqlalchemy import SQLAlchemy
 from geoalchemy2 import Geometry
+import enum
+class UserRole(enum.Enum):
+    USER = 'user'
+    STAFF = 'staff'
+    ADMIN = 'admin'
 
 db = SQLAlchemy()
 
@@ -9,8 +14,14 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key = True, autoincrement= True)
     fullname = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(300), nullable = False)
-    phone = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(300), nullable=True)
+    phone = db.Column(db.String(20), nullable=True)
+    google_id = db.Column(db.String(255), unique=True, nullable=True)
+    auth_provider = db.Column(db.String(20), nullable=False, default='local')
     complaints = db.relationship('Complaint', backref='user', lazy=True)
+
+    role = db.Column(db.String(20), default='user', nullable=False)
+    staff = db.relationship('Staff', backref='user', uselist=False,  lazy=True)
 
 class Complaint(db.Model):
     __tablename__ = 'complaints'
@@ -44,12 +55,19 @@ class Resolution(db.Model):
 class Staff(db.Model):
     __tablename__ = 'staffs'
     staff_id = db.Column(db.Integer, primary_key = True, autoincrement= True)
-    fullname = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(300), nullable = False)
-    phone = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), unique=True,nullable=False)
+    # fullname = db.Column(db.String(100), nullable=False)
+    # email = db.Column(db.String(300), nullable = False)
+    # password = db.Column(db.String(300), nullable=True)
+    # phone = db.Column(db.String(20), nullable=True)
+    # google_id = db.Column(db.String(255), unique=True, nullable=True)
+    # auth_provider = db.Column(db.String(20), nullable=False, default='local')
+
     resolutions = db.relationship('Resolution', backref='staff', lazy=True)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=False)
     office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'), nullable=False)
+
+    
 
 class Department(db.Model):
     __tablename__ = 'departments'
