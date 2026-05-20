@@ -4,9 +4,13 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
 
   <title>SafeCity Register</title>
+
+  <!-- CSS -->
 
   <link rel="stylesheet" href="regd.css">
 
@@ -19,11 +23,15 @@
 
 <body>
 
+  <!-- MAIN CONTAINER -->
+
   <div class="container">
 
     <!-- LEFT PANEL -->
 
     <div class="left-panel">
+
+      <!-- LOGO -->
 
       <div class="logo">
 
@@ -33,13 +41,15 @@
 
       </div>
 
+      <!-- LEFT CONTENT -->
+
       <div class="left-content">
 
         <h1>Create Account</h1>
 
         <p>
           Register your account and
-          make your community safer.
+          make your city safer.
         </p>
 
         <!-- FLOAT ICONS -->
@@ -51,11 +61,15 @@
           </div>
 
           <div class="shield">
+
             <i class="fa-solid fa-shield"></i>
+
           </div>
 
           <div class="message">
+
             <i class="fa-solid fa-message"></i>
+
           </div>
 
         </div>
@@ -72,6 +86,8 @@
 
     <div class="right-panel">
 
+      <!-- REGISTER BOX -->
+
       <div class="register-box">
 
         <h1>Register</h1>
@@ -80,44 +96,15 @@
           Fill your details
         </p>
 
-        <!-- NAME -->
-
-        <div class="row">
-
-          <div class="input-box">
-
-            <i class="fa-solid fa-user"></i>
-
-            <input
-            type="text"
-            id="firstName"
-            placeholder="First Name">
-
-          </div>
-
-          <div class="input-box">
-
-            <i class="fa-solid fa-user"></i>
-
-            <input
-            type="text"
-            id="lastName"
-            placeholder="Last Name">
-
-          </div>
-
-        </div>
-
-        <!-- EMAIL -->
+        <!-- FULL NAME -->
 
         <div class="input-box">
 
-          <i class="fa-regular fa-envelope"></i>
+          <i class="fa-solid fa-user"></i>
 
           <input
-          type="email"
-          id="email"
-          placeholder="Email Address">
+          type="text"
+          placeholder="Full Name">
 
         </div>
 
@@ -129,35 +116,19 @@
 
           <input
           type="tel"
-          id="phone"
           placeholder="Phone Number">
 
         </div>
 
-        <!-- GENDER -->
+        <!-- EMAIL -->
 
-        <div class="gender-box">
+        <div class="input-box">
 
-          <label>
-            <input type="radio"
-            name="gender">
+          <i class="fa-regular fa-envelope"></i>
 
-            Male
-          </label>
-
-          <label>
-            <input type="radio"
-            name="gender">
-
-            Female
-          </label>
-
-          <label>
-            <input type="radio"
-            name="gender">
-
-            Other
-          </label>
+          <input
+          type="email"
+          placeholder="Email Address">
 
         </div>
 
@@ -188,20 +159,12 @@
           id="confirmPassword"
           placeholder="Confirm Password">
 
-          <i class="fa-regular fa-eye eye"
-          id="toggleConfirmPassword"></i>
-
         </div>
 
         <!-- REGISTER BUTTON -->
 
-        <button
-        type="button"
-        class="register-btn"
-        id="registerBtn">
-
+        <button class="register-btn">
           Register
-
         </button>
 
         <!-- LOGIN -->
@@ -210,9 +173,10 @@
 
           Already have an account?
 
-          <a href="index.html">
+          <a href="login.html">
             Login
           </a>
+          
 
         </p>
 
@@ -221,6 +185,8 @@
     </div>
 
   </div>
+
+  <!-- JS -->
 
   <script src="script.js"></script>
 
