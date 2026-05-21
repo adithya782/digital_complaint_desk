@@ -348,7 +348,7 @@ def handle_upload():
         mime_type = file_obj.content_type  # e.g., 'image/jpeg'
         
         # 3. Flask hands the bytes off to the Supabase Client
-        response = supabase.storage.from_('Compliant-evidence').upload(
+        response = supabase_storage.storage.from_('Compliant-evidence').upload(
             path=filename,
             file=file_bytes,
             file_options={"content-type": mime_type}
