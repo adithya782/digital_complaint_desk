@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Desk - Control Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-8">
+
+    <div class="max-w-4xl mx-auto space-y-12">
+        
+        <header class="border-b border-gray-800 pb-4">
+            <h1 class="text-3xl font-bold text-indigo-400">Digital Complaint Desk Portal</h1>
+            <p class="text-sm text-gray-400 mt-1">Upload files and stream assets back directly via background JS fetch threads.</p>
+        </header>
+
+        <section class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-md max-w-md mx-auto">
+            <h2 class="text-xl font-bold mb-4 text-emerald-400">Add New Evidence Asset</h2>
+            <form id="uploadForm" class="space-y-4">
+                <div>
+                    <input type="file" id="imageInput" name="complaint_image" accept="image/*" 
+                           class="block w-full text-sm text-gray-400 bg-gray-900 p-2 rounded-md border border-gray-600 cursor-pointer">
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 font-medium py-2 rounded-md transition">
+                    Upload to Cloud
+                </button>
+            </form>
+            <div id="statusIndicator" class="mt-4 p-3 rounded-md hidden text-sm font-medium"></div>
+        </section>
+
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-2">
+                <h2 class="text-xl font-bold text-indigo-300">Live Cloud Vault Gallery</h2>
+                <button id="refreshBtn" class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-600 px-3 py-1 rounded transition">
+                    🔄 Force Refresh Index
+                </button>
+            </div>
+            
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const imageInput = document.getElementById('imageInput');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const refreshBtn = document.getElementById('refreshBtn');
+
+        // --- PIPELINE 1: FETCH FILES FROM FLASK & RENDER THE HTML DYNAMICALLY ---
+        async function fetchAndRenderGallery() {
+            galleryGrid.innerHTML = `
+                <div class="col-span-full text-center text-gray-500 py-8 animate-pulse">
+                    Querying cloud vault indexes...
+                </div>`;
+            
+            try {
+                // Fetch the list from our Flask API
+                const response = await fetch('http://127.0.0.1:5000/get-vault-links');
+                const images = await response.json();
+
+                if (images.length === 0) {
+                    galleryGrid.innerHTML = `
+                        <div class="col-span-full bg-gray-800 p-8 rounded-xl text-center border border-gray-700 text-gray-400">
+                            No media records found in the cloud storage vault.
+                        </div>`;
+                    return;
+                }
+
+                // Clear layout container loader and construct dynamic HTML blocks
+                galleryGrid.innerHTML = '';
+                images.forEach(img => {
+                    const card = document.createElement('div');
+                    card.className = "bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-md hover:border-indigo-500 transition duration-300";
+                    card.innerHTML = `
+                        <div class="bg-gray-950 h-48 flex items-center justify-center overflow-hidden">
+                            <img src="${img.url}" alt="Evidence" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm font-semibold text-gray-200 truncate" title="${img.name}">${img.name}</p>
+                            <div class="mt-2 text-right">
+                                <a href="${img.url}" target="_blank" class="text-xs text-indigo-400 hover:underline">View Source ↗</a>
+                            </div>
+                        </div>`;
+                    galleryGrid.appendChild(card);
+                });
+            } catch (err) {
+                galleryGrid.innerHTML = `<div class="col-span-full text-rose-400 text-center">Failed to load live catalog matrix: ${err.message}</div>`;
+            }
+        }
+
+        // --- PIPELINE 2: CAPTURE UPLOADS IN BACKGROUND & TRIGGER REFRESH ---
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (imageInput.files.length === 0) {
+                alert("Please pick a file asset first!");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('complaint_image', imageInput.files[0]);
+
+            // Present loading state to user
+            statusIndicator.className = "mt-4 p-3 rounded-md bg-blue-950 text-blue-300 border border-blue-800 text-sm animate-pulse";
+            statusIndicator.innerText = "Processing streaming byte layers to Supabase...";
+            statusIndicator.classList.remove('hidden');
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/submit-complaint', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusIndicator.className = "mt-4 p-3 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800 text-sm";
+                    statusIndicator.innerText = `✅ Success! Uploaded as: ${data.file_name}`;
+                    
+                    // Clear out file picker form value
+                    uploadForm.reset();
+                    
+                    // CRITICAL OPERATION: Trigger real-time gallery sync without reloading the page
+                    fetchAndRenderGallery();
+                } else {
+                    statusIndicator.className = "mt-4 p-3 rounded-md bg-rose-950 text-rose-300 border border-rose-800 text-sm";
+                    statusIndicator.innerText = `❌ Error: ${data.error}`;
+                }
+            } catch (err) {
+                statusIndicator.className = "mt-4 p-3 rounded-md bg-rose-950 text-rose-300 border border-rose-800 text-sm";
+                statusIndicator.innerText = `❌ Network Transmission Error: ${err.message}`;
+            }
+        });
+
+        // Event listener hooks to wire up button triggers
+        refreshBtn.addEventListener('click', fetchAndRenderGallery);
+
+        // Run index fetch immediately when the page finishes base loading cycle
+        window.addEventListener('DOMContentLoaded', fetchAndRenderGallery);
+    </script>
+</body>
+</html>

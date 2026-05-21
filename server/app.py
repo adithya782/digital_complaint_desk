@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 from pathlib import Path
+from supabase import Client, create_client
 
 # env_path = Path(__file__).resolve().parent / '.env'
 # load_dotenv(dotenv_path=env_path)
@@ -18,6 +19,11 @@ load_dotenv()
 app = Flask(__name__)
 
 prod_url = os.environ.get('DATABASE_URL')
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
+
+# Initialize your storage client using the environment variables
+supabase_storage: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 if prod_url:
     # Handle SQLAlchemy syntax requirements for production strings
@@ -329,7 +335,25 @@ def register_admin():
         db.session.rollback()
         return jsonify({'error': f'Database creation failed: {str(e)}'}), 500
     
+# UPLOAD IMAGES TO SUPABASE STORAGE
+# @app.route('/submit-complaint', methods=['POST'])
+def handle_upload():
+    # 1. Flask grabs the temporary file object from the HTML form
+    file_obj = request.files['complaint_image']
     
+    if file_obj:
+        # 2. Flask reads the file directly into raw binary bytes
+        file_bytes = file_obj.read()
+        filename = file_obj.filename
+        mime_type = file_obj.content_type  # e.g., 'image/jpeg'
+        
+        # 3. Flask hands the bytes off to the Supabase Client
+        response = supabase.storage.from_('Compliant-evidence').upload(
+            path=filename,
+            file=file_bytes,
+            file_options={"content-type": mime_type}
+        )
+        return "File uploaded successfully straight from memory!"    
 
 app.register_blueprint(auth_bp)
 
