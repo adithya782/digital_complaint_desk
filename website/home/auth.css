@@ -227,13 +227,10 @@ body{
 
   font-size:15px;
 }
-
 .eye{
   cursor:pointer;
 }
-
 /* OPTIONS */
-
 .options{
   display:flex;
   justify-content:space-between;
@@ -352,11 +349,8 @@ body{
 
   font-size:14px;
 }
-
 .register a{
   text-decoration:none;
-
   color:#6d52ff;
-
   font-weight:700;
 }
