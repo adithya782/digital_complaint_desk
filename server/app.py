@@ -173,7 +173,9 @@ def login():
             if user.staff:
                 return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': user.role, 'staff_id': user.staff.staff_id}),200
             else:
-                return jsonify({'error': 'Staff profile missing for this account'}), 404    
+                return jsonify({'error': 'Staff profile missing for this account'}), 404 
+        if user.role == UserRole.ADMIN.value:
+            return jsonify({'success': 'Login successful', 'access_token': access_token, 'role': user.role})
         return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': user.role}),200
     return jsonify({'error': 'incorrect password!'}), 400
 
@@ -361,9 +363,10 @@ if __name__ == '__main__':
     with app.app_context():
         # db.drop_all()
         # print('Dropped')
-        db.create_all()
-        print('Database Created')
-        admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
-        db.session.add(admin)
-        db.session.commit()
+        # db.create_all()
+        # print('Database Created')
+        # admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
+        # db.session.add(admin)
+        # db.session.commit()
+        pass
     app.run(debug=True)
