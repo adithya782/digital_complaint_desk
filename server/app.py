@@ -359,8 +359,8 @@ app.register_blueprint(auth_bp)
 
 if __name__ == '__main__':
     with app.app_context():
-        db.drop_all()
-        print('Dropped')
+        # db.drop_all()
+        # print('Dropped')
         db.create_all()
         print('Database Created')
         admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
