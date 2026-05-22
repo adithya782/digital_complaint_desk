@@ -23,7 +23,7 @@ window.onload = function () {
 function handleGoogleCredentialResponse(response) {
     const googleToken = response.credential;
 
-    fetch('http://127.0.0.1:5000/api/auth/google', {
+    fetch(`${window.API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -39,6 +39,7 @@ function handleGoogleCredentialResponse(response) {
             
             if (data.registration_incomplete) {
                 alert("Google Sign-In successful! Please complete your profile next.");
+                ocalStorage.setItem('temp_oauth_email', data.email)
                 window.location.href = "complete-profile.html"; 
             } else {
                 alert("Login completely successful!");
@@ -81,7 +82,7 @@ if (manualRegBtn) {
         email: email,
         password: password
     };
-    fetch('http://127.0.0.1:5000/api/auth/register', {
+    fetch(`${window.API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

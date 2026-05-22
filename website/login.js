@@ -23,7 +23,7 @@ window.onload = function () {
 function handleGoogleCredentialResponse(response) {
     const googleToken = response.credential;
 
-    fetch('http://127.0.0.1:5000/api/auth/google', {
+    fetch(`${window.API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -39,6 +39,7 @@ function handleGoogleCredentialResponse(response) {
             
             if (data.registration_incomplete) {
                 alert("Google Sign-In successful! Please complete your profile next.");
+                localStorage.setItem('temp_oauth_email', data.email)
                 window.location.href = "complete-profile.html"; 
             } else {
                 alert("Login completely successful!");
@@ -63,7 +64,7 @@ function login() {
         return;
     }
     else{
-    fetch('http://127.0.0.1:5000/api/auth/login',{
+    fetch(`${window.API_BASE_URL}/api/auth/login`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -78,12 +79,15 @@ function login() {
         if (data.success){
             if (data.role == 'admin'){
             alert('AUTHENTICATION DONE, It is an admin user');
+            // window.location.href = 'admin_dashboard.html'
             }
             if (data.role == 'staff'){
             alert('AUTHENTICATION DONE, It is a staff user');
+            // window.location.href = 'staff_dashboard.html'
             }
             if (data.role == 'user'){
             alert('AUTHENTICATION DONE, It is a common user');
+            // window.location.href = 'user_dashboard.html
             }
         }
         else{
