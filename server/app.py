@@ -5,7 +5,7 @@ from datetime import date, timedelta, datetime
 from flask_restful import Api, reqparse, marshal_with, fields, Resource
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, get_jwt_identity, JWTManager
 from flask_cors import CORS
-from models import db, User, Complaint, Resolution, Staff, Department, UserRole
+from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction
 from dotenv import load_dotenv
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
@@ -58,23 +58,23 @@ def google_auth():
         return jsonify({'error': 'Missing Google ID token'}), 400
     try:
         client_id = os.environ.get('GOOGLE_CLIENT_ID')
-        # id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+        id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
         '''
         Uncomment the above lines and comment the mock oauth part below during actual production!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         '''
         # ---- MOCK OAUTH FOR LOCAL POSTMAN TESTING ----
-        if token.startswith("mock_google_token_"):
-            # Simulate what Google normally sends back after verification
-            mock_id = token.replace("mock_google_token_", "")
-            id_info = {
-                'sub': f'google_sub_{mock_id}',
-                'email': f'mockuser_{mock_id}@gmail.com',
-                'name': f'Mock User {mock_id.capitalize()}'
-            }
-        else:
-            # Fall back to real verification when you link Google Cloud Console
-            client_id = os.environ.get('GOOGLE_CLIENT_ID')
-            id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
+        # if token.startswith("mock_google_token_"):
+        #     # Simulate what Google normally sends back after verification
+        #     mock_id = token.replace("mock_google_token_", "")
+        #     id_info = {
+        #         'sub': f'google_sub_{mock_id}',
+        #         'email': f'mockuser_{mock_id}@gmail.com',
+        #         'name': f'Mock User {mock_id.capitalize()}'
+        #     }
+        # else:
+        #     # Fall back to real verification when you link Google Cloud Console
+        #     client_id = os.environ.get('GOOGLE_CLIENT_ID')
+        #     id_info = id_token.verify_oauth2_token(token, google_requests.Request(), client_id)
         # ----------------------------------------------
 
         google_id = id_info.get('sub')
@@ -145,7 +145,7 @@ def complete_profile():
         user.password = password
         db.session.commit()
         return jsonify({
-            'message': 'Profile completed successfully!',
+            'success': 'Profile completed successfully!',
             'user': {
                 'id': user.user_id,
                 'email': user.email,
@@ -180,12 +180,12 @@ def login():
         access_token = create_access_token(identity=str(user.user_id), additional_claims={'role': user.role})
         if user.role == UserRole.STAFF.value:
             if user.staff:
-                return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': user.role, 'staff_id': user.staff.staff_id}),200
+                return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': 'staff', 'staff_id': user.staff.staff_id}),200
             else:
                 return jsonify({'error': 'Staff profile missing for this account'}), 404 
         if user.role == UserRole.ADMIN.value:
-            return jsonify({'success': 'Login successful', 'access_token': access_token, 'role': user.role})
-        return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': user.role}),200
+            return jsonify({'success': 'Login successful', 'access_token': access_token, 'role': 'admin'})
+        return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': 'user'}),200
     return jsonify({'error': 'incorrect password!'}), 400
 
 @auth_bp.route('/api/auth/register', methods=['POST'])
@@ -366,16 +366,38 @@ def handle_upload():
         )
         return "File uploaded successfully straight from memory!"    
 
+class user_dashboard(Resource):
+    @jwt_required()
+    def get(self):
+        id = get_jwt_identity()
+        claims = get_jwt()
+        role = claims.get('role')
+        if not id:
+            return {"Unauthorized": 'Please login first'}, 401
+        if role != UserRole.USER.value:
+            return {"Forbidden": 'Only common users can access this page'}, 403
+        
+        user = db.session.get(User,id)
+        user_complaints = []
+        for complaint in user.complaints:
+            user_complaints.append({'title': complaint.title, 'description': complaint.description, 'category': complaint.category, 'status': complaint.status, 'created_at': complaint.created_at, 'updated_at': complaint.updated_at})
+        return {'user_id': user.user_id, 'fullname': user.fullname, 'complaints': user_complaints, 'phone': user.phone},200
+
+
+
 app.register_blueprint(auth_bp)
+
+
+api.add_resource(user_dashboard, '/api/user/dashboard')
 
 if __name__ == '__main__':
     with app.app_context():
-        db.drop_all()
-        print('Dropped')
-        db.create_all()
-        print('Database Created')
-        admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
-        db.session.add(admin)
-        db.session.commit()
+        # db.drop_all()
+        # print('Dropped')
+        # db.create_all()
+        # print('Database Created')
+        # admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
+        # db.session.add(admin)
+        # db.session.commit()
         pass
     app.run(debug=True)

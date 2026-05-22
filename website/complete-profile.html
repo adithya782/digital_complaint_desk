@@ -136,10 +136,9 @@
                     alert('Profile setup fully completed successfully!');
                     // Wipe temporary records and navigate home
                     localStorage.removeItem('temp_oauth_email');
-                    window.location.href = "dashboard.html";
-                } else {
-                    alert('Failed to complete profile configuration: ' + (data.error || 'Unknown network response context'));
-                }
+                    // window.location.href = "login.html";
+                    window.location.replace('login.html')
+                } 
             })
             .catch(err => {
                 console.error("Networking communication failure:", err);

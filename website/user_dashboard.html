@@ -32,41 +32,23 @@
 </button>
 
  <!-- SIDEBAR -->
-
 <div class="sidebar" id="sidebar">
-
-  
-  <!-- MENU -->
-
   <ul>
-
     <li class="active">
-
       <i class="fa-solid fa-house"></i>
-
       <span class="text">Dashboard</span>
-
     </li>
 
-
     <li>
-
       <i class="fa-solid fa-user"></i>
-
       <span class="text">Profile</span>
-
     </li>
 
-    <li>
-
+    <li onclick="logout()">
       <i class="fa-solid fa-right-from-bracket"></i>
-
       <span class="text">Logout</span>
-
     </li>
-
   </ul>
-
 </div>
 
   <!-- MAIN CONTENT -->
@@ -78,7 +60,7 @@
     <div class="topbar">
 
       <h2>
-        Welcome,  👋
+        Welcome, <span id="dashboardUsername">user</span> 👋
       </h2>
 
       <div class="profile">
@@ -168,61 +150,10 @@
      <!-- RECENT COMPLAINTS -->
 
 <div class="complaints-box">
-
   <h3>Recent Complaints</h3>
-
-  <ul>
-
-    <li>
-
-      <div>
-
-        <strong>
-          Street Light Not Working
-        </strong>
-
-      </div>
-
-      <span class="progress">
-        In Progress
-      </span>
-
-    </li>
-
-    <li>
-
-      <div>
-
-        <strong>
-          Garbage Overflow
-        </strong>
-
-      </div>
-
-      <span class="resolved">
-        Resolved
-      </span>
-
-    </li>
-
-    <li>
-
-      <div>
-
-            <strong>
-              Water Leakage
-            </strong>
-
-        </div>
-
-         <span class="pending">
-            Pending
-          </span>
-
-        </li>
-
-        </ul>
-    </div>
+  <ul id="complaintsList">
+    </ul>
+</div>
       <!-- QUICK SOS -->
 
       <div class="sos-box">
