@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>Officer Dashboard</title>
+
+  <!-- CSS -->
+
+  <link rel="stylesheet"
+  href="staff_dashboard.css">
+
+  <!-- FONT AWESOME -->
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+  <!-- MENU BUTTON -->
+
+  <button class="menu-btn" id="menuBtn">
+
+    <i class="fa-solid fa-bars"></i>
+
+  </button>
+
+ <!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+  <!-- MENU -->
+
+  <ul>
+
+    <!-- DASHBOARD -->
+
+    <li>
+
+      <button class="side-btn active">
+
+        <i class="fa-solid fa-house"></i>
+
+        <span class="text">Dashboard</span>
+
+      </button>
+
+    </li>
+
+    <!-- HISTORY -->
+
+    <li>
+
+      <button class="side-btn">
+
+        <i class="fa-solid fa-file-lines"></i>
+
+        <span class="text">History</span>
+
+      </button>
+
+    </li>
+
+    <!-- TRANSACTIONS -->
+
+    <li>
+
+      <button class="side-btn">
+
+        <i class="fa-solid fa-money-bill"></i>
+
+        <span class="text">Transactions</span>
+
+      </button>
+
+    </li>
+
+    <!-- PROFILE -->
+
+    <li>
+        
+      <button class="side-btn">
+
+        <i class="fa-solid fa-user"></i>
+
+        <span class="text">Profile</span>
+
+      </button>
+
+    </li>
+
+    <!-- LOGOUT -->
+
+    <li>
+
+      <button class="side-btn">
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+
+        <span class="text">Logout</span>
+
+      </button>
+
+    </li>
+
+  </ul>
+
+</div>
+
+  <!-- MAIN CONTENT -->
+
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+      <h2>
+        Welcome, Officer sri sai aditya 👋
+      </h2>
+
+     
+
+    </div>
+
+    <!-- STAT BUTTONS -->
+
+    <div class="stats">
+
+      <button class="stat-card blue">
+
+        <div>
+
+          <h4>Today's Issues</h4>
+
+          <h2>12</h2>
+
+        </div>
+
+        <i class="fa-solid fa-file-circle-plus"></i>
+
+      </button>
+
+      <button class="stat-card orange">
+
+        <div>
+
+          <h4>Pending Issues</h4>
+
+          <h2>25</h2>
+
+        </div>
+
+        <i class="fa-solid fa-clock"></i>
+
+      </button>
+
+      <button class="stat-card green">
+
+        <div>
+
+          <h4>Resolved Today</h4>
+
+          <h2>8</h2>
+
+        </div>
+
+        <i class="fa-solid fa-circle-check"></i>
+
+      </button>
+
+      <button class="stat-card purple">
+
+        <div>
+
+          <h4>Total Reports</h4>
+
+          <h2>156</h2>
+
+        </div>
+
+        <i class="fa-solid fa-chart-line"></i>
+
+      </button>
+
+    </div>
+
+    <!-- CONTENT SECTION -->
+
+    <div class="content-grid">
+
+      <!-- LEFT -->
+  
+      <div class="issues-box">
+
+        <h3>Today's Issues</h3>
+
+        <table>
+          
+
+        </table>
+
+      </div>
+
+      <!-- RIGHT -->
+
+      <div class="profile-box" id="profileBox">
+
+    <img src="https://tse2.mm.bing.net/th/id/OIP.Vh2OQraISqT4SE80nDJ1aQHaGj?cb=thfvnextfalcon&rs=1&pid=ImgDetMain&o=7&rm=3" alt="durga">
+
+    <h3>pending cases </h3>
+    <!-- hidden expanded section -->
+    <div class="profile-details hidden">
+        <p><b>ID:</b>4730</p>
+        <p><b>Department:</b>cic</p>
+        <p><b>Email:</b> hackie@gmail.com.com</p>
+        <p><b>Status:</b> Active</p>
+    </div>
+
+</div>
+
+    </div>
+
+    <!-- QUICK ACTION -->
+
+    <div class="quick-actions">
+
+    <button class="action-btn msg-btn" onclick="sendMessage()">
+        <i class="fa-solid fa-message"></i>
+        Send Message
+    </button>
+
+    <button class="action-btn report-btn" onclick="generateReport()">
+        <i class="fa-solid fa-file-lines"></i>
+        Generate Report
+    </button>
+
+</div>
+    </div>
+
+  </div>
+
+  <!-- JS -->
+
+  <script src="staff_dashboard.js"></script>
+
+</body>
+</html>
