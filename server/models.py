@@ -94,3 +94,36 @@ office_department = db.Table('office_department',
     db.Column('office_id', db.Integer, db.ForeignKey('offices.office_id'), primary_key=True),
     db.Column('department_id', db.Integer, db.ForeignKey('departments.department_id'), primary_key=True)
 )
+
+class TransactionStatus(enum.Enum):
+    PENDING = 'pending'
+    SUCCESS = 'success'
+    FAILED = 'failed'
+    REFUNDED = 'refunded'
+
+class Transaction(db.Model):
+    __tablename__ = 'transactions'
+    
+    transaction_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    
+    # 🔗 Relational Foreign Keys
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    complaint_id = db.Column(db.Integer, db.ForeignKey('complaints.complaint_id'), nullable=True) # Optional (if tied to a bounty or fine)
+    
+    # 💰 Transaction Details
+    amount = db.Column(db.Numeric(10, 2), nullable=False)  # Using Numeric/Decimal prevents floating point rounding bugs
+    payment_gateway_ref = db.Column(db.String(255), unique=True, nullable=True) # ID from Razorpay, Stripe, etc.
+    payment_mode = db.Column(db.String(50), nullable=False) # e.g., 'UPI', 'CARD', 'NET_BANKING', 'WALLET'
+    
+    # 📊 State Management
+    status = db.Column(db.String(20), default='pending', nullable=False) # Maps to TransactionStatus
+    purpose = db.Column(db.String(100), nullable=False) # e.g., 'FINE_PAYMENT', 'REWARD_DISBURSEMENT', 'COMMUNITY_BOUNTY'
+    
+    # ⏰ Timestamping
+    created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+    # 🔄 Explicit Relationships for easier back-querying
+    # (Complements backref structures nicely)
+    user_record = db.relationship('User', backref=db.backref('transactions', lazy=True))
+    complaint_record = db.relationship('Complaint', backref=db.backref('transactions', lazy=True))
