@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title>Citizen Dashboard</title>
+
+  <!-- CSS -->
+
+  <link rel="stylesheet"
+  href="user_dashboard.css">
+
+  <!-- FONT AWESOME -->
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+    <!-- MENU BUTTON -->
+
+<button id="menuBtn" class="menu-btn">
+
+  <i class="fa-solid fa-bars"></i>
+
+</button>
+
+ <!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+  
+  <!-- MENU -->
+
+  <ul>
+
+    <li class="active">
+
+      <i class="fa-solid fa-house"></i>
+
+      <span class="text">Dashboard</span>
+
+    </li>
+
+
+    <li>
+
+      <i class="fa-solid fa-user"></i>
+
+      <span class="text">Profile</span>
+
+    </li>
+
+    <li>
+
+      <i class="fa-solid fa-right-from-bracket"></i>
+
+      <span class="text">Logout</span>
+
+    </li>
+
+  </ul>
+
+</div>
+
+  <!-- MAIN CONTENT -->
+
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+      <h2>
+        Welcome,  👋
+      </h2>
+
+      <div class="profile">
+
+        <i class="fa-regular fa-bell"></i>
+
+      </div>
+
+    </div>
+
+    <!-- DASHBOARD CARDS -->
+
+   <!-- PAGE BUTTONS -->
+
+  <div class="page-buttons">
+
+  <!-- FILE COMPLAINT -->
+
+  <button class="page-btn green-btn">
+
+    <i class="fa-solid fa-file-circle-plus"></i>
+
+    <div>
+
+      <h3>File Complaint</h3>
+
+      <p>Report issue in your area</p>
+
+    </div>
+
+  </button>
+
+  <!-- MY COMPLAINTS -->
+
+  <button class="page-btn blue-btn">
+
+    <i class="fa-solid fa-list-check"></i>
+
+    <div>
+
+      <h3>My Complaints</h3>
+
+      <p>View all complaints</p>
+
+    </div>
+
+  </button>
+
+  <!-- STATUS -->
+
+  <button class="page-btn purple-btn">
+
+    <i class="fa-solid fa-chart-line"></i>
+
+    <div>
+
+      <h3>Status</h3>
+
+      <p>Track complaint status</p>
+
+    </div>
+
+  </button>
+
+  <!-- SOS -->
+
+  <button class="page-btn red-btn">
+
+    <i class="fa-solid fa-phone"></i>
+
+    <div>
+
+      <h3>SOS</h3>
+
+      <p>Emergency help support</p>
+
+    </div>
+
+  </button>
+
+</div>
+
+    <!-- BOTTOM SECTION -->
+
+    <div class="bottom-section">
+
+     <!-- RECENT COMPLAINTS -->
+
+<div class="complaints-box">
+
+  <h3>Recent Complaints</h3>
+
+  <ul>
+
+    <li>
+
+      <div>
+
+        <strong>
+          Street Light Not Working
+        </strong>
+
+      </div>
+
+      <span class="progress">
+        In Progress
+      </span>
+
+    </li>
+
+    <li>
+
+      <div>
+
+        <strong>
+          Garbage Overflow
+        </strong>
+
+      </div>
+
+      <span class="resolved">
+        Resolved
+      </span>
+
+    </li>
+
+    <li>
+
+      <div>
+
+            <strong>
+              Water Leakage
+            </strong>
+
+        </div>
+
+         <span class="pending">
+            Pending
+          </span>
+
+        </li>
+
+        </ul>
+    </div>
+      <!-- QUICK SOS -->
+
+      <div class="sos-box">
+
+        <h3>Quick SOS</h3>
+
+        <p>
+          Need immediate help?
+          Press the SOS button.
+        </p>
+
+        <div class="sos-buttons">
+
+          <button class="call-btn">
+
+            <i class="fa-solid fa-phone"></i>
+
+            Call
+
+          </button>
+
+          <button class="msg-btn">
+
+            <i class="fa-solid fa-message"></i>
+
+            Message
+
+          </button>
+
+        </div>
+
+        <small>
+
+          <i class="fa-solid fa-location-dot"></i>
+
+          Your location will be shared
+
+        </small>
+
+      </div>
+
+    </div>
+
+  </div>
+  <script src="user_dashboard.js"></script>
+
+</body>
+</html>
