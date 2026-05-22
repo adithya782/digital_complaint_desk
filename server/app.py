@@ -95,7 +95,8 @@ def google_auth():
             return jsonify({
                 'message': 'Google Authentication Successful',
                 'registration_incomplete': True,
-                'access_token': access_token
+                'access_token': access_token,
+                'email': user.email
                             }), 200
         
         return jsonify({
@@ -126,14 +127,22 @@ def complete_profile():
         required=True, 
         help='Phone number is required and cannot be blank'
     )
+    profile_parser.add_argument(
+        'password', 
+        type=str, 
+        required=True, 
+        help='Phone number is required and cannot be blank'
+    )
     args = profile_parser.parse_args()
     phone_number = args['phone_number'].strip()
+    password = generate_password_hash(args['password'].strip())
     try:
         user_id = get_jwt_identity()
         user = db.session.get(User,int(user_id))
         if not user:
             return jsonify({'error': 'User not found'}), 404
         user.phone = phone_number
+        user.password = password
         db.session.commit()
         return jsonify({
             'message': 'Profile completed successfully!',
@@ -164,8 +173,8 @@ def login():
         return jsonify({'error':'User not found, please register'}),404
     
 
-    if user.auth_provider == 'google':
-        return jsonify({'message': "Seems you've registered through google signin, please sign-in using google"}), 400
+    # if user.auth_provider == 'google':
+    #     return jsonify({'message': "Seems you've registered through google signin, please sign-in using google"}), 400
 
     if check_password_hash(user.password,password):
         access_token = create_access_token(identity=str(user.user_id), additional_claims={'role': user.role})
@@ -361,12 +370,12 @@ app.register_blueprint(auth_bp)
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.drop_all()
-        # print('Dropped')
-        # db.create_all()
-        # print('Database Created')
-        # admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
-        # db.session.add(admin)
-        # db.session.commit()
+        db.drop_all()
+        print('Dropped')
+        db.create_all()
+        print('Database Created')
+        admin = User(fullname=os.environ.get('ADMIN_NAME'), email=os.environ.get('ADMIN_EMAIL'), password=generate_password_hash(os.environ.get('ADMIN_PASSWORD')), auth_provider='manual', role=UserRole.ADMIN.value, phone=os.environ.get('ADMIN_PHONE') )
+        db.session.add(admin)
+        db.session.commit()
         pass
     app.run(debug=True)
