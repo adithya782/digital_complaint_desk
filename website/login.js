@@ -41,9 +41,27 @@ function handleGoogleCredentialResponse(response) {
                 alert("Google Sign-In successful! Please complete your profile next.");
                 localStorage.setItem('temp_oauth_email', data.email)
                 window.location.href = "complete-profile.html"; 
-            } else {
+            } 
+            else {
                 alert("Login completely successful!");
-                window.location.href = "dashboard.html"; 
+                // if (data.success){
+                if (data.user.role == 'admin'){
+                alert('AUTHENTICATION DONE, It is an admin user');
+                // window.location.href = 'admin_dashboard.html'
+                }
+                else if (data.user.role == 'staff'){
+                alert('AUTHENTICATION DONE, It is a staff user');
+                // window.location.href = 'staff_dashboard.html'
+                }
+                else if (data.user.role == 'user'){
+                alert('AUTHENTICATION DONE, It is a common user');
+                window.location.href = 'user_dashboard.html';
+                // }
+                }
+                else{
+                    // alert(data.error || data.message)
+                    alert('something went wrong');
+                }
             }
         } else {
             alert("Authentication failed: " + (data.error || "Unknown Error"));
@@ -87,7 +105,7 @@ function login() {
             }
             if (data.role == 'user'){
             alert('AUTHENTICATION DONE, It is a common user');
-            // window.location.href = 'user_dashboard.html
+            window.location.href = 'user_dashboard.html';
             }
         }
         else{
