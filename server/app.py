@@ -1,16 +1,21 @@
+import math
+import pickle
 import os
 from flask import Flask, Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta, datetime, timezone
 from flask_restful import Api, reqparse, marshal_with, fields, Resource
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, get_jwt_identity, JWTManager
 from flask_cors import CORS
-from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction
+from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction, Office, office_department
 from dotenv import load_dotenv
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 from pathlib import Path
 from supabase import Client, create_client
+from sqlalchemy import func
+from tasks import ai_training
+
 
 # env_path = Path(__file__).resolve().parent / '.env'
 # load_dotenv(dotenv_path=env_path)
@@ -43,8 +48,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 app.secret_key = os.environ.get('SECRET_KEY')  
 db.init_app(app)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-
+CORS(app, resources={r"/*": {"origins": [r"http://.*", r"https://.*"]}}, supports_credentials=True)
 jwt = JWTManager(app)
 api = Api(app)
 
@@ -384,11 +388,203 @@ class user_dashboard(Resource):
         return {'user_id': user.user_id, 'fullname': user.fullname, 'complaints': user_complaints, 'phone': user.phone},200
 
 
+'''HAVERSINE FORMULA - To calculate distance between 2 GPS coordinates'''
+def distance_calculate(lat1,long1,lat2,long2):
+    R = 6371.0
+    d_lat = math.radians(lat2-lat1)
+    d_long = math.radians(long2-long1)
+    a = (math.sin(d_lat/2)**2 + math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.sin(d_long/2)**2)
+    c = 2*math.atan2(math.sqrt(a), math.sqrt(1-a))
+    return R * c
 
+class ProcessAndDispatchComplaint(Resource):
+    @jwt_required()
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('title', required=True)
+        parser.add_argument('description')
+        parser.add_argument('latitude')
+        parser.add_argument('longitude')
+        parser.add_argument('anonymous', type=bool)
+        data = parser.parse_args()
+        user_id = get_jwt_identity()
+        if not data['description'] or data['latitude'] is None or data['longitude'] is None:
+            return {"message": "Missing required fields: description, Location"}, 400
+        
+        c_lat, c_lon = float(data['latitude']), float(data['longitude'])
+
+        try:
+            with open('complaint_classifier.pkl', 'rb') as f:
+                model_pipeline = pickle.load(f)
+            predicted_dept = model_pipeline.predict([data['description']])[0]
+        except Exception:
+            predicted_dept = "Law, Order & Public Safety"
+        
+        dept = Department.query.filter_by(department_name = predicted_dept).first()
+        if not dept:
+            return {"message": f"Department '{predicted_dept}' is missing from database master records."}, 500
+
+        matching_offices = Office.query.join(
+            office_department, Office.office_id == office_department.c.office_id
+        ).filter(office_department.c.department_id == dept.department_id).all()
+
+        assigned_office =None
+        closest_dist = float('inf')
+
+        for office in matching_offices:
+            dist = distance_calculate(c_lat, c_lon, office.latitude, office.longitude)
+            if dist < closest_dist:
+                closest_dist = dist
+                assigned_office = office
+        if not assigned_office:
+            return {"message": f"AI classified as '{predicted_dept}' but no physical office branches handle this sector."}, 422
+        
+        priority = "Medium"
+        deadline_hours = 72
+
+        low_priority_tokens = ["blinking", "flickering", "paint", "fountain", "weed"]
+        high_priority_tokens = ["assaulted", "attack", "transformer", "snapped", "blackout", "fight", "weapon"]
+
+        desc_lower = data['description'].lower()
+        if any(token in desc_lower for token in high_priority_tokens):
+            priority = "High"
+            deadline_hours = 24
+        elif any(token in desc_lower for token in low_priority_tokens):
+            priority = "Low"
+            deadline_hours = 168
+        
+        available_staff = Staff.query.filter_by(office_id=assigned_office.id,department_id=dept.department_id).all()
+
+        assigned_official = None
+        min_load = float('inf')
+        today_date= datetime.now(timezone.utc).date()
+
+        if available_staff:
+            for staff in available_staff:
+                load = Complaint.query.filter(Complaint.staff_id == staff.staff_id, Complaint.status != 'Resolved', func.date(Complaint.created_at) == today_date).count()
+                if load < min_load:
+                    min_load = load 
+                    assigned_official = staff 
+        if data['anonymous'] == True:
+            id = None 
+        else:
+            id = user_id
+
+        new_complaint = Complaint(
+            title=data['title'], 
+            description=data['description'], 
+            department_id=dept.department_id, # Set category explicitly string matched
+            latitude=c_lat, 
+            longitude=c_lon, 
+            user_id=id, # Stores integer or None (Anonymous safe)
+            staff_id=assigned_official.staff_id, 
+            priority=priority,
+            deadline=datetime.now(timezone.utc) + timedelta(hours=deadline_hours)
+        )
+        
+        db.session.add(new_complaint)
+        db.session.commit()
+        return {
+            'status': 'success',
+            'predicted_dept': predicted_dept,
+            'assigned_official':  assigned_official.user.fullname,
+            'office': assigned_office.office_name,
+            'distance': round(closest_dist,2),
+            'expected_deadline' : new_complaint.deadline.isoformat() ,
+            'tracking_id': new_complaint.complaint_id
+        }           
+        
+class VerifyAdmin(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        claims = get_jwt()
+        role = claims.get('role')
+        if role != UserRole.ADMIN.value:
+            return {"Unauthorized": 'You cant access this page'}, 403
+        complaints = Complaint.query.filter_by(verified=False).all()
+        data = []
+        for complaint in complaints:
+            data.append({'title': complaint.title, 'description': complaint.description, 'department_id': complaint.department_id})
+
+        departments = Department.query.all()
+        depts = []
+        for department in departments:
+            depts.append({'department_id': department.department_id, 'department_name': department.department_name})
+        return {'complaints': data, 'departments': data, 'message': 'success'},200
+    @jwt_required()
+    def post(self):
+        pass 
+
+class staff_dashboard(Resource):
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity()
+        claims = get_jwt()
+        role = claims.get('role')
+        if role != UserRole.STAFF.value:
+            return {"Unauthorized": 'No access'}, 403
+        user = db.session.get(User, user_id)
+        staff = user.staff
+        complaints = Complaint.query.filter(Complaint.staff_id==staff.staff_id, Complaint.status !='Resolved').all()
+        now = datetime.now(timezone.utc)
+        scored_complaints = []
+        for complaint in complaints:
+            priority_weight = 2.0  
+            if complaint.priority == 'Critical' or "Emergency" in complaint.title.lower():
+                score = 5000.0
+            elif complaint.priority == 'High':
+                priority_weight = 4.0
+            elif complaint.priority == 'Low':
+                priority_weight = 1.0
+                
+            if complaint.deadline:
+                deadline_utc = complaint.deadline.replace(tzinfo=timezone.utc)
+                time_delta = deadline_utc - now
+                days_left = time_delta.total_seconds() / 86400.0
+            else:
+                days_left = 7.0  
+                
+            if days_left <= 0:
+                score = 1000.0 + abs(days_left) * 10
+            else:
+                score = priority_weight / max(days_left, 0.1)
+                
+            scored_complaints.append({
+                'complaint_id': complaint.complaint_id,
+                'title': complaint.title,
+                'description': complaint.description,
+                'status': complaint.status,
+                'priority': complaint.priority,
+                'deadline': complaint.deadline.isoformat() if complaint.deadline else None,
+                'days_remaining': round(days_left, 1),
+                'calculated_score': score
+            })
+        scored_complaints.sort(key=lambda x: x['calculated_score'], reverse=True)
+        DAILY_CAPACITY = 5
+        todays_slot = scored_complaints[:DAILY_CAPACITY]
+        tomorrows_slot = scored_complaints[DAILY_CAPACITY:DAILY_CAPACITY*2]
+        future_backlog = scored_complaints[DAILY_CAPACITY*2:]
+        return {
+            'fullname': user.fullname,
+            'staff_id': staff.staff_id,
+            'department': staff.department.department_name,
+            'workload_summary': {
+                'total_active_issues': len(scored_complaints),
+                'daily_capacity_limit': DAILY_CAPACITY
+            },
+            'slots': {
+                'todays_focus_slot': todays_slot,
+                'tomorrows_slot': tomorrows_slot,
+                'future_backlog_slot': future_backlog
+            }
+        }, 200
+    
 app.register_blueprint(auth_bp)
 
 
 api.add_resource(user_dashboard, '/api/user/dashboard')
+api.add_resource(staff_dashboard, '/api/staff/dashboard')
 
 if __name__ == '__main__':
     with app.app_context():

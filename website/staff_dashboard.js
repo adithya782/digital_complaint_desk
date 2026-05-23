@@ -1,134 +1,266 @@
-// SIDEBAR
-const sidebar = document.getElementById("sidebar");
-
-// MENU BUTTON
-const menuBtn = document.getElementById("menuBtn");
-
-// CLICK EVENT
-menuBtn.addEventListener("click", () => {
-
-  // TOGGLE SIDEBAR
-  sidebar.classList.toggle("close");
-
-});
-// SELECT ALL STAT BUTTONS
-const statButtons = document.querySelectorAll(".stat-card");
-
-// LOOP BUTTONS
-statButtons.forEach((button) => {
-
-  // CLICK EVENT
-  button.addEventListener("click", () => {
-
-    // REMOVE ACTIVE FROM ALL
-    statButtons.forEach((btn) => {
-      btn.classList.remove("active-card");
-    });
-
-    // ADD ACTIVE TO CLICKED BUTTON
-    button.classList.add("active-card");
-
-    // GET BUTTON TITLE
-    const title = button.querySelector("h4").innerText;
-
-    // CHECK WHICH BUTTON CLICKED
-    if(title === "Today's Issues"){
-      alert("Opening Today's Issues");
-    }
-
-    else if(title === "Pending Issues"){
-      alert("Opening Pending Issues");
-    }
-
-    else if(title === "Resolved Today"){
-      alert("Opening Resolved Issues");
-    }
-
-    else if(title === "Total Reports"){
-      alert("Opening Total Reports");
-    }
-
-  });
-
-});
-// SELECT ALL SIDEBAR BUTTONS
-const sideButtons = document.querySelectorAll(".side-btn");
-
-// LOOP ALL BUTTONS
-sideButtons.forEach((button) => {
-
-  // CLICK EVENT
-  button.addEventListener("click", () => {
-
-    // REMOVE ACTIVE CLASS FROM ALL
-    sideButtons.forEach((btn) => {
-      btn.classList.remove("active");
-    });
-
-    // ADD ACTIVE CLASS TO CLICKED BUTTON
-    button.classList.add("active");
-
-    // GET BUTTON NAME
-    const btnText = button.querySelector(".text").innerText;
-
-    // CHECK BUTTON
-    if(btnText === "Dashboard"){
-      alert("Dashboard Opened");
-    }
-
-    else if(btnText === "History"){
-      alert("History Opened");
-    }
-
-    else if(btnText === "Transactions"){
-      alert("Transactions Opened");
-    }
-
-    else if(btnText === "Profile"){
-      alert("Profile Opened");
-    }
-
-    else if(btnText === "Logout"){
-
-      let checkLogout = confirm("Are you sure want to logout?");
-
-      if(checkLogout){
-        alert("Logged Out Successfully");
+// ==========================================
+// 1. DATA MODELS & LOCAL CONFIGURATION
+// ==========================================
+const localcomplaints = {
+  officer_name: "Officer Ramesh Kumar",
+  workload_summary: {
+    total_active_issues: 8,
+    daily_capacity_limit: 5
+  },
+  slots: {
+    todays_focus_slot: [
+      {
+        complaint_id: 101,
+        title: "🚨 Main Water Line Burst",
+        description: "Massive water leakage near the main junction. Road flooding completely.",
+        status: "In Progress",
+        priority: "High",
+        deadline: "2026-05-23T18:00:00Z",
+        days_remaining: 0.1,
+        calculated_score: 40.0
+      },
+      {
+        complaint_id: 102,
+        title: "⚡ Streetlight Cable Sparking",
+        description: "Live wires exposed near the public park entrance. Hazardous condition.",
+        status: "Pending",
+        priority: "High",
+        deadline: "2026-05-24T12:00:00Z",
+        days_remaining: 0.9,
+        calculated_score: 4.4
+      },
+      {
+        complaint_id: 103,
+        title: "🕳️ Dangerous Deep Pothole",
+        description: "Large pothole in the middle of the third lane causing severe traffic slowdowns.",
+        status: "Pending",
+        priority: "Medium",
+        deadline: "2026-05-25T14:30:00Z",
+        days_remaining: 2.0,
+        calculated_score: 1.0
       }
+    ],
+    tomorrows_slot: [
+      {
+        complaint_id: 104,
+        title: "🗑️ Public Dustbin Overflowing",
+        description: "Garbage collection missed for three consecutive cycles near block C market.",
+        status: "Pending",
+        priority: "Low",
+        deadline: "2026-05-27T09:00:00Z",
+        days_remaining: 3.8,
+        calculated_score: 0.26
+      }
+    ],
+    future_backlog_slot: []
+  }
+};
 
+const access_token = localStorage.getItem('access_token');
+
+// ==========================================
+// 2. LIFECYCLE INITIALIZATION (DOM CONTENT LOADED)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  console.log("DOM processing complete. Mapping interface fields...");
+  
+  const complaintsContainer = document.getElementById('TodayIssues');
+  const nameElement = document.getElementById('dashboardUsername');
+  const pendingContainer = document.getElementById('PendingQueue');
+
+  if (pendingContainer) {
+    pendingContainer.innerHTML = ''; // Clear placeholder
+    
+    // 🚀 Pull from tomorrows_slot or future arrays instead of duplicating today's focus!
+    const backlogList = localcomplaints.slots.tomorrows_slot; 
+
+    backlogList.forEach(complaint => {
+      const backlogHtml = `
+        <li style="background: #fff; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid #fb923c; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+          <strong style="font-size: 13px; color: #03113f;">${complaint.title}</strong>
+          <p style="font-size: 12px; color: #6b7280; margin: 3px 0 0 0;">Priority: ${complaint.priority}</p>
+        </li>
+      `;
+      pendingContainer.insertAdjacentHTML('beforeend', backlogHtml);
+    });
+  }
+  // Paint fallback local user metrics to display immediately
+  if (nameElement) {
+    nameElement.innerText = localcomplaints.officer_name;
+  }
+
+  // Paint local mockup records to protect against empty displays
+  if (complaintsContainer) {
+    complaintsContainer.innerHTML = ''; 
+    
+    const activeList = localcomplaints.slots.todays_focus_slot;
+    
+    activeList.forEach(complaint => {
+      let statusClass = 'pending';
+      const finalstatus = complaint.status.toLowerCase();
+      if (finalstatus.includes('progress')) { statusClass = 'progress'; }
+      if (finalstatus.includes('resolved')) { statusClass = 'resolved'; }
+      
+      const comphtml = `
+        <li>
+          <div>
+            <strong>${complaint.title}</strong>
+          </div>
+          <p>${complaint.description}</p>
+          <p>Priority: <strong>${complaint.priority}</strong></p>
+          <span class="${statusClass}">${complaint.status}</span>
+        </li>
+      `;
+      complaintsContainer.insertAdjacentHTML('beforeend', comphtml);
+    });
+  }
+
+  // Initialize background network updates and UI event setups
+  triggerLiveDashboardFetch();
+  initializeUIControls();
+});
+
+// ==========================================
+// 3. ASYNC REMOTE API ACCESS ENGINE
+// ==========================================
+function triggerLiveDashboardFetch() {
+  fetch(`${window.API_BASE_URL || 'http://localhost:5000'}/api/staff/dashboard`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + access_token,
+      'Content-Type': 'application/json'
     }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data && data.slots && data.slots.todays_focus_slot) {
+      const complaintsContainer = document.getElementById('TodayIssues');
+      const nameElement = document.getElementById('dashboardUsername');
+      const staff_id = document.getElementById('staff_id');
+      const department = document.getElementById('department');
+      
+      if (staff_id && data.staff_id) nameElement.innerText = data.staff_id;
+      if (department && data.department) nameElement.innerText = data.department;
+      if (nameElement && data.fullname) nameElement.innerText = data.fullname;
+      
+      if (complaintsContainer) {
+        complaintsContainer.innerHTML = ''; 
+        
+        data.slots.todays_focus_slot.forEach(complaint => {
+          let statusClass = 'pending';
+          const finalstatus = complaint.status.toLowerCase();
+          if (finalstatus.includes('progress')) { statusClass = 'progress'; }
+          if (finalstatus.includes('resolved')) { statusClass = 'resolved'; }
+          
+          const comphtml = `
+            <li>
+              <div>
+                <strong>${complaint.title}</strong>
+              </div>
+              <p>${complaint.description}</p>
+              <p>Priority: <strong>${complaint.priority}</strong></p>
+              <span class="${statusClass}">${complaint.status}</span>
+            </li>
+          `;
+          complaintsContainer.insertAdjacentHTML('beforeend', comphtml);
+        });
+      }
+    }
+  })
+  .catch(err => console.error('Live fetch background sync error: ', err));
+}
 
+// ==========================================
+// 4. INTERACTION MANAGER (UI CONTROLS)
+// ==========================================
+function initializeUIControls() {
+  
+  // 🔒 THE ONLY SIDEBAR EVENT LISTENER ALLOWED IN THE ENTIRE FILE
+  const sidebar = document.getElementById("sidebar");
+  const menuBtn = document.getElementById("menuBtn");
+  const mainContent = document.querySelector(".main-content");
+
+  if (menuBtn && sidebar && mainContent) {
+    menuBtn.addEventListener("click", () => {
+      // 🚀 BOTH actions fire at the exact same millisecond on a single click!
+      sidebar.classList.toggle("close");
+
+      if (sidebar.classList.contains("close")) {
+        mainContent.style.marginLeft = "85px";
+      } else {
+        mainContent.style.marginLeft = "250px";
+      }
+    });
+  }
+
+  // Statistical summary selectors
+  const statButtons = document.querySelectorAll(".stat-card");
+  statButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      statButtons.forEach((btn) => btn.classList.remove("active-card"));
+      button.classList.add("active-card");
+
+      const title = button.querySelector("h4").innerText;
+      if (title === "Today's Issues") alert("Opening Today's Issues");
+      else if (title === "Pending Issues") alert("Opening Pending Issues");
+      else if (title === "Resolved Today") alert("Opening Resolved Issues");
+      else if (title === "Total Reports") alert("Opening Total Reports");
+    });
   });
 
-});
-// select buttons
-const msgBtn = document.querySelector(".msg-btn");
-const reportBtn = document.querySelector(".report-btn");
+  // Structural Navigation elements
+  const sideButtons = document.querySelectorAll(".side-btn");
+  sideButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      sideButtons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
 
-// Send Message button
-msgBtn.addEventListener("click", () => {
-    console.log("Send Message clicked");
-    alert("Message feature opened");
-});
+      const btnText = button.querySelector(".text").innerText;
+      if (btnText === "Dashboard") alert("Dashboard Opened");
+      else if (btnText === "History") alert("History Opened");
+      else if (btnText === "Transactions") alert("Transactions Opened");
+      else if (btnText === "Profile") alert("Profile Opened");
+      else if (btnText === "Logout") {
+        let checkLogout = confirm("Are you sure want to logout?");
+        if (checkLogout) logout();
+      }
+    });
+  });
 
-// Generate Report button
-reportBtn.addEventListener("click", () => {
-    console.log("Generate Report clicked");
+  // Communication buttons delegation
+  const msgBtn = document.querySelector(".msg-btn");
+  const reportBtn = document.querySelector(".report-btn");
 
-    let reportId = "RPT" + Math.floor(Math.random() * 1000);
+  if (msgBtn) {
+    msgBtn.addEventListener("click", () => {
+      alert("Message feature opened");
+    });
+  }
 
-    alert("Report Generated: " + reportId);
+  if (reportBtn) {
+    reportBtn.addEventListener("click", () => {
+      let reportId = "RPT" + Math.floor(Math.random() * 1000);
+      alert("Report Generated: " + reportId);
 
-    // optional: add to page
-    const p = document.createElement("p");
-    p.textContent = "New Report: " + reportId;
-    document.body.appendChild(p);
-});
-const profileBox = document.getElementById("profileBox");
+      const p = document.createElement("p");
+      p.textContent = "New Report: " + reportId;
+      document.body.appendChild(p);
+    });
+  }
 
-profileBox.addEventListener("click", () => {
-    profileBox.classList.toggle("expanded");
+  // Inspector expansion panel trigger
+  const profileBox = document.getElementById("profileBox");
+  if (profileBox) {
+    profileBox.addEventListener("click", () => {
+      profileBox.classList.toggle("expanded");
+      const details = profileBox.querySelector(".profile-details");
+      if (details) details.classList.toggle("hidden");
+    });
+  }
+}
 
-    const details = profileBox.querySelector(".profile-details");
-    details.classList.toggle("hidden");
-});
+// Global scope exit declaration
+function logout() {
+  localStorage.removeItem('access_token');
+  window.location.replace('home.html');
+}

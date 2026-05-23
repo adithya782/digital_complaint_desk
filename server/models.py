@@ -20,20 +20,25 @@ class User(db.Model):
     auth_provider = db.Column(db.String(20), nullable=False, default='local')
     complaints = db.relationship('Complaint', backref='user', lazy=True)
 
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+
     role = db.Column(db.String(20), default='user', nullable=False)
     staff = db.relationship('Staff', backref='user', uselist=False,  lazy=True)
 
 class Complaint(db.Model):
     __tablename__ = 'complaints'
     complaint_id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False,unique=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True,unique=False)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=False)
-    category = db.Column(db.String(100), nullable=False)
-
-    status = db.Column(db.String(50), default='pending')
+    # category = db.Column(db.String(100), nullable=True)
+    is_verified = db.Column(db.Boolean, default=False, nullable=False)
+    status = db.Column(db.String(50), default='Pending')
     created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+    priority = db.Column(db.String(20), default="Medium", nullable=False)
+    deadline = db.Column(db.DateTime, nullable=True)
 
     image_url = db.Column(db.String(500), nullable=True) 
     video_url = db.Column(db.String(500), nullable=True)
@@ -43,6 +48,8 @@ class Complaint(db.Model):
     longitude = db.Column(db.Float, nullable=False)
 
     resolution = db.relationship('Resolution',backref='original_complaint', uselist=False,lazy=True)
+    staff_id = db.Column(db.Integer, db.ForeignKey('staffs.staff_id'), nullable=True,unique=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=False)
 
 class Resolution(db.Model):
     __tablename__ = 'resolutions'
@@ -64,6 +71,7 @@ class Staff(db.Model):
     # auth_provider = db.Column(db.String(20), nullable=False, default='local')
 
     resolutions = db.relationship('Resolution', backref='staff', lazy=True)
+    complaints = db.relationship('Complaint', backref='staff', lazy=True)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=False)
     office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'), nullable=False)
 
@@ -74,6 +82,7 @@ class Department(db.Model):
     department_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     department_name = db.Column(db.String(50), unique = True)
     staffs = db.relationship('Staff', backref='department', lazy=False)
+    complaints = db.relationship('Complaint', backref='department', lazy=False)
     
 
 class Office(db.Model):
