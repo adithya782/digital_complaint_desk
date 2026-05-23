@@ -39,6 +39,15 @@
         <i class="fa-solid fa-house"></i>
         <span>Dashboard</span>
       </button>
+           <button onclick="createDepartment()">
+  <i class="fa-solid fa-building"></i>
+  <span>Create Department</span>
+</button>
+
+<button onclick="createOffice()">
+  <i class="fa-solid fa-briefcase"></i>
+  <span>Create Office</span>
+</button>
 
       <button onclick="createStaff()">
         <i class="fa-solid fa-user-plus"></i>
@@ -240,7 +249,99 @@
 
     </div>
 
-    
+    <!--create staff page-->
+     <div id="createStaffPage" style="display:none;">
+
+      <div class="admin-form-box">
+
+        <h2>
+          <i class="fa-solid fa-user-plus"></i>
+          Staff Registration
+        </h2>
+
+        <form id="staffForm">
+
+          <div class="input-group">
+
+            <label>Full Name</label>
+
+            <input
+              type="text"
+              id="staffFullname"
+              placeholder="Enter Full Name"
+              required
+            >
+
+          </div>
+
+          <div class="input-group">
+
+            <label>Email Address</label>
+
+            <input
+              type="email"
+              id="staffEmail"
+              placeholder="Enter Email"
+              required
+            >
+
+          </div>
+
+          <div class="input-group">
+
+            <label>Phone Number</label>
+
+            <input
+              type="tel"
+              id="staffPhone"
+              placeholder="Enter Phone Number"
+              required
+            >
+
+          </div>
+
+          <div class="input-group">
+
+            <label>Password</label>
+
+            <input
+              type="password"
+              id="staffPassword"
+              placeholder="Enter Password"
+              required
+            >
+
+          </div>
+
+          <div class="form-buttons">
+
+            <button type="submit"
+                    class="create-btn">
+
+              Create Staff
+
+            </button>
+
+            <button type="reset"
+                    class="reset-btn">
+
+              Reset
+
+            </button>
+
+            <button type="button"
+                    class="back-btn"
+                    onclick="showDashboard()">
+
+              Back Dashboard
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
 
     <!-- CREATE ADMIN PAGE -->
     <div id="createAdminPage" style="display:none;">
