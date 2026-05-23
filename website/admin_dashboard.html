@@ -74,6 +74,11 @@
         <span>Audit Resolutions</span>
       </button>
 
+      <button onclick="handleLogout()" style="margin-top: 30px; color: #e53935;">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </button>
+
     </div>
 
   </div>
@@ -91,7 +96,7 @@
 
       <div class="profile">
         <img src="https://i.pravatar.cc/40" alt="">
-        <span>Super Admin</span>
+        <span id="fullname">Super Admin</span>
       </div>
 
     </div>
@@ -249,8 +254,7 @@
 
     </div>
 
-    <!--create staff page-->
-     <div id="createStaffPage" style="display:none;">
+    <div id="createStaffPage" style="display:none;">
 
       <div class="admin-form-box">
 
@@ -262,89 +266,36 @@
         <form id="staffForm">
 
           <div class="input-group">
-
             <label>Full Name</label>
-
-            <input
-              type="text"
-              id="staffFullname"
-              placeholder="Enter Full Name"
-              required
-            >
-
+            <input type="text" id="staffFullname" placeholder="Enter Full Name" required>
           </div>
 
           <div class="input-group">
-
             <label>Email Address</label>
-
-            <input
-              type="email"
-              id="staffEmail"
-              placeholder="Enter Email"
-              required
-            >
-
+            <input type="email" id="staffEmail" placeholder="Enter Email" required>
           </div>
 
           <div class="input-group">
-
             <label>Phone Number</label>
-
-            <input
-              type="tel"
-              id="staffPhone"
-              placeholder="Enter Phone Number"
-              required
-            >
-
+            <input type="tel" id="staffPhone" placeholder="Enter Phone Number" required>
           </div>
 
           <div class="input-group">
-
             <label>Password</label>
-
-            <input
-              type="password"
-              id="staffPassword"
-              placeholder="Enter Password"
-              required
-            >
-
+            <input type="password" id="staffPassword" placeholder="Enter Password" required>
           </div>
 
           <div class="form-buttons">
-
-            <button type="submit"
-                    class="create-btn">
-
-              Create Staff
-
-            </button>
-
-            <button type="reset"
-                    class="reset-btn">
-
-              Reset
-
-            </button>
-
-            <button type="button"
-                    class="back-btn"
-                    onclick="showDashboard()">
-
-              Back Dashboard
-
-            </button>
-
+            <button type="submit" class="create-btn">Create Staff</button>
+            <button type="reset" class="reset-btn">Reset</button>
+            <button type="button" class="back-btn" onclick="showDashboard()">Back Dashboard</button>
           </div>
 
         </form>
 
       </div>
-
-    <!-- CREATE ADMIN PAGE -->
-    <div id="createAdminPage" style="display:none;">
+      
+    </div> <div id="createAdminPage" style="display:none;">
 
       <div class="admin-form-box">
 
@@ -356,93 +307,38 @@
         <form id="adminForm">
 
           <div class="input-group">
-
             <label>Full Name</label>
-
-            <input
-              type="text"
-              id="fullname"
-              placeholder="Enter Full Name"
-              required
-            >
-
+            <input type="text" id="fullname" placeholder="Enter Full Name" required>
           </div>
 
           <div class="input-group">
-
             <label>Email Address</label>
-
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter Email"
-              required
-            >
-
+            <input type="email" id="email" placeholder="Enter Email" required>
           </div>
 
           <div class="input-group">
-
             <label>Phone Number</label>
-
-            <input
-              type="tel"
-              id="phone"
-              placeholder="Enter Phone Number"
-              required
-            >
-
+            <input type="tel" id="phone" placeholder="Enter Phone Number" required>
           </div>
 
           <div class="input-group">
-
             <label>Password</label>
-
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter Password"
-              required
-            >
-
+            <input type="password" id="password" placeholder="Enter Password" required>
           </div>
 
           <div class="form-buttons">
-
-            <button type="submit"
-                    class="create-btn">
-
-              Create Admin
-
-            </button>
-
-            <button type="reset"
-                    class="reset-btn">
-
-              Reset
-
-            </button>
-
-            <button type="button"
-                    class="back-btn"
-                    onclick="showDashboard()">
-
-              Back Dashboard
-
-            </button>
-
+            <button type="submit" class="create-btn" onclick="registerAdmin(event)">Create Admin</button>
+            <button type="reset" class="reset-btn" onclick="this.reset()">Reset</button>
+            <button type="button" class="back-btn" onclick="showDashboard()">Back Dashboard</button>
           </div>
 
         </form>
 
       </div>
 
-    </div>
-
-  </div>
-
-  <!-- JS -->
-  <script src="admin_dashboard.js"></script>
+    </div> </div> 
+    <script src="config.js"></script>
+    <script src="admin_dashboard.js"></script>
 
 </body>
 </html>
