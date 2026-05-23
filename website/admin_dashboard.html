@@ -1,77 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
   <title>Advanced Admin Dashboard</title>
 
   <!-- CSS -->
-  <link rel="stylesheet" href="admin_dashboard.css">
-
-  <!-- Font Awesome -->
   <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        href="admin_dashboard.css">
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 
 <body>
 
   <!-- SIDEBAR -->
+
   <div class="sidebar" id="sidebar">
 
     <div class="logo-area">
 
       <div class="logo">
+
         <i class="fa-solid fa-shield-halved"></i>
-        <span class="logo-text">Admin Dashboard</span>
+
+        <span class="logo-text">
+          Admin Dashboard
+        </span>
+
       </div>
 
-      <button class="toggle-btn" onclick="toggleSidebar()">
+      <button class="toggle-btn"
+              onclick="toggleSidebar()">
+
         <i class="fa-solid fa-bars"></i>
+
       </button>
 
     </div>
 
     <!-- MENU -->
+
     <div class="menu">
 
       <button onclick="showDashboard()">
-        <i class="fa-solid fa-house"></i>
-        <span>Dashboard</span>
-      </button>
-           <button onclick="createDepartment()">
-  <i class="fa-solid fa-building"></i>
-  <span>Create Department</span>
-</button>
 
-<button onclick="createOffice()">
-  <i class="fa-solid fa-briefcase"></i>
-  <span>Create Office</span>
-</button>
+        <i class="fa-solid fa-house"></i>
+
+        <span>Dashboard</span>
+
+      </button>
+
+      <button onclick="createDepartment()">
+
+        <i class="fa-solid fa-building"></i>
+
+        <span>Create Department</span>
+
+      </button>
+
+      <button onclick="createOffice()">
+
+        <i class="fa-solid fa-briefcase"></i>
+
+        <span>Create Office</span>
+
+      </button>
 
       <button onclick="createStaff()">
+
         <i class="fa-solid fa-user-plus"></i>
+
         <span>Create Staff</span>
+
       </button>
 
       <button onclick="removeStaff()">
+
         <i class="fa-solid fa-user-minus"></i>
+
         <span>Remove Staff</span>
+
       </button>
 
       <button onclick="showCreateAdminPage()">
+
         <i class="fa-solid fa-user-shield"></i>
+
         <span>Create Admin</span>
+
       </button>
 
       <button onclick="verifyAI()">
+
         <i class="fa-solid fa-robot"></i>
+
         <span>Verify AI</span>
+
       </button>
 
       <button onclick="auditResolution()">
+
         <i class="fa-solid fa-clipboard-check"></i>
+
         <span>Audit Resolutions</span>
+
       </button>
 
     </div>
@@ -79,30 +120,42 @@
   </div>
 
   <!-- MAIN CONTENT -->
+
   <div class="main-content">
 
     <!-- TOPBAR -->
+
     <div class="topbar">
 
       <div>
+
         <h1>Admin Dashboard</h1>
+
         <p>Advanced Management System</p>
+
       </div>
 
       <div class="profile">
-        <img src="https://i.pravatar.cc/40" alt="">
+
+        <img src="https://i.pravatar.cc/40"
+             alt="profile">
+
         <span>Super Admin</span>
+
       </div>
 
     </div>
 
     <!-- DASHBOARD PAGE -->
+
     <div id="dashboardPage">
 
       <!-- CARDS -->
+
       <div class="cards">
 
         <!-- STAFF -->
+
         <div class="card purple clickable-card"
              onclick="showRecords('staff')">
 
@@ -114,7 +167,8 @@
 
         </div>
 
-        <!-- ADMINS -->
+        <!-- ADMIN -->
+
         <div class="card blue clickable-card"
              onclick="showRecords('admin')">
 
@@ -127,6 +181,7 @@
         </div>
 
         <!-- AI -->
+
         <div class="card green clickable-card"
              onclick="showRecords('ai')">
 
@@ -139,6 +194,7 @@
         </div>
 
         <!-- AUDITS -->
+
         <div class="card orange clickable-card"
              onclick="showRecords('audit')">
 
@@ -153,6 +209,7 @@
       </div>
 
       <!-- TABLE -->
+
       <div class="table-box">
 
         <div class="table-header">
@@ -173,10 +230,15 @@
           <thead>
 
             <tr>
+
               <th>ID</th>
+
               <th>Classification</th>
+
               <th>Status</th>
+
               <th>Reviewer</th>
+
             </tr>
 
           </thead>
@@ -184,37 +246,58 @@
           <tbody id="tableBody">
 
             <tr>
+
               <td>#1001</td>
+
               <td>Fraud Detection</td>
-              <td><span class="verified">Verified</span></td>
+
+              <td>
+                <span class="verified">
+                  Verified
+                </span>
+              </td>
+
               <td>Admin A</td>
+
             </tr>
 
             <tr>
+
               <td>#1002</td>
+
               <td>Image Analysis</td>
-              <td><span class="pending">Pending</span></td>
+
+              <td>
+                <span class="pending">
+                  Pending
+                </span>
+              </td>
+
               <td>Admin B</td>
+
             </tr>
 
           </tbody>
 
         </table>
-        
 
       </div>
 
     </div>
 
     <!-- RECORDS PAGE -->
-    <div id="recordsPage" style="display:none;">
+
+    <div id="recordsPage"
+         style="display:none;">
 
       <div class="table-box">
 
         <div class="table-header">
 
           <h2 id="recordTitle">
+
             Records
+
           </h2>
 
           <button class="add-btn"
@@ -231,10 +314,15 @@
           <thead>
 
             <tr>
+
               <th>ID</th>
+
               <th>Name</th>
+
               <th>Status</th>
+
               <th>Department</th>
+
             </tr>
 
           </thead>
@@ -249,14 +337,19 @@
 
     </div>
 
-    <!--create staff page-->
-     <div id="createStaffPage" style="display:none;">
+    <!-- CREATE STAFF PAGE -->
+
+    <div id="createStaffPage"
+         style="display:none;">
 
       <div class="admin-form-box">
 
         <h2>
+
           <i class="fa-solid fa-user-plus"></i>
+
           Staff Registration
+
         </h2>
 
         <form id="staffForm">
@@ -265,12 +358,10 @@
 
             <label>Full Name</label>
 
-            <input
-              type="text"
-              id="staffFullname"
-              placeholder="Enter Full Name"
-              required
-            >
+            <input type="text"
+                   id="staffFullname"
+                   placeholder="Enter Full Name"
+                   required>
 
           </div>
 
@@ -278,12 +369,10 @@
 
             <label>Email Address</label>
 
-            <input
-              type="email"
-              id="staffEmail"
-              placeholder="Enter Email"
-              required
-            >
+            <input type="email"
+                   id="staffEmail"
+                   placeholder="Enter Email"
+                   required>
 
           </div>
 
@@ -291,12 +380,10 @@
 
             <label>Phone Number</label>
 
-            <input
-              type="tel"
-              id="staffPhone"
-              placeholder="Enter Phone Number"
-              required
-            >
+            <input type="tel"
+                   id="staffPhone"
+                   placeholder="Enter Phone Number"
+                   required>
 
           </div>
 
@@ -304,12 +391,10 @@
 
             <label>Password</label>
 
-            <input
-              type="password"
-              id="staffPassword"
-              placeholder="Enter Password"
-              required
-            >
+            <input type="password"
+                   id="staffPassword"
+                   placeholder="Enter Password"
+                   required>
 
           </div>
 
@@ -343,14 +428,21 @@
 
       </div>
 
+    </div>
+
     <!-- CREATE ADMIN PAGE -->
-    <div id="createAdminPage" style="display:none;">
+
+    <div id="createAdminPage"
+         style="display:none;">
 
       <div class="admin-form-box">
 
         <h2>
+
           <i class="fa-solid fa-user-shield"></i>
+
           Admin Registration
+
         </h2>
 
         <form id="adminForm">
@@ -359,12 +451,10 @@
 
             <label>Full Name</label>
 
-            <input
-              type="text"
-              id="fullname"
-              placeholder="Enter Full Name"
-              required
-            >
+            <input type="text"
+                   id="fullname"
+                   placeholder="Enter Full Name"
+                   required>
 
           </div>
 
@@ -372,12 +462,10 @@
 
             <label>Email Address</label>
 
-            <input
-              type="email"
-              id="email"
-              placeholder="Enter Email"
-              required
-            >
+            <input type="email"
+                   id="email"
+                   placeholder="Enter Email"
+                   required>
 
           </div>
 
@@ -385,12 +473,10 @@
 
             <label>Phone Number</label>
 
-            <input
-              type="tel"
-              id="phone"
-              placeholder="Enter Phone Number"
-              required
-            >
+            <input type="tel"
+                   id="phone"
+                   placeholder="Enter Phone Number"
+                   required>
 
           </div>
 
@@ -398,12 +484,10 @@
 
             <label>Password</label>
 
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter Password"
-              required
-            >
+            <input type="password"
+                   id="password"
+                   placeholder="Enter Password"
+                   required>
 
           </div>
 
@@ -442,7 +526,9 @@
   </div>
 
   <!-- JS -->
+
   <script src="admin_dashboard.js"></script>
 
 </body>
+
 </html>
