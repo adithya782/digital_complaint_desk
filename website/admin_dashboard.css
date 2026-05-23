@@ -14,89 +14,99 @@ body{
 
 /* SIDEBAR */
 
-.sidebar{
-  width:270px;
-  background:white;
-  border-right:1px solid #ddd;
-  transition:0.4s;
-  overflow:hidden;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+.sidebar {
+  width: 270px;
+  background: white;
+  border-right: 1px solid #ddd;
+  transition: 0.4s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  
+  /* 🚀 CRITICAL FIXES TO STOP SCROLLING */
+  position: sticky;       /* Keeps it locked in place while the rest of the page scrolls */
+  top: 0;                 /* Pins it to the top of the viewport */
+  height: 100vh;          /* Forces it to exactly match the screen height */
+  overflow: hidden;       /* Absolutely prevents any vertical or horizontal scrollbars */
+  display: flex;          /* Sets up a clean structural column flow */
+  flex-direction: column; 
 }
 
-.sidebar.close{
-  width:90px;
+.sidebar.close {
+  width: 90px;
 }
 
-.logo-area{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px;
-  border-bottom:1px solid #eee;
+.logo-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;         /* Prevents the header logo area from getting squished */
 }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:22px;
-  font-weight:bold;
-  color:#6c63ff;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #6c63ff;
 }
 
-.toggle-btn{
-  width:40px;
-  height:40px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  background:#eef2ff;
-  transition:0.3s;
+.toggle-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #eef2ff;
+  transition: 0.3s;
 }
 
-.toggle-btn:hover{
-  background:#6c63ff;
-  color:white;
+.toggle-btn:hover {
+  background: #6c63ff;
+  color: white;
 }
 
-.menu{
-  padding:20px 10px;
+.menu {
+  padding: 20px 10px;
+  flex: 1;                /* Forces the menu wrapper to occupy remaining space cleanly */
+  overflow: hidden;       /* Redundant defense to ensure the child menu layer cannot scroll */
 }
 
-.menu button{
-  width:100%;
-  border:none;
-  background:transparent;
-  padding:16px;
-  margin-bottom:12px;
-  border-radius:12px;
-  cursor:pointer;
-  text-align:left;
-  display:flex;
-  align-items:center;
-  gap:15px;
-  font-size:16px;
-  transition:0.3s;
-  color:#333;
+.menu button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  transition: 0.3s;
+  color: #333;
 }
 
-.menu button:hover{
-  background:#6c63ff;
-  color:white;
+.menu button:hover {
+  background: #6c63ff;
+  color: white;
 }
 
-.menu button i{
-  min-width:30px;
-  font-size:20px;
+.menu button i {
+  min-width: 30px;
+  font-size: 20px;
 }
 
 .sidebar.close .logo-text,
-.sidebar.close .menu button span{
-  display:none;
+.sidebar.close .menu button span {
+  display: none;
 }
 
-.sidebar.close .menu button{
-  justify-content:center;
+.sidebar.close .menu button {
+  justify-content: center;
 }
 
 /* MAIN CONTENT */

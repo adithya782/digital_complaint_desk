@@ -1,3 +1,10 @@
+
+const access_token = localStorage.getItem('access_token');
+if (!access_token){
+  alert('Please login first');
+  window.location.replace('login.html');
+}
+
 // ===========================
 // INITIAL COUNTS
 // ===========================
@@ -276,63 +283,6 @@ document.getElementById("staffForm")
 });
 
 // ===========================
-// ADMIN FORM SUBMIT
-// ===========================
-
-document.getElementById("adminForm")
-.addEventListener("submit", function(e){
-
-  e.preventDefault();
-
-  let fullname =
-  document.getElementById("fullname").value;
-
-  let email =
-  document.getElementById("email").value;
-
-  let phone =
-  document.getElementById("phone").value;
-
-  let password =
-  document.getElementById("password").value;
-
-  // UPDATE ADMIN COUNT
-
-  admin++;
-
-  updateDashboardCounts();
-
-  // STORE RECORD
-
-  records.admin.push({
-    name: fullname
-  });
-
-  // SUCCESS ALERT
-
-  alert(
-
-    "Admin Created Successfully!\n\n" +
-
-    "Full Name : " + fullname + "\n" +
-
-    "Email : " + email + "\n" +
-
-    "Phone : " + phone + "\n" +
-
-    "Password : " + password
-  );
-
-  // RESET FORM
-
-  this.reset();
-
-  // BACK DASHBOARD
-
-  showDashboard();
-});
-
-// ===========================
 // CREATE DEPARTMENT
 // ===========================
 
@@ -355,3 +305,81 @@ function createOffice(){
 // ===========================
 
 updateDashboardCounts();
+
+let confirm_upgrade = false;
+
+function registerAdmin(event){
+  if (event) event.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const fullname = document.getElementById('fullname').value.trim();
+  if (!email || !password || !phone || !fullname) {
+    alert("Please fill in all fields.");
+    return;
+  }
+  fetch(`${window.API_BASE_URL}/api/auth/register_admin`,{
+  method:'POST',
+  headers: {
+    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+  },
+  body: JSON.stringify({
+            'email': email,
+            'password': password,
+            'phone': phone,
+            'fullname':fullname,
+            'confirm_upgrade': confirm_upgrade
+        })
+})
+.then(res => {
+  // if(!res.ok) throw new Error('Failed to fetch');
+  if (res.status == 401){
+    alert('Please login first');
+    window.location.href = 'login.html'
+  }
+  if (res.status == 403){
+    alert('Forbidden');
+    window.location.href = 'home.html'
+  }
+  return res.json(); 
+})
+.then(data => {
+  if(!data) return;
+  if (data.error){
+    alert(data.error);
+    const form = document.getElementById("adminForm");
+    if (form) {
+      form.reset();
+    }
+  }
+  if (data.requires_confirmation){
+      const userApproved = confirm(data.message);
+      if (userApproved) {
+        confirm_upgrade = true;
+        registerAdmin(null); 
+      } else {
+        confirm_upgrade = false; 
+      }
+      return;
+    }
+  if(data.success){
+    const form = document.getElementById("adminForm");
+    if (form) {
+      form.reset();
+    }
+  }
+
+})
+.catch(err =>
+{
+  console.error('Dashboard error: ', err);
+}
+)
+}
+function handleLogout() {
+  if(!confirm('You sure wanna logout?')) return;
+  localStorage.removeItem('access_token');
+  window.location.replace('home.html');
+}

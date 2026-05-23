@@ -188,7 +188,7 @@ def login():
             else:
                 return jsonify({'error': 'Staff profile missing for this account'}), 404 
         if user.role == UserRole.ADMIN.value:
-            return jsonify({'success': 'Login successful', 'access_token': access_token, 'role': 'admin'})
+            return jsonify({'success': 'Login successful', 'access_token': access_token, 'role': 'admin'}),200
         return jsonify({'success': 'Login Successful', 'access_token': access_token, 'role': 'user'}),200
     return jsonify({'error': 'incorrect password!'}), 400
 
@@ -291,15 +291,15 @@ def register_admin():
     identity = get_jwt_identity()
     claims = get_jwt()
     role = claims.get('role')
-    if not identity:
-        return jsonify({"Unauthorized": 'Please login first'}), 401
+    if identity is None:
+        return jsonify({"error": 'Please login first'}), 401
     if role != UserRole.ADMIN.value:
-        return jsonify({"Forbidden": 'Only Admins can create other admins'}), 403
+        return jsonify({"error": 'Only Admins can create other admins'}), 403
     
     try:
         admin_user = db.session.get(User,int(identity))
         if admin_user.role != UserRole.ADMIN.value:
-            return jsonify({"Forbidden": 'Only Admins can create other admins'}), 403
+            return jsonify({"error": 'Only Admins can create other admins'}), 403
     except (ValueError, TypeError):
         return jsonify({'error': 'Invalid admin token identity'}), 422
     parser = reqparse.RequestParser()
