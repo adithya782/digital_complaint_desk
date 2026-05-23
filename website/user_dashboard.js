@@ -47,6 +47,46 @@ document.querySelector(".msg-btn")
   alert("Opening Emergency Message");
 
 });
+// MENU TOGGLE
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+
+menuBtn.addEventListener("click", () => {
+  sidebar.classList.toggle("active");
+});
+
+// GET USERNAME FROM LOCAL STORAGE
+const username = localStorage.getItem("username");
+
+if(username){
+  document.getElementById("dashboardUsername").innerText = username;
+}
+
+// LOGOUT FUNCTION
+function logout(){
+  localStorage.clear();
+  window.location.href = "login.html";
+}
+
+// FILE COMPLAINT BUTTON
+const fileComplaintBtn = document.querySelector(".green-btn");
+
+fileComplaintBtn.addEventListener("click", () => {
+  window.location.href = "file_complaint.html";
+});
+// FILE COMPLAINT PAGE OPEN
+
+document.getElementById("fileComplaintBtn")
+.addEventListener("click", function(){
+
+  window.location.href = "file_complaint.html";
+
+});
+function openComplaintPage(){
+
+  window.location.href = "file_complaint.html";
+
+}
 
 localcomplaints = {
   "user_id": 42,
