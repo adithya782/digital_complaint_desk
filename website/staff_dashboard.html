@@ -123,7 +123,7 @@
     <div class="topbar">
 
       <h2>
-        Welcome, Officer sri sai aditya 👋
+        Welcome, Officer <span id="name"> staff </span> 👋
       </h2>
 
      
@@ -199,31 +199,24 @@
       <!-- LEFT -->
   
       <div class="issues-box">
-
-        <h3>Today's Issues</h3>
-
-        <table>
-          
-
-        </table>
-
-      </div>
+  <h3>Today's Issues</h3>
+  <ul id="TodayIssues"></ul>
+  <table></table> </div>
 
       <!-- RIGHT -->
 
-      <div class="profile-box" id="profileBox">
+    <div class="profile-box" id="profileBox">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.Vh2OQraISqT4SE80nDJ1aQHaGj?cb=thfvnextfalcon&rs=1&pid=ImgDetMain&o=7&rm=3" alt="officer profile">
+    
+    <h3>Pending Cases Queue</h3>
+    
+    <ul id="PendingQueue" style="list-style: none; padding: 0; margin-top: 15px; text-align: left;"></ul>
 
-    <img src="https://tse2.mm.bing.net/th/id/OIP.Vh2OQraISqT4SE80nDJ1aQHaGj?cb=thfvnextfalcon&rs=1&pid=ImgDetMain&o=7&rm=3" alt="durga">
-
-    <h3>pending cases </h3>
-    <!-- hidden expanded section -->
     <div class="profile-details hidden">
-        <p><b>ID:</b>4730</p>
-        <p><b>Department:</b>cic</p>
-        <p><b>Email:</b> hackie@gmail.com.com</p>
-        <p><b>Status:</b> Active</p>
+        <p><b>ID:</b> <span id="staff_id">4730</span></p>
+        <p><b>Department:</b> <span id="department"> CIC Operations </span></p>
+        <!-- <p><b>Status:</b> Active Officer</p> -->
     </div>
-
 </div>
 
     </div>
@@ -248,7 +241,7 @@
   </div>
 
   <!-- JS -->
-
+  <script src="config.js"></script>
   <script src="staff_dashboard.js"></script>
 
 </body>

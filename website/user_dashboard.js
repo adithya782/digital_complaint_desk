@@ -88,11 +88,12 @@ localcomplaints = {
   ]
 }
 let phone = ''
-fetch('http://127.0.0.1:5000/api/user/dashboard',{
+fetch(`${window.API_BASE_URL}/api/user/dashboard`,{
   method:'GET',
   headers: {
     'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
   }
 })
 .then(res => {

@@ -39,6 +39,12 @@ body{
   padding:25px 18px;
   transition:0.4s ease;
   overflow:hidden;
+  overflow-y: auto;
+  position: fixed;
+  top:0;
+  left: 0;
+  height: 100vh;
+  z-index: 999;
 }
 
 /* SIDEBAR CLOSE */
@@ -148,6 +154,8 @@ body{
 .main-content{
   flex:1;
   padding:50px;
+  margin-left: 250px;                
+  transition: margin-left 0.4s ease;
 }
 
 /* TOPBAR */
@@ -419,4 +427,55 @@ table td{
 
 .hidden {
     display: none;
+}
+
+/* =======================================
+   🚀 FIX FOR TODAY'S ISSUES CONTAINER 
+   ======================================= */
+
+#TodayIssues {
+  list-style: none;     /* Removes standard ugly browser bullet dots */
+  margin: 20px 0 0 0;   /* Matches the top layout margins of your tables */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;            /* Generates explicit structural spacing between cards */
+  width: 100%;
+}
+
+/* Style rules for the dynamically injected <li> cards */
+#TodayIssues li {
+  background: #f8fafc;  /* Clean, light off-white card background */
+  border-left: 5px solid #6d52ff; /* Elegant purple accent bar matching your theme */
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease;
+}
+
+#TodayIssues li:hover {
+  transform: translateX(4px); /* Interactive response effect matching your side-btn style */
+}
+
+/* Internal typography styling */
+#TodayIssues li strong {
+  font-size: 16px;
+  color: #03113f;       /* Matches your dark sidebar color */
+  font-weight: 600;
+}
+
+#TodayIssues li p {
+  font-size: 14px;
+  color: #4b5563;       /* Balanced gray tone for readability */
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Alignment rules for status badges inside the list items */
+#TodayIssues li span {
+  align-self: flex-start; /* Prevents status badge from stretching across full card width */
+  margin-top: 4px;
 }
