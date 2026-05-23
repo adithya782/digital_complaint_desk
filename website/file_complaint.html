@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>File Complaint</title>
+
+  <link rel="stylesheet" href="file_complaint.css">
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>
+    <i class="fa-solid fa-file-circle-plus"></i>
+    Register Complaint
+  </h1>
+
+  <form id="complaintForm">
+
+    <div class="input-box">
+      <label>Complaint Title</label>
+      <input type="text" placeholder="Enter complaint title" required>
+    </div>
+
+    <div class="input-box">
+      <label>Description</label>
+      <textarea placeholder="Describe your issue" required></textarea>
+    </div>
+
+    <div class="input-box">
+      <label>Department</label>
+
+      <select required>
+        <option value="">Select Department</option>
+        <option>Police</option>
+        <option>Water Supply</option>
+        <option>Electricity</option>
+        <option>Roads & Transport</option>
+        <option>Municipality</option>
+        <option>other</option>
+      </select>
+    </div>
+
+    <!-- LOCATION -->
+
+      <div class="input-box">
+
+        <label>Location</label>
+
+        <div class="location-box">
+            <b>click the button on location</b>
+          <button type="button"
+          class="location-btn"
+          onclick="getLocation()">
+
+            <i class="fa-solid fa-location-dot"></i>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    <div class="input-box">
+      <label>Upload Image</label>
+      <input type="file">
+    </div>
+
+    <div class="input-box">
+      <label>Anonymous Complaint</label>
+
+      <select>
+        <option>No</option>
+        <option>Yes</option>
+      </select>
+    </div>
+
+    <button type="submit" class="submit-btn">
+      Submit Complaint
+    </button>
+
+  </form>
+
+</div>
+
+<script src="file_complaint.js"></script>
+ <script src="config.js"></script>
+<script src="user_dashboard.js"></script>
+
+<script>
+document.getElementById("complaintForm")
+.addEventListener("submit", function(e){
+
+  e.preventDefault();
+
+  alert("Complaint Submitted Successfully!");
+
+  window.location.href = "user_dashboard.html";
+
+});
+</script>
+</body>
+</html>
