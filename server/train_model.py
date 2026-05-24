@@ -79,7 +79,7 @@ def train_model_from_database():
     model_pickle_path = 'complaint_classifier.pkl'
     try:
         with open(model_pickle_path, 'wb') as model_file:
-            pickle.dump(model_pipeline, f"model_file")
+            pickle.dump(model_pipeline, model_file)
         print(f"🚀 Success! Freshly trained intelligence pipeline exported to '{model_pickle_path}'.")
         return True
     except Exception as e:

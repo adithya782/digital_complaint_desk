@@ -1,3 +1,4 @@
+import uuid
 import math
 import pickle
 import os
@@ -7,7 +8,7 @@ from datetime import date, timedelta, datetime, timezone
 from flask_restful import Api, reqparse, marshal_with, fields, Resource
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, get_jwt_identity, JWTManager
 from flask_cors import CORS
-from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction, Office, office_department
+from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction, Office
 from dotenv import load_dotenv
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
@@ -15,7 +16,7 @@ from pathlib import Path
 from supabase import Client, create_client
 from sqlalchemy import func
 from tasks import ai_training
-
+from flask_migrate import Migrate
 
 # env_path = Path(__file__).resolve().parent / '.env'
 # load_dotenv(dotenv_path=env_path)
@@ -51,7 +52,7 @@ db.init_app(app)
 CORS(app, resources={r"/*": {"origins": [r"http://.*", r"https://.*"]}}, supports_credentials=True)
 jwt = JWTManager(app)
 api = Api(app)
-
+migrate = Migrate(app,db)
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/api/auth/google', methods=['POST'])
@@ -400,23 +401,42 @@ def distance_calculate(lat1,long1,lat2,long2):
 class ProcessAndDispatchComplaint(Resource):
     @jwt_required()
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('title', required=True)
-        parser.add_argument('description')
-        parser.add_argument('latitude')
-        parser.add_argument('longitude')
-        parser.add_argument('anonymous', type=bool)
-        data = parser.parse_args()
-        user_id = get_jwt_identity()
-        if not data['description'] or data['latitude'] is None or data['longitude'] is None:
-            return {"message": "Missing required fields: description, Location"}, 400
+        title = request.form.get('title')
+        description = request.form.get('description')
+        latitude = request.form.get('latitude')
+        longitude = request.form.get('longitude')
+        # Handle boolean conversion from form string
+        anonymous = request.form.get('isAnonymous') == 'true'
         
-        c_lat, c_lon = float(data['latitude']), float(data['longitude'])
+        evidence_file = request.files.get('evidence')
+        evidence_url = None
+
+        user_id = get_jwt_identity()
+        if not title or not description or not latitude or not longitude:
+            return {"message": "Missing required fields: title, description, location"}, 400
+        
+        if evidence_file:
+            try:
+                ext = evidence_file.filename.split('.')[-1]
+                unique_filename = f"{uuid.uuid4()}.{ext}"
+
+                supabase_storage.storage.from_('Compliant-evidence').upload(
+                    path=unique_filename,
+                    file=evidence_file.read(),
+                    file_options={"content-type": evidence_file.content_type}
+                )
+                evidence_url = supabase_storage.storage.from_('Compliant-evidence').get_public_url(unique_filename)
+            except Exception as e:
+                return {'message': f"File upload failed: {str(e)}"},500
+        else:
+            evidence_url = None
+        
+        c_lat, c_lon = float(latitude), float(longitude)
 
         try:
             with open('complaint_classifier.pkl', 'rb') as f:
                 model_pipeline = pickle.load(f)
-            predicted_dept = model_pipeline.predict([data['description']])[0]
+            predicted_dept = model_pipeline.predict([description])[0]
         except Exception:
             predicted_dept = "Law, Order & Public Safety"
         
@@ -445,7 +465,7 @@ class ProcessAndDispatchComplaint(Resource):
         low_priority_tokens = ["blinking", "flickering", "paint", "fountain", "weed"]
         high_priority_tokens = ["assaulted", "attack", "transformer", "snapped", "blackout", "fight", "weapon"]
 
-        desc_lower = data['description'].lower()
+        desc_lower = description.lower()
         if any(token in desc_lower for token in high_priority_tokens):
             priority = "High"
             deadline_hours = 24
@@ -465,21 +485,19 @@ class ProcessAndDispatchComplaint(Resource):
                 if load < min_load:
                     min_load = load 
                     assigned_official = staff 
-        if data['anonymous'] == True:
-            id = None 
-        else:
-            id = user_id
+        
 
         new_complaint = Complaint(
-            title=data['title'], 
-            description=data['description'], 
+            title=title, 
+            description=description, 
             department_id=dept.department_id, # Set category explicitly string matched
             latitude=c_lat, 
             longitude=c_lon, 
-            user_id=id, # Stores integer or None (Anonymous safe)
+            user_id=None if anonymous else user_id, # Stores integer or None (Anonymous safe)
             staff_id=assigned_official.staff_id, 
             priority=priority,
-            deadline=datetime.now(timezone.utc) + timedelta(hours=deadline_hours)
+            deadline=datetime.now(timezone.utc) + timedelta(hours=deadline_hours),
+            evidence_url = evidence_url
         )
         
         db.session.add(new_complaint)
@@ -491,7 +509,8 @@ class ProcessAndDispatchComplaint(Resource):
             'office': assigned_office.office_name,
             'distance': round(closest_dist,2),
             'expected_deadline' : new_complaint.deadline.isoformat() ,
-            'tracking_id': new_complaint.complaint_id
+            'tracking_id': new_complaint.complaint_id,
+            'evidence_url':evidence_url
         }           
         
 class VerifyAdmin(Resource):
@@ -580,11 +599,43 @@ class staff_dashboard(Resource):
             }
         }, 200
     
+class createDepartment(Resource):
+    def get(self):
+        departments = Department.query.all()
+        data = []
+        for department in departments:
+            data.append({
+                'department_id': department.department_id,
+                'department_name': department.department_name
+            })
+        return {'message': 'success','departments': data}, 200
+    @jwt_required()
+    def post(self):
+        user_id = get_jwt_identity()
+        claims = get_jwt()
+        role = claims.get('role')
+        if role != UserRole.ADMIN.value:
+            return {"error": 'You cant access this page'}, 403
+
+        parser = reqparse.RequestParser()
+        parser.add_argument('department_name', required=True)
+        data = parser.parse_args()
+        department_name = data.get('department_name')
+
+        new_dept = Department(department_name=department_name)
+        db.session.add(new_dept)
+        db.session.commit()
+        return {'mesage': 'New department created successfully'}, 200
+        
+
+
 app.register_blueprint(auth_bp)
 
 
 api.add_resource(user_dashboard, '/api/user/dashboard')
 api.add_resource(staff_dashboard, '/api/staff/dashboard')
+api.add_resource(ProcessAndDispatchComplaint, '/api/user/complaint')
+api.add_resource(createDepartment, '/api/create/department')
 
 if __name__ == '__main__':
     with app.app_context():

@@ -36,7 +36,7 @@ function handleGoogleCredentialResponse(response) {
     .then(data => {
         if (data.access_token) {
             localStorage.setItem('access_token', data.access_token);
-            
+            let login_as_user;
             if (data.registration_incomplete) {
                 alert("Google Sign-In successful! Please complete your profile next.");
                 localStorage.setItem('temp_oauth_email', data.email)
@@ -46,15 +46,16 @@ function handleGoogleCredentialResponse(response) {
                 alert("Login completely successful!");
                 // if (data.success){
                 if (data.user.role == 'admin'){
-                alert('AUTHENTICATION DONE, It is an admin user');
-                // window.location.href = 'admin_dashboard.html'
+                // alert('AUTHENTICATION DONE, It is an admin user');
+                if (!confirm('Wanna login as USER?'))  window.location.replace('admin_dashboard.html');
+                window.location.replace('user_dashboard.html');
                 }
                 else if (data.user.role == 'staff'){
-                alert('AUTHENTICATION DONE, It is a staff user');
-                // window.location.href = 'staff_dashboard.html'
+                if (!confirm('Wanna login as USER?'))  window.location.replace('staff_dashboard.html');
+                window.location.replace('user_dashboard.html');
                 }
                 else if (data.user.role == 'user'){
-                alert('AUTHENTICATION DONE, It is a common user');
+                alert('Welcome back!');
                 window.location.href = 'user_dashboard.html';
                 // }
                 }
