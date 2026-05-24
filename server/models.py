@@ -40,8 +40,7 @@ class Complaint(db.Model):
     priority = db.Column(db.String(20), default="Medium", nullable=False)
     deadline = db.Column(db.DateTime, nullable=True)
 
-    image_url = db.Column(db.String(500), nullable=True) 
-    video_url = db.Column(db.String(500), nullable=True)
+    evidence_url = db.Column(db.String(500), nullable=True) 
 
     # Location of the complaint
     latitude = db.Column(db.Float, nullable=False)

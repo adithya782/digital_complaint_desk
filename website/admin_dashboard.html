@@ -63,7 +63,7 @@
 
         <i class="fa-solid fa-building"></i>
 
-        <span>Create Department</span>
+        <span>Departments</span>
 
       </button>
 
@@ -304,7 +304,7 @@
           <button class="add-btn"
                   onclick="showDashboard()">
 
-            Back Dashboard
+            Back to Dashboard
 
           </button>
 
@@ -336,6 +336,118 @@
 
       </div>
 
+    </div>
+
+    <div id="createDepartmentPage" style="display:none;">
+
+      <div class="admin-form-box">
+
+        <h2>
+
+          <i class="fa-solid fa-user-plus"></i>
+
+          Create Department
+
+        </h2>
+
+        <form id="departmentForm">
+
+          <div class="input-group">
+            <label>Department Name</label>
+            <input type="text" id="department_name" placeholder="Enter Department Name" required>
+          </div>
+
+          
+
+          <div class="form-buttons">
+            <button type="submit" class="create-btn" onclick="registerDepartment(event)">Create Department</button>
+            <button type="reset" class="reset-btn">Reset</button>
+            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="table-box">
+
+        <div class="department-table-header">
+
+          <h2>List of Departments</h2>
+
+      
+
+        </div>
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+
+              <th>Department Name</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="tableBody">
+            </tbody>
+
+            
+
+        </table>
+
+      </div>
+
+      
+    </div>
+
+    <div id="createOfficePage" style="display:none;">
+
+      <div class="admin-form-box">
+
+        <h2>
+
+          <i class="fa-solid fa-user-plus"></i>
+
+          Office Registration
+
+        </h2>
+
+        <form id="staffForm">
+
+          <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="staffFullname" placeholder="Enter Full Name" required>
+          </div>
+
+          <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="staffEmail" placeholder="Enter Email" required>
+          </div>
+
+          <div class="input-group">
+            <label>Phone Number</label>
+            <input type="tel" id="staffPhone" placeholder="Enter Phone Number" required>
+          </div>
+
+          <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="staffPassword" placeholder="Enter Password" required>
+          </div>
+
+          <div class="form-buttons">
+            <button type="submit" class="create-btn">Create Staff</button>
+            <button type="reset" class="reset-btn">Reset</button>
+            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
+          </div>
+
+        </form>
+
+      </div>
     </div>
 
     <div id="createStaffPage" style="display:none;">
@@ -375,7 +487,7 @@
           <div class="form-buttons">
             <button type="submit" class="create-btn">Create Staff</button>
             <button type="reset" class="reset-btn">Reset</button>
-            <button type="button" class="back-btn" onclick="showDashboard()">Back Dashboard</button>
+            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
           </div>
 
         </form>
@@ -419,7 +531,7 @@
           <div class="form-buttons">
             <button type="submit" class="create-btn" onclick="registerAdmin(event)">Create Admin</button>
             <button type="reset" class="reset-btn" onclick="this.reset()">Reset</button>
-            <button type="button" class="back-btn" onclick="showDashboard()">Back Dashboard</button>
+            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
           </div>
 
         </form>

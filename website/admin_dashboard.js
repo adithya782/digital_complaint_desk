@@ -1,9 +1,9 @@
 
-const access_token = localStorage.getItem('access_token');
-if (!access_token){
-  alert('Please login first');
-  window.location.replace('login.html');
-}
+// const access_token = localStorage.getItem('access_token');
+// if (!access_token){
+//   alert('Please login first');
+//   window.location.replace('login.html');
+// }
 
 // ===========================
 // INITIAL COUNTS
@@ -54,7 +54,13 @@ function showDashboard(){
   document.getElementById("createStaffPage")
   .style.display = "none";
 
+  document.getElementById("createOfficePage")
+  .style.display = "none";
+
   document.getElementById("createAdminPage")
+  .style.display = "none";
+
+  document.getElementById("createDepartmentPage")
   .style.display = "none";
 
   updateDashboardCounts();
@@ -75,6 +81,12 @@ function createStaff(){
   document.getElementById("createAdminPage")
   .style.display = "none";
 
+  document.getElementById("createDepartmentPage")
+  .style.display = "none";
+
+  document.getElementById("createOfficePage")
+  .style.display = "none";
+
   document.getElementById("createStaffPage")
   .style.display = "block";
 }
@@ -92,6 +104,10 @@ function showCreateAdminPage(){
   .style.display = "none";
 
   document.getElementById("createStaffPage")
+  .style.display = "none";
+  document.getElementById("createDepartmentPage")
+  .style.display = "none";
+  document.getElementById("createOfficePage")
   .style.display = "none";
 
   document.getElementById("createAdminPage")
@@ -229,58 +245,58 @@ function showRecords(type){
 // STAFF FORM SUBMIT
 // ===========================
 
-document.getElementById("staffForm")
-.addEventListener("submit", function(e){
+// document.getElementById("staffForm")
+// .addEventListener("submit", function(e){
 
-  e.preventDefault();
+//   e.preventDefault();
 
-  let fullname =
-  document.getElementById("staffFullname").value;
+//   let fullname =
+//   document.getElementById("staffFullname").value;
 
-  let email =
-  document.getElementById("staffEmail").value;
+//   let email =
+//   document.getElementById("staffEmail").value;
 
-  let phone =
-  document.getElementById("staffPhone").value;
+//   let phone =
+//   document.getElementById("staffPhone").value;
 
-  let password =
-  document.getElementById("staffPassword").value;
+//   let password =
+//   document.getElementById("staffPassword").value;
 
-  // UPDATE STAFF COUNT
+//   // UPDATE STAFF COUNT
 
-  staff++;
+//   staff++;
 
-  updateDashboardCounts();
+//   updateDashboardCounts();
 
-  // STORE RECORD
+//   // STORE RECORD
 
-  records.staff.push({
-    name: fullname
-  });
+//   records.staff.push({
+//     name: fullname
+//   });
 
-  // SUCCESS ALERT
+//   // SUCCESS ALERT
 
-  alert(
+//   alert(
 
-    "Staff Created Successfully!\n\n" +
+//     "Staff Created Successfully!\n\n" +
 
-    "Full Name : " + fullname + "\n" +
+//     "Full Name : " + fullname + "\n" +
 
-    "Email : " + email + "\n" +
+//     "Email : " + email + "\n" +
 
-    "Phone : " + phone + "\n" +
+//     "Phone : " + phone + "\n" +
 
-    "Password : " + password
-  );
+//     "Password : " + password
+//   );
 
   // RESET FORM
 
-  this.reset();
+//   this.reset();
 
-  // BACK DASHBOARD
+//   // BACK DASHBOARD
 
-  showDashboard();
-});
+//   showDashboard();
+// });
 
 // ===========================
 // CREATE DEPARTMENT
@@ -288,7 +304,25 @@ document.getElementById("staffForm")
 
 function createDepartment(){
 
-  alert("Department Created");
+  document.getElementById("dashboardPage")
+  .style.display = "none";
+
+  document.getElementById("recordsPage")
+  .style.display = "none";
+
+  document.getElementById("createAdminPage")
+  .style.display = "none";
+
+  document.getElementById("createStaffPage")
+  .style.display = "none";
+
+  document.getElementById("createOfficePage")
+  .style.display = "none";
+  
+  document.getElementById("createDepartmentPage")
+  .style.display = "block";
+
+  listDepartments();
 }
 
 // ===========================
@@ -297,8 +331,23 @@ function createDepartment(){
 
 function createOffice(){
 
-  alert("Office Created");
+  document.getElementById("dashboardPage")
+  .style.display = "none";
+
+  document.getElementById("recordsPage")
+  .style.display = "none";
+
+  document.getElementById("createStaffPage")
+  .style.display = "none";
+  document.getElementById("createDepartmentPage")
+  .style.display = "none";
+  document.getElementById("createAdminPage")
+  .style.display = "none";
+
+  document.getElementById("createOfficePage")
+  .style.display = "block";
 }
+
 
 // ===========================
 // INITIAL LOAD
@@ -382,4 +431,95 @@ function handleLogout() {
   if(!confirm('You sure wanna logout?')) return;
   localStorage.removeItem('access_token');
   window.location.replace('home.html');
+}
+
+function registerDepartment(event){
+  event.preventDefault();
+  const name = document.getElementById('department_name').value.trim();
+  
+  if (!name) {
+    alert("Please fill in the field.");
+    return;
+  }
+  fetch(`${window.API_BASE_URL}/api/department/create`,{
+  method:'POST',
+  headers: {
+    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+  },
+  body: JSON.stringify({
+            'department_name':name
+        })
+})
+.then(res => {
+  // if(!res.ok) throw new Error('Failed to fetch');
+  if (res.status == 401){
+    alert('Please login first');
+    window.location.href = 'login.html'
+  }
+  if (res.status == 403){
+    alert('Forbidden');
+    window.location.href = 'home.html'
+  }
+  return res.json(); 
+})
+.then(data => {
+  if(!data) return;
+  if (data.error){
+    alert(data.error);
+    const form = document.getElementById("adminForm");
+    if (form) {
+      form.reset();
+    }
+  }
+})
+}
+
+function listDepartments(){
+
+    fetch(`${window.API_BASE_URL}/api/department/create`,{
+  method:'GET',
+  headers: {
+    'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true'
+  }
+})
+.then(res => {
+  // if(!res.ok) throw new Error('Failed to fetch');
+  if (res.status == 401){
+    alert('Please login first');
+    window.location.href = 'login.html'
+  }
+  if (res.status == 403){
+    alert('Forbidden');
+    window.location.href = 'home.html'
+  }
+  return res.json(); 
+})
+.then(data => {
+  if(!data) return;
+  if (data.error){
+    console.log(data.error);
+  
+    let table = document.getElementById("tableBody");
+    table.innerHTML = '';
+  data.departments.forEach(department => {
+  
+  
+
+  let row = `
+    <tr>
+      <td>${department.department_id}</td>
+      <td>${department.department_name}</td>
+      
+    </tr>
+  `;
+
+  table.insertAdjacentHTML('beforeend', row);
+  })
+  }
+  
+})
 }
