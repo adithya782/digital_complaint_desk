@@ -48,7 +48,7 @@ class Complaint(db.Model):
 
     resolution = db.relationship('Resolution',backref='original_complaint', uselist=False,lazy=True)
     staff_id = db.Column(db.Integer, db.ForeignKey('staffs.staff_id'), nullable=True,unique=False)
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=True)
 
 class Resolution(db.Model):
     __tablename__ = 'resolutions'
@@ -68,11 +68,12 @@ class Staff(db.Model):
     # phone = db.Column(db.String(20), nullable=True)
     # google_id = db.Column(db.String(255), unique=True, nullable=True)
     # auth_provider = db.Column(db.String(20), nullable=False, default='local')
+    
 
     resolutions = db.relationship('Resolution', backref='staff', lazy=True)
     complaints = db.relationship('Complaint', backref='staff', lazy=True)
-    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=False)
-    office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'), nullable=False)
+    department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id', ondelete='SET NULL'), nullable=True)
+    office_id = db.Column(db.Integer, db.ForeignKey('offices.office_id'), nullable=True)
 
     
 
@@ -80,8 +81,8 @@ class Department(db.Model):
     __tablename__ = 'departments'
     department_id = db.Column(db.Integer, primary_key = True, autoincrement=True)
     department_name = db.Column(db.String(50), unique = True)
-    staffs = db.relationship('Staff', backref='department', lazy=False)
-    complaints = db.relationship('Complaint', backref='department', lazy=False)
+    staffs = db.relationship('Staff', backref='department')
+    complaints = db.relationship('Complaint', backref='department')
     
 
 class Office(db.Model):

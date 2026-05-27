@@ -8,9 +8,10 @@ from sklearn.pipeline import Pipeline
 # Import your Flask app instance, DB context, and models
 # (Adjust the import statement if your main Flask file is named something other than app.py)
 from models import Complaint, Department
+from app import app, db
 
 def train_model_from_database():
-    from app import app, db
+    
 
     print("⏳ Connecting to database and extracting admin-verified training data...")
     

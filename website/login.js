@@ -95,21 +95,28 @@ function login() {
     })
     .then(res => res.json())
     .then(data => {
+        console.log(data);
         if (data.success){
             localStorage.setItem('access_token', data.access_token);
             if (data.role == 'admin'){
-            alert('AUTHENTICATION DONE, It is an admin user');
+            // alert('AUTHENTICATION DONE, It is an admin user');
+            if(confirm('Wanna login as user?')){ window.location.replace('user_dashboard.html');}
+            else{
             window.location.href = 'admin_dashboard.html'
             }
+            }
             if (data.role == 'staff'){
-            alert('AUTHENTICATION DONE, It is a staff user');
-            // window.location.href = 'staff_dashboard.html'
+                if(confirm('Wanna login as user?')){ window.location.replace('user_dashboard.html');}
+                else{
+                window.location.href = 'staff_dashboard.html'
+                }
             }
             if (data.role == 'user'){
             alert('AUTHENTICATION DONE, It is a common user');
             window.location.href = 'user_dashboard.html';
             }
         }
+        
         else{
             alert(data.error || data.message)
         }
