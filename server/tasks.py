@@ -1,5 +1,6 @@
 from celery import Celery
 from train_model import train_model_from_database
+from celery.schedules import crontab
 
 celery_app = Celery('tasks', broker = 'redis://localhost:6379/0', backend='redis://localhost:6379/1')
 
@@ -9,3 +10,10 @@ def ai_training():
     success = train_model_from_database()
     print(f"🤖 Celery Worker: Training completed with status: {success}")
     return success
+
+celery_app.conf.beat_schedule = {
+    'train-model-every-10-minutes': {
+        'task': 'tasks.ai_training',
+        'schedule': crontab(minute='*/10'), 
+    },
+}

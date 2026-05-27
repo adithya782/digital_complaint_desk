@@ -124,23 +124,36 @@ document.addEventListener('DOMContentLoaded', () => {
 // 3. ASYNC REMOTE API ACCESS ENGINE
 // ==========================================
 function triggerLiveDashboardFetch() {
-  fetch(`${window.API_BASE_URL || 'http://localhost:5000'}/api/staff/dashboard`, {
+  fetch(`${window.API_BASE_URL}/api/staff/dashboard`, {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + access_token,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
     }
   })
-  .then(res => res.json())
+  .then(res =>  {
+  // if(!res.ok) throw new Error('Failed to fetch');
+  if (res.status == 401){
+    alert('Please login first');
+    window.location.href = 'login.html'
+  }
+  if (res.status == 403){
+    alert('Forbidden');
+    window.location.href = 'home.html'
+  }
+  return res.json(); 
+})
   .then(data => {
+    console.log(data);
     if (data && data.slots && data.slots.todays_focus_slot) {
       const complaintsContainer = document.getElementById('TodayIssues');
       const nameElement = document.getElementById('dashboardUsername');
       const staff_id = document.getElementById('staff_id');
       const department = document.getElementById('department');
       
-      if (staff_id && data.staff_id) nameElement.innerText = data.staff_id;
-      if (department && data.department) nameElement.innerText = data.department;
+      if (staff_id && data.staff_id) staff_id.innerText = data.staff_id;
+      if (department && data.department) department.innerText = data.department;
       if (nameElement && data.fullname) nameElement.innerText = data.fullname;
       
       if (complaintsContainer) {

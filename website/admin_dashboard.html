@@ -1,547 +1,566 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
-<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <meta charset="UTF-8">
+    <title>Advanced Admin Dashboard</title>
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <!-- CSS -->
+    <link rel="stylesheet" href="admin_dashboard.css" />
 
-  <title>Advanced Admin Dashboard</title>
+    <!-- FONT AWESOME -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  </head>
 
-  <!-- CSS -->
-  <link rel="stylesheet"
-        href="admin_dashboard.css">
+  <body>
+    <!-- SIDEBAR -->
 
-  <!-- FONT AWESOME -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <div class="sidebar" id="sidebar">
+      <div class="logo-area">
+        <div class="logo">
+          <i class="fa-solid fa-shield-halved"></i>
 
-</head>
+          <span class="logo-text"> Admin Dashboard </span>
+        </div>
 
-<body>
-
-  <!-- SIDEBAR -->
-
-  <div class="sidebar" id="sidebar">
-
-    <div class="logo-area">
-
-      <div class="logo">
-
-        <i class="fa-solid fa-shield-halved"></i>
-
-        <span class="logo-text">
-          Admin Dashboard
-        </span>
-
+        <button class="toggle-btn" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <button class="toggle-btn"
-              onclick="toggleSidebar()">
+      <!-- MENU -->
 
-        <i class="fa-solid fa-bars"></i>
+      <div class="menu">
+        <button onclick="showDashboard()">
+          <i class="fa-solid fa-house"></i>
 
-      </button>
+          <span>Dashboard</span>
+        </button>
 
-    </div>
+        <button onclick="createDepartment()">
+          <i class="fa-solid fa-building"></i>
 
-    <!-- MENU -->
+          <span>Departments</span>
+        </button>
 
-    <div class="menu">
+        <button onclick="createOffice()">
+          <i class="fa-solid fa-briefcase"></i>
 
-      <button onclick="showDashboard()">
+          <span>Offices</span>
+        </button>
 
-        <i class="fa-solid fa-house"></i>
+        <button onclick="createStaff()">
+          <i class="fa-solid fa-user-plus"></i>
 
-        <span>Dashboard</span>
+          <span>Create Staff</span>
+        </button>
 
-      </button>
+        <button onclick="editStaff()">
+          <i class="fa-solid fa-user-minus"></i>
 
-      <button onclick="createDepartment()">
+          <span>Edit Staffs</span>
+        </button>
 
-        <i class="fa-solid fa-building"></i>
+        <button onclick="showCreateAdminPage()">
+          <i class="fa-solid fa-user-shield"></i>
 
-        <span>Departments</span>
+          <span>Create Admin</span>
+        </button>
 
-      </button>
-
-      <button onclick="createOffice()">
-
-        <i class="fa-solid fa-briefcase"></i>
-
-        <span>Create Office</span>
-
-      </button>
-
-      <button onclick="createStaff()">
-
-        <i class="fa-solid fa-user-plus"></i>
-
-        <span>Create Staff</span>
-
-      </button>
-
-      <button onclick="removeStaff()">
-
-        <i class="fa-solid fa-user-minus"></i>
-
-        <span>Remove Staff</span>
-
-      </button>
-
-      <button onclick="showCreateAdminPage()">
-
-        <i class="fa-solid fa-user-shield"></i>
-
-        <span>Create Admin</span>
-
-      </button>
-
-      <button onclick="verifyAI()">
+        <!-- <button onclick="verifyAI()">
 
         <i class="fa-solid fa-robot"></i>
 
         <span>Verify AI</span>
 
-      </button>
+      </button> -->
 
-      <button onclick="auditResolution()">
-
-        <i class="fa-solid fa-clipboard-check"></i>
-
-        <span>Audit Resolutions</span>
-
-      </button>
-
-      <button onclick="handleLogout()" style="margin-top: 30px; color: #e53935;">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        <span>Logout</span>
-      </button>
-
-    </div>
-
-  </div>
-
-  <!-- MAIN CONTENT -->
-
-  <div class="main-content">
-
-    <!-- TOPBAR -->
-
-    <div class="topbar">
-
-      <div>
-
-        <h1>Admin Dashboard</h1>
-
-        <p>Advanced Management System</p>
-
-      </div>
-
-      <div class="profile">
-        <img src="https://i.pravatar.cc/40" alt="">
-        <span id="fullname">Super Admin</span>
-      </div>
-
-    </div>
-
-    <!-- DASHBOARD PAGE -->
-
-    <div id="dashboardPage">
-
-      <!-- CARDS -->
-
-      <div class="cards">
-
-        <!-- STAFF -->
-
-        <div class="card purple clickable-card"
-             onclick="showRecords('staff')">
-
-          <i class="fa-solid fa-users"></i>
-
-          <h2 id="staffCount">120</h2>
-
-          <p>Total Staff</p>
-
-        </div>
-
-        <!-- ADMIN -->
-
-        <div class="card blue clickable-card"
-             onclick="showRecords('admin')">
-
-          <i class="fa-solid fa-user-shield"></i>
-
-          <h2 id="adminCount">15</h2>
-
-          <p>Total Admins</p>
-
-        </div>
-
-        <!-- AI -->
-
-        <div class="card green clickable-card"
-             onclick="showRecords('ai')">
-
-          <i class="fa-solid fa-robot"></i>
-
-          <h2 id="verifyCount">340</h2>
-
-          <p>AI Verified</p>
-
-        </div>
-
-        <!-- AUDITS -->
-
-        <div class="card orange clickable-card"
-             onclick="showRecords('audit')">
-
+        <button onclick="auditResolution()">
           <i class="fa-solid fa-clipboard-check"></i>
 
-          <h2 id="auditCount">28</h2>
+          <span>Audit Resolutions</span>
+        </button>
 
-          <p>Audit Reports</p>
-
-        </div>
-
+        <button
+          onclick="handleLogout()"
+          style="margin-top: 30px; color: #e53935"
+        >
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </button>
       </div>
-
-      <!-- TABLE -->
-
-      <div class="table-box">
-
-        <div class="table-header">
-
-          <h2>AI Verification Logs</h2>
-
-          <button class="add-btn"
-                  onclick="addNewRow()">
-
-            + Add Record
-
-          </button>
-
-        </div>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>ID</th>
-
-              <th>Classification</th>
-
-              <th>Status</th>
-
-              <th>Reviewer</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="tableBody">
-
-            <tr>
-
-              <td>#1001</td>
-
-              <td>Fraud Detection</td>
-
-              <td>
-                <span class="verified">
-                  Verified
-                </span>
-              </td>
-
-              <td>Admin A</td>
-
-            </tr>
-
-            <tr>
-
-              <td>#1002</td>
-
-              <td>Image Analysis</td>
-
-              <td>
-                <span class="pending">
-                  Pending
-                </span>
-              </td>
-
-              <td>Admin B</td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
     </div>
 
-    <!-- RECORDS PAGE -->
+    <!-- MAIN CONTENT -->
 
-    <div id="recordsPage"
-         style="display:none;">
+    <div class="main-content">
+      <!-- TOPBAR -->
 
-      <div class="table-box">
+      <div class="topbar">
+        <div>
+          <h1>Admin Dashboard</h1>
 
-        <div class="table-header">
+          <p>Advanced Management System</p>
+        </div>
 
-          <h2 id="recordTitle">
+        <div class="profile">
+          <img src="https://i.pravatar.cc/40" alt="" />
+          <span id="fullname">Super Admin</span>
+        </div>
+      </div>
 
-            Records
+      <!-- DASHBOARD PAGE -->
 
+      <div id="dashboardPage">
+        <!-- CARDS -->
+
+        <div class="cards">
+          <!-- STAFF -->
+
+          <div
+            class="card purple clickable-card"
+            onclick="showRecords('staff')"
+          >
+            <i class="fa-solid fa-users"></i>
+
+            <h2 id="staffCount">120</h2>
+
+            <p>Total Staff</p>
+          </div>
+
+          <!-- ADMIN -->
+
+          <div class="card blue clickable-card" onclick="showRecords('admin')">
+            <i class="fa-solid fa-user-shield"></i>
+
+            <h2 id="adminCount">15</h2>
+
+            <p>Total Admins</p>
+          </div>
+
+          <!-- AI -->
+
+          <div class="card green clickable-card" onclick="showRecords('ai')">
+            <i class="fa-solid fa-robot"></i>
+
+            <h2 id="verifyCount">340</h2>
+
+            <p>AI Verified</p>
+          </div>
+
+          <!-- AUDITS -->
+
+          <div
+            class="card orange clickable-card"
+            onclick="showRecords('audit')"
+          >
+            <i class="fa-solid fa-clipboard-check"></i>
+
+            <h2 id="auditCount">28</h2>
+
+            <p>Audit Reports</p>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-box">
+          <div class="table-header">
+            <h2 id="aiTitle">AI Verification Logs</h2>
+            <div>
+              <button class="add-btn" onclick="fetchAI(false)">View All</button>
+              <button class="add-btn" onclick="fetchAI(true)">
+                Pending Only
+              </button>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+
+                <th>Classification</th>
+
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="tableBody">
+              <tr>
+                <td>#1001</td>
+
+                <td>Fraud Detection</td>
+
+                <td>
+                  <span class="verified"> Verified </span>
+                </td>
+
+                <td>Admin A</td>
+              </tr>
+
+              <tr>
+                <td>#1002</td>
+
+                <td>Image Analysis</td>
+
+                <td>
+                  <span class="pending"> Pending </span>
+                </td>
+
+                <td>Admin B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RECORDS PAGE -->
+
+      <div id="recordsPage" style="display: none">
+        <div class="table-box">
+          <div class="table-header">
+            <h2 id="recordTitle">Records</h2>
+
+            <button class="add-btn" onclick="showDashboard()">
+              Back to Dashboard
+            </button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+
+                <th>Name</th>
+
+                <th>Status</th>
+
+                <th>Department</th>
+              </tr>
+            </thead>
+
+            <tbody id="recordsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="createDepartmentPage" style="display: none">
+        <div class="admin-form-box">
+          <h2>
+            <i class="fa-solid fa-user-plus"></i>
+
+            Create Department
           </h2>
 
-          <button class="add-btn"
-                  onclick="showDashboard()">
+          <form id="departmentForm">
+            <div class="input-group">
+              <label>Department Name</label>
+              <input
+                type="text"
+                id="department_name"
+                placeholder="Enter Department Name"
+                required
+              />
+            </div>
 
-            Back to Dashboard
-
-          </button>
-
+            <div class="form-buttons">
+              <button
+                type="button"
+                class="create-btn"
+                onclick="registerDepartment(event)"
+              >
+                Create Department
+              </button>
+              <button type="reset" class="reset-btn">Reset</button>
+              <button type="button" class="back-btn" onclick="showDashboard()">
+                Back to Dashboard
+              </button>
+            </div>
+          </form>
         </div>
 
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>ID</th>
-
-              <th>Name</th>
-
-              <th>Status</th>
-
-              <th>Department</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="recordsTable">
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-    <div id="createDepartmentPage" style="display:none;">
-
-      <div class="admin-form-box">
-
-        <h2>
-
-          <i class="fa-solid fa-user-plus"></i>
-
-          Create Department
-
-        </h2>
-
-        <form id="departmentForm">
-
-          <div class="input-group">
-            <label>Department Name</label>
-            <input type="text" id="department_name" placeholder="Enter Department Name" required>
+        <div class="table-box">
+          <div class="department-table-header">
+            <h2>List of Departments</h2>
           </div>
 
-          
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
 
-          <div class="form-buttons">
-            <button type="submit" class="create-btn" onclick="registerDepartment(event)">Create Department</button>
-            <button type="reset" class="reset-btn">Reset</button>
-            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
-          </div>
+                <th>Department Name</th>
+              </tr>
+            </thead>
 
-        </form>
-
-      </div>
-
-      <div class="table-box">
-
-        <div class="department-table-header">
-
-          <h2>List of Departments</h2>
-
-      
-
+            <tbody id="departmenttableBody"></tbody>
+          </table>
         </div>
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>ID</th>
-
-              <th>Department Name</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="tableBody">
-            </tbody>
-
-            
-
-        </table>
-
       </div>
 
-      
+      <div id="createOfficePage" style="display: none">
+        <div class="admin-form-box">
+          <h2>
+            <i class="fa-solid fa-user-plus"></i>
+
+            Office Registration
+          </h2>
+
+          <form id="officeForm">
+            <div class="input-group">
+              <label>Office Name</label>
+              <input
+                type="text"
+                id="office_name"
+                placeholder="Enter Office Name"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Office Location (Coordinates)</label>
+              <div style="display: flex; gap: 10px">
+                <input
+                  type="text"
+                  id="office_lat"
+                  placeholder="Latitude"
+                  readonly
+                  required
+                />
+                <input
+                  type="text"
+                  id="office_lon"
+                  placeholder="Longitude"
+                  readonly
+                  required
+                />
+                <button type="button" onclick="getOfficeLocation()">
+                  Get GPS
+                </button>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label>Assign Departments</label>
+              <div
+                id="department-checklist"
+                style="
+                  border: 1px solid #ccc;
+                  padding: 10px;
+                  max-height: 150px;
+                  overflow-y: auto;
+                "
+              ></div>
+            </div>
+
+            <div class="form-buttons">
+              <button type="submit" class="create-btn">Create Office</button>
+              <button type="reset" class="reset-btn">Reset</button>
+              <button type="button" class="back-btn" onclick="showDashboard()">
+                Back to Dashboard
+              </button>
+            </div>
+          </form>
+        </div>
+        <div
+          id="officeMap"
+          style="
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border: 2px solid #ccc;
+          "
+        ></div>
+      </div>
+
+      <div id="createStaffPage" style="display: none">
+        <input type="hidden" id="selectedOfficeId" />
+
+        <div class="admin-form-box">
+          <h2>
+            <i class="fa-solid fa-user-plus"></i>
+
+            Staff Registration
+          </h2>
+
+          <form id="staffForm">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                id="staffFullname"
+                placeholder="Enter Full Name"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                id="staffEmail"
+                placeholder="Enter Email"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Phone Number</label>
+              <input
+                type="tel"
+                id="staffPhone"
+                placeholder="Enter Phone Number"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Select Department</label>
+              <select id="staffDepartment" onchange="loadOfficesForDept()">
+                <option value="">-- Choose Department --</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label>Select Office on Map</label>
+              <div
+                id="office-map"
+                style="height: 300px; width: 100%; border: 1px solid #ccc"
+              ></div>
+            </div>
+
+            <div class="input-group">
+              <label>Password</label>
+              <input
+                type="password"
+                id="staffPassword"
+                placeholder="Enter Password"
+                required
+              />
+            </div>
+
+            <div class="form-buttons">
+              <button type="submit" class="create-btn">Create Staff</button>
+              <button type="reset" class="reset-btn">Reset</button>
+              <button type="button" class="back-btn" onclick="showDashboard()">
+                Back to Dashboard
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="EditStaffPage" style="display: none">
+        <div class="admin-form-box">
+          <h2>
+            <i class="fa-solid fa-user-plus"></i>
+
+            Staffs
+          </h2>
+          <div class="table-box">
+            <div class="table-header">
+              <h2 id="StaffsTitle">STAFFS</h2>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>NAME</th>
+                  <th>DEPARTMENT</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody id="editstafftableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="createAdminPage" style="display: none">
+        <div class="admin-form-box">
+          <h2>
+            <i class="fa-solid fa-user-shield"></i>
+
+            Admin Registration
+          </h2>
+
+          <form id="adminForm">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                id="fullname"
+                placeholder="Enter Full Name"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter Email"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="Enter Phone Number"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Password</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter Password"
+                required
+              />
+            </div>
+
+            <div class="form-buttons">
+              <button
+                type="submit"
+                class="create-btn"
+                onclick="registerAdmin(event)"
+              >
+                Create Admin
+              </button>
+              <button type="reset" class="reset-btn" onclick="this.reset()">
+                Reset
+              </button>
+              <button type="button" class="back-btn" onclick="showDashboard()">
+                Back to Dashboard
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div id="createOfficePage" style="display:none;">
-
-      <div class="admin-form-box">
-
-        <h2>
-
-          <i class="fa-solid fa-user-plus"></i>
-
-          Office Registration
-
-        </h2>
-
-        <form id="staffForm">
-
-          <div class="input-group">
-            <label>Full Name</label>
-            <input type="text" id="staffFullname" placeholder="Enter Full Name" required>
-          </div>
-
-          <div class="input-group">
-            <label>Email Address</label>
-            <input type="email" id="staffEmail" placeholder="Enter Email" required>
-          </div>
-
-          <div class="input-group">
-            <label>Phone Number</label>
-            <input type="tel" id="staffPhone" placeholder="Enter Phone Number" required>
-          </div>
-
-          <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="staffPassword" placeholder="Enter Password" required>
-          </div>
-
-          <div class="form-buttons">
-            <button type="submit" class="create-btn">Create Staff</button>
-            <button type="reset" class="reset-btn">Reset</button>
-            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
-          </div>
-
-        </form>
-
-      </div>
-    </div>
-
-    <div id="createStaffPage" style="display:none;">
-
-      <div class="admin-form-box">
-
-        <h2>
-
-          <i class="fa-solid fa-user-plus"></i>
-
-          Staff Registration
-
-        </h2>
-
-        <form id="staffForm">
-
-          <div class="input-group">
-            <label>Full Name</label>
-            <input type="text" id="staffFullname" placeholder="Enter Full Name" required>
-          </div>
-
-          <div class="input-group">
-            <label>Email Address</label>
-            <input type="email" id="staffEmail" placeholder="Enter Email" required>
-          </div>
-
-          <div class="input-group">
-            <label>Phone Number</label>
-            <input type="tel" id="staffPhone" placeholder="Enter Phone Number" required>
-          </div>
-
-          <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="staffPassword" placeholder="Enter Password" required>
-          </div>
-
-          <div class="form-buttons">
-            <button type="submit" class="create-btn">Create Staff</button>
-            <button type="reset" class="reset-btn">Reset</button>
-            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
-          </div>
-
-        </form>
-
-      </div>
-      
-    </div> <div id="createAdminPage" style="display:none;">
-
-      <div class="admin-form-box">
-
-        <h2>
-
-          <i class="fa-solid fa-user-shield"></i>
-
-          Admin Registration
-
-        </h2>
-
-        <form id="adminForm">
-
-          <div class="input-group">
-            <label>Full Name</label>
-            <input type="text" id="fullname" placeholder="Enter Full Name" required>
-          </div>
-
-          <div class="input-group">
-            <label>Email Address</label>
-            <input type="email" id="email" placeholder="Enter Email" required>
-          </div>
-
-          <div class="input-group">
-            <label>Phone Number</label>
-            <input type="tel" id="phone" placeholder="Enter Phone Number" required>
-          </div>
-
-          <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="Enter Password" required>
-          </div>
-
-          <div class="form-buttons">
-            <button type="submit" class="create-btn" onclick="registerAdmin(event)">Create Admin</button>
-            <button type="reset" class="reset-btn" onclick="this.reset()">Reset</button>
-            <button type="button" class="back-btn" onclick="showDashboard()">Back to Dashboard</button>
-          </div>
-
-        </form>
-
-      </div>
-
-    </div> </div> 
     <script src="config.js"></script>
     <script src="admin_dashboard.js"></script>
-
-</body>
-
+  </body>
 </html>

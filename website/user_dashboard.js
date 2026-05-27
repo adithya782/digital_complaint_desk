@@ -105,6 +105,7 @@ fetch(`${window.API_BASE_URL}/api/user/dashboard`,{
   if (res.status == 403){
     alert('Forbidden');
     window.location.href = 'home.html'
+    localStorage.removeItem('acccess_token');
   }
   return res.json(); 
 })
