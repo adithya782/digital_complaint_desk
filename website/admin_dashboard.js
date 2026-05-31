@@ -882,32 +882,51 @@ function fetchAI(onlyPending) {
         // Inside your complaints.forEach loop:
         const isProcessed = item.is_verified;
 
+        // Inside your complaints.forEach loop:
+
+        // 1. Get the AI suggestion (assuming the field is item.ai_department_id)
+        const aiSuggestedId = item.ai_department_id;
+
         tbody.innerHTML += `
     <tr>
         <td>#${item.complaint_id}</td>
         <td>${item.title}</td>
         <td>${item.description}</td>
         <td>
-            ${
-              isProcessed
-                ? departments.find(
-                    (d) => d.department_id === item.department_id,
-                  )?.department_name || "Unknown Dept"
-                : `
-                <select id="deptSelect-${item.complaint_id}">
-                    <option value="">Select Dept</option>
-                    ${departments.map((d) => `<option value="${d.department_id}">${d.department_name}</option>`).join("")}
-                </select>
-            `
-            }
-        </td>
+    ${
+      isProcessed
+        ? // If processed, show text directly
+          `<span>${
+            departments.find((d) => d.department_id === item.department_id)
+              ?.department_name || "Unknown Dept"
+          }</span>`
+        : // If not processed, show the pre-selected dropdown
+          `<select id="deptSelect-${item.complaint_id}">
+            <option value="">Select Dept</option>
+            ${departments
+              .map(
+                (d) =>
+                  `<option value="${d.department_id}" ${
+                    d.department_id === item.department_id ? "selected" : ""
+                  }>
+                    ${d.department_name}
+                </option>`,
+              )
+              .join("")}
+          </select>`
+    }
+</td>
         <td>
             <span class="${isProcessed ? "verified" : "pending"}">
                 ${isProcessed ? "Processed" : "Pending Verification"}
             </span>
         </td>
         <td>
-            ${isProcessed ? "---" : `<button onclick="submitVerification(${item.complaint_id})">Submit</button>`}
+            ${
+              isProcessed
+                ? "---"
+                : `<button onclick="submitVerification(${item.complaint_id})">Confirm / Submit</button>`
+            }
         </td>
     </tr>
 `;

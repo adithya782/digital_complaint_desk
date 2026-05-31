@@ -267,8 +267,20 @@ def register_staff():
         
         try:
             existing_user.role=UserRole.STAFF.value
-            staff = Staff(user_id = existing_user.user_id, department_id = data['department_id'], office_id = data['office_id'])
-            db.session.add(staff)
+            staff_record = Staff.query.filter_by(user_id=existing_user.user_id).first()
+            
+            if staff_record:
+                # If they exist, just update their details
+                staff_record.department_id = data['department_id']
+                staff_record.office_id = data['office_id']
+            else:
+                # If they don't have a record, create a new one
+                new_staff = Staff(
+                    user_id=existing_user.user_id,
+                    department_id=data['department_id'],
+                    office_id=data['office_id']
+                )
+                db.session.add(new_staff)
             db.session.commit()
             return jsonify({'success':True, 'message': f"Existing user '{existing_user.fullname}' has been successfully upgraded to Staff."}),200
         except Exception as e:
