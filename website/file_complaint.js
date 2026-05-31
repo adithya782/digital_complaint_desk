@@ -204,3 +204,82 @@ async function fileComplaint(e) {
 
 // Bind to your form
 document.getElementById("complaintForm").addEventListener("submit", fileComplaint);
+
+async function fileComplaint(e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append('title', document.getElementById('title').value);
+    formData.append('description', document.getElementById('description').value);
+    formData.append('latitude', document.getElementById('latitude').value);
+    formData.append('longitude', document.getElementById('longitude').value);
+    formData.append('isAnonymous', document.getElementById('isAnonymous').value);
+
+    const fileInput = document.getElementById('evidence');
+
+    if (fileInput.files.length > 0) {
+        formData.append('evidence', fileInput.files[0]);
+    }
+
+    try {
+
+        const response = await fetch(
+            `${window.API_BASE_URL}/api/user/complaint`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization':
+                        'Bearer ' + localStorage.getItem('access_token'),
+                    'ngrok-skip-browser-warning': 'true'
+                },
+                body: formData
+            }
+        );
+
+        const result = await response.json();
+
+        if (response.ok) {
+
+            // Save locally for Staff Dashboard
+            const complaintData = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value,
+                anonymous: document.getElementById('isAnonymous').value,
+                status: "Pending"
+            };
+
+            let complaints =
+                JSON.parse(localStorage.getItem("complaints")) || [];
+
+            complaints.push(complaintData);
+
+            localStorage.setItem(
+                "complaints",
+                JSON.stringify(complaints)
+            );
+
+            alert("Complaint submitted successfully!");
+
+            window.location.href = "user_dashboard.html";
+
+        } else {
+
+            alert("Error: " + result.message);
+
+        }
+
+    } catch (err) {
+
+        console.error("Submission failed", err);
+
+        alert("Failed to submit complaint.");
+
+    }
+}
+
+document
+    .getElementById("complaintForm")
+    .addEventListener("submit", fileComplaint);
