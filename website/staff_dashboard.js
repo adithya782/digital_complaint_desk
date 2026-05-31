@@ -292,7 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
     li.innerHTML = `
     <div class="complaint-title">
         <strong>${complaint.title}</strong>
-           <small>Anonymous: ${complaint.anonymous}</small>
+        <p>Topic: ${complaint.topic || "General"}</p>
+       <small>Anonymous: ${complaint.anonymous}</small>
     </div>
 
     <div class="complaint-body" style="display:none;">
