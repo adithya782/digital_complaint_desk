@@ -286,13 +286,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const complaints =
         JSON.parse(localStorage.getItem("complaints")) || [];
 
-    const detailsBox =
-        document.getElementById("complaintDetails");
+   // const detailsBox =
+     //   document.getElementById("complaintDetails");
 
     const issuesList =
         document.getElementById("TodayIssues");
 
-    if (!issuesList || !detailsBox) return;
+   //if (!issuesList || !detailsBox) return;
 
     console.log("Saved complaints:", complaints);
 
@@ -313,17 +313,35 @@ document.addEventListener("DOMContentLoaded", () => {
         const li = document.createElement("li");
 
         li.innerHTML = `
-            <div>
-                <strong>${complaint.title}</strong>
-            </div>
-            <p>${complaint.description}</p>
-            <span class="pending">${complaint.status}</span>
-        `;
+    <div class="complaint-header">
+        <strong>${complaint.title}</strong>
+    </div>
 
+    <div class="complaint-short">
+        <p>${complaint.description}</p>
+        <span class="pending">${complaint.status}</span>
+    </div>
+
+    <div class="complaint-full">
+        <hr>
+
+        <p><b>Title:</b> ${complaint.title}</p>
+
+        <p><b>Description:</b> ${complaint.description}</p>
+
+        <p><b>Latitude:</b> ${complaint.latitude || "-"}</p>
+
+        <p><b>Longitude:</b> ${complaint.longitude || "-"}</p>
+
+        <p><b>Anonymous:</b> ${complaint.anonymous || "false"}</p>
+
+        <p><b>Status:</b> ${complaint.status || "Pending"}</p>
+    </div>
+`;
         li.style.cursor = "pointer";
 
-        li.addEventListener("click", () => {
-
+       li.addEventListener("click", () => {
+        li.classList.toggle("expanded");
             detailsBox.innerHTML = `
                 <h3>Complaint Details</h3>
 
