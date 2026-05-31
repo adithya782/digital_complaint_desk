@@ -495,3 +495,28 @@ table td{
     border-radius:8px;
     border-left:4px solid #6c63ff;
 }
+#TodayIssues li{
+    background:#fff;
+    padding:15px;
+    margin-bottom:10px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:all 0.4s ease;
+    overflow:hidden;
+}
+
+#TodayIssues li.expanded{
+    transform:scale(1.02);
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);
+}
+
+.complaint-full{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.4s ease;
+}
+
+#TodayIssues li.expanded .complaint-full{
+    max-height:500px;
+    margin-top:10px;
+}
