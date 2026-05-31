@@ -277,107 +277,56 @@ function logout() {
   localStorage.removeItem('access_token');
   window.location.replace('home.html');
 }
-// ==========================================
-// LOCAL STORAGE COMPLAINTS
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const complaints =
         JSON.parse(localStorage.getItem("complaints")) || [];
 
-   // const detailsBox =
-     //   document.getElementById("complaintDetails");
-
     const issuesList =
         document.getElementById("TodayIssues");
 
-   //if (!issuesList || !detailsBox) return;
-
-    console.log("Saved complaints:", complaints);
-
-    // Show message when no complaint exists
-    if (complaints.length === 0) {
-
-        detailsBox.innerHTML = `
-            <h3>Complaint Details</h3>
-            <p>No complaints available.</p>
-        `;
-
-        return;
-    }
-
-    // Add complaints to Today's Issues
-    complaints.forEach((complaint) => {
+    complaints.forEach((complaint, index) => {
 
         const li = document.createElement("li");
 
-        li.innerHTML = `
-    <div class="complaint-header">
+    li.innerHTML = `
+    <div class="complaint-title">
         <strong>${complaint.title}</strong>
+           <small>Anonymous: ${complaint.anonymous}</small>
     </div>
 
-    <div class="complaint-short">
-        <p>${complaint.description}</p>
-        <span class="pending">${complaint.status}</span>
-    </div>
-
-    <div class="complaint-full">
-        <hr>
-
-        <p><b>Title:</b> ${complaint.title}</p>
-
+    <div class="complaint-body" style="display:none;">
+        <p><b>Topic:</b> ${complaint.title}</p>
         <p><b>Description:</b> ${complaint.description}</p>
-
-        <p><b>Latitude:</b> ${complaint.latitude || "-"}</p>
-
-        <p><b>Longitude:</b> ${complaint.longitude || "-"}</p>
-
-        <p><b>Anonymous:</b> ${complaint.anonymous || "false"}</p>
-
-        <p><b>Status:</b> ${complaint.status || "Pending"}</p>
+        <p><b>Latitude:</b> ${complaint.latitude}</p>
+        <p><b>Longitude:</b> ${complaint.longitude}</p>
+        <p><b>Anonymous:</b> ${complaint.anonymous}</p>
+        <p><b>Status:</b> ${complaint.status}</p>
     </div>
 `;
+
         li.style.cursor = "pointer";
 
-       li.addEventListener("click", () => {
-        li.classList.toggle("expanded");
-            detailsBox.innerHTML = `
-                <h3>Complaint Details</h3>
+        li.addEventListener("click", () => {
 
-                <p><b>Title:</b> ${complaint.title}</p>
+            document
+                .querySelectorAll(".complaint-body")
+                .forEach(body => {
+                    if (body !== li.querySelector(".complaint-body")) {
+                        body.style.display = "none";
+                    }
+                });
 
-                <p><b>Description:</b> ${complaint.description}</p>
+            const body =
+                li.querySelector(".complaint-body");
 
-                <p><b>Latitude:</b> ${complaint.latitude || "-"}</p>
-
-                <p><b>Longitude:</b> ${complaint.longitude || "-"}</p>
-
-                <p><b>Anonymous:</b> ${complaint.anonymous || "false"}</p>
-
-                <p><b>Status:</b> ${complaint.status || "Pending"}</p>
-            `;
+            body.style.display =
+                body.style.display === "block"
+                    ? "none"
+                    : "block";
         });
 
         issuesList.appendChild(li);
     });
 
-    // Show first complaint automatically
-    const firstComplaint = complaints[0];
-
-    detailsBox.innerHTML = `
-        <h3>Complaint Details</h3>
-
-        <p><b>Title:</b> ${firstComplaint.title}</p>
-
-        <p><b>Description:</b> ${firstComplaint.description}</p>
-
-        <p><b>Latitude:</b> ${firstComplaint.latitude || "-"}</p>
-
-        <p><b>Longitude:</b> ${firstComplaint.longitude || "-"}</p>
-
-        <p><b>Anonymous:</b> ${firstComplaint.anonymous || "false"}</p>
-
-        <p><b>Status:</b> ${firstComplaint.status || "Pending"}</p>
-    `;
 });
