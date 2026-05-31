@@ -479,3 +479,19 @@ table td{
   align-self: flex-start; /* Prevents status badge from stretching across full card width */
   margin-top: 4px;
 }
+#complaintDetails{
+    margin-top:15px;
+    padding:15px;
+    background:#ffffff;
+    border-radius:10px;
+    border:1px solid #ddd;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+#TodayIssues li{
+    padding:12px;
+    margin-bottom:10px;
+    background:#fff;
+    border-radius:8px;
+    border-left:4px solid #6c63ff;
+}
