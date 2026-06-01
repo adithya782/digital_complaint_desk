@@ -13,6 +13,15 @@ export default function AdminLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="department"
+        options={{
+          title: "Departments",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="building" size={20} color={color} solid />
+          ),
+        }}
+      />
       {/* <Tabs.Screen
         name="staff"
         options={{
