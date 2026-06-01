@@ -277,6 +277,8 @@ function logout() {
   localStorage.removeItem('access_token');
   window.location.replace('home.html');
 }
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const complaints =
@@ -308,24 +310,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         li.style.cursor = "pointer";
 
-        li.addEventListener("click", () => {
+       li.addEventListener("click", () => {
 
-            document
-                .querySelectorAll(".complaint-body")
-                .forEach(body => {
-                    if (body !== li.querySelector(".complaint-body")) {
-                        body.style.display = "none";
-                    }
-                });
+    localStorage.setItem(
+        "selectedComplaint",
+        JSON.stringify(complaint)
+    );
 
-            const body =
-                li.querySelector(".complaint-body");
-
-            body.style.display =
-                body.style.display === "block"
-                    ? "none"
-                    : "block";
-        });
+    window.location.href =
+        "complaint_details.html";
+});
 
         issuesList.appendChild(li);
     });
