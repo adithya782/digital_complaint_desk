@@ -139,3 +139,88 @@ body.dark footer,
 body.dark nav {
   color: #e5e7eb;
 }
+
+/* ==========================
+   DARK MODE - TODAY ISSUES
+========================== */
+
+body.dark #TodayIssues li {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border-left: 5px solid #60a5fa !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+body.dark #TodayIssues li strong {
+    color: #ffffff !important;
+}
+
+body.dark #TodayIssues li p,
+body.dark #TodayIssues li span {
+    color: #cbd5e1 !important;
+}
+
+body.dark .complaint-body {
+    border-top: 1px solid #475569 !important;
+}
+
+body.dark #complaintDetails {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+}
+
+/* LOGIN FORM */
+body.dark .input-box,
+body.dark .input-field,
+body.dark .input-group {
+    background: transparent;
+}
+
+/* INPUTS */
+body.dark input[type="email"],
+body.dark input[type="password"],
+body.dark input[type="text"] {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: none !important;
+    width: 100%;
+}
+
+/* PLACEHOLDER */
+body.dark input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* INPUT CONTAINER */
+body.dark .input-field,
+body.dark .input-box {
+    border: 2px solid #cbd5e1 !important;
+    border-radius: 18px;
+    background: transparent !important;
+}
+
+/* ICONS */
+body.dark .input-field i,
+body.dark .input-box i,
+body.dark .fa-envelope,
+body.dark .fa-lock {
+    color: #ffffff !important;
+}
+
+/* REMEMBER ME */
+body.dark label,
+body.dark .remember-forgot {
+    color: #ffffff !important;
+}
+
+/* CHECKBOX */
+body.dark input[type="checkbox"] {
+    accent-color: #3b82f6;
+}
+
+/* FORGOT PASSWORD */
+body.dark .remember-forgot a,
+body.dark .forgot-password {
+    color: #60a5fa !important;
+}
