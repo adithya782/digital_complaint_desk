@@ -224,3 +224,61 @@ body.dark .remember-forgot a,
 body.dark .forgot-password {
     color: #60a5fa !important;
 }
+ 
+/* DASHBOARD BOXES */
+body.dark .recent-complaints,
+body.dark .quick-sos,
+body.dark .dashboard-box,
+body.dark .content-box,
+body.dark .card-box,
+body.dark .complaints-box {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border: 1px solid #374151 !important;
+}
+
+/* HEADINGS INSIDE */
+body.dark .recent-complaints h2,
+body.dark .quick-sos h2,
+body.dark .dashboard-box h2,
+body.dark .content-box h2 {
+    color: #ffffff !important;
+}
+
+/* PARAGRAPHS */
+body.dark .recent-complaints p,
+body.dark .quick-sos p,
+body.dark .dashboard-box p,
+body.dark .content-box p {
+    color: #cbd5e1 !important;
+}
+
+/* QUICK SOS DARK MODE */
+
+body.dark .sos-box {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border: 1px solid #374151 !important;
+}
+
+body.dark .sos-box h3 {
+    color: #ffffff !important;
+}
+
+body.dark .sos-box p {
+    color: #cbd5e1 !important;
+}
+
+body.dark .sos-box small {
+    color: #94a3b8 !important;
+}
+
+body.dark .sos-box .call-btn {
+    background: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+body.dark .sos-box .msg-btn {
+    background: #2563eb !important;
+    color: #ffffff !important;
+}
