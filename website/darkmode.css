@@ -1,0 +1,141 @@
+/* =====================================
+   GLOBAL DARK MODE EXTENSION
+===================================== */
+
+body.dark {
+  background: #0b0f1a !important;
+  color: #e5e7eb !important;
+}
+
+/* ALL TEXT */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark label,
+body.dark span,
+body.dark p,
+body.dark small,
+body.dark strong,
+body.dark li,
+body.dark a {
+  color: #e5e7eb !important;
+}
+
+/* CONTAINERS */
+body.dark .container,
+body.dark .card,
+body.dark .box,
+body.dark .panel,
+body.dark .section,
+body.dark .feature-card,
+body.dark .profile-box,
+body.dark .issues-box,
+body.dark .stat-card,
+body.dark .complaint-box,
+body.dark .dashboard-card,
+body.dark .info-box {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+  border: 1px solid #374151 !important;
+}
+
+/* NAVBAR */
+body.dark .navbar {
+  background: rgba(10,15,30,0.85) !important;
+  backdrop-filter: blur(12px);
+}
+
+/* SIDEBAR */
+body.dark .sidebar {
+  background: #111827 !important;
+}
+
+/* BUTTONS */
+body.dark button,
+body.dark .btn,
+body.dark input[type="submit"],
+body.dark input[type="button"] {
+  background: #2563eb !important;
+  color: white !important;
+  border: none !important;
+}
+
+
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+
+
+body.dark thead {
+  background: #1e40af !important;
+}
+
+body.dark th,
+body.dark td {
+  color: #e5e7eb !important;
+  border: 1px solid #334155 !important;
+}
+
+body.dark tr:hover {
+  background: #1f2937 !important;
+}
+
+/* LIST ITEMS */
+body.dark ul li,
+body.dark ol li {
+  color: #e5e7eb !important;
+}
+
+/* LINKS */
+body.dark a {
+  color: #60a5fa !important;
+}
+
+/* ICONS */
+body.dark i,
+body.dark svg {
+  color: #e5e7eb !important;
+}
+
+/* MODALS */
+body.dark .modal,
+body.dark .popup {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+}
+
+/* FORM BOXES */
+body.dark form {
+  color: #e5e7eb !important;
+}
+
+/* SCROLLBAR */
+body.dark ::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+/* IMAGES */
+body.dark img {
+  opacity: 0.95;
+}
+
+/* FORCE ALL COMMON ELEMENTS */
+body.dark div,
+body.dark section,
+body.dark article,
+body.dark aside,
+body.dark header,
+body.dark footer,
+body.dark nav {
+  color: #e5e7eb;
+}
