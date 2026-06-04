@@ -5,83 +5,87 @@ const localcomplaints = {
   officer_name: "Officer Ramesh Kumar",
   workload_summary: {
     total_active_issues: 8,
-    daily_capacity_limit: 5
+    daily_capacity_limit: 5,
   },
   slots: {
     todays_focus_slot: [
       {
         complaint_id: 101,
         title: "🚨 Main Water Line Burst",
-        description: "Massive water leakage near the main junction. Road flooding completely.",
+        description:
+          "Massive water leakage near the main junction. Road flooding completely.",
         status: "In Progress",
         priority: "High",
         deadline: "2026-05-23T18:00:00Z",
         days_remaining: 0.1,
-        calculated_score: 40.0
+        calculated_score: 40.0,
       },
       {
         complaint_id: 102,
         title: "⚡ Streetlight Cable Sparking",
-        description: "Live wires exposed near the public park entrance. Hazardous condition.",
+        description:
+          "Live wires exposed near the public park entrance. Hazardous condition.",
         status: "Pending",
         priority: "High",
         deadline: "2026-05-24T12:00:00Z",
         days_remaining: 0.9,
-        calculated_score: 4.4
+        calculated_score: 4.4,
       },
       {
         complaint_id: 103,
         title: "🕳️ Dangerous Deep Pothole",
-        description: "Large pothole in the middle of the third lane causing severe traffic slowdowns.",
+        description:
+          "Large pothole in the middle of the third lane causing severe traffic slowdowns.",
         status: "Pending",
         priority: "Medium",
         deadline: "2026-05-25T14:30:00Z",
         days_remaining: 2.0,
-        calculated_score: 1.0
-      }
+        calculated_score: 1.0,
+      },
     ],
     tomorrows_slot: [
       {
         complaint_id: 104,
         title: "🗑️ Public Dustbin Overflowing",
-        description: "Garbage collection missed for three consecutive cycles near block C market.",
+        description:
+          "Garbage collection missed for three consecutive cycles near block C market.",
         status: "Pending",
         priority: "Low",
         deadline: "2026-05-27T09:00:00Z",
         days_remaining: 3.8,
-        calculated_score: 0.26
-      }
+        calculated_score: 0.26,
+      },
     ],
-    future_backlog_slot: []
-  }
+    future_backlog_slot: [],
+  },
 };
 
-const access_token = localStorage.getItem('access_token');
+const access_token = localStorage.getItem("access_token");
 
 // ==========================================
 // 2. LIFECYCLE INITIALIZATION (DOM CONTENT LOADED)
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM processing complete. Mapping interface fields...");
-  
-  const complaintsContainer = document.getElementById('TodayIssues');
-  const nameElement = document.getElementById('dashboardUsername');
-  const pendingContainer = document.getElementById('PendingQueue');
+
+  const complaintsContainer = document.getElementById("TodayIssues");
+  const nameElement = document.getElementById("dashboardUsername");
+  const pendingContainer = document.getElementById("PendingQueue");
 
   if (pendingContainer) {
-    pendingContainer.innerHTML = ''; // Clear placeholder
-    
-    // 🚀 Pull from tomorrows_slot or future arrays instead of duplicating today's focus!
-    const backlogList = localcomplaints.slots.tomorrows_slot; 
+    pendingContainer.innerHTML = ""; // Clear placeholder
 
-    backlogList.forEach(complaint => {
+    // 🚀 Pull from tomorrows_slot or future arrays instead of duplicating today's focus!
+    const backlogList = localcomplaints.slots.tomorrows_slot;
+
+    backlogList.forEach((complaint) => {
       const backlogHtml = `
         <li style="background: #fff; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid #fb923c; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
           <strong style="font-size: 13px; color: #03113f;">${complaint.title}</strong>
           <p style="font-size: 12px; color: #6b7280; margin: 3px 0 0 0;">Priority: ${complaint.priority}</p>
         </li>
       `;
-      pendingContainer.insertAdjacentHTML('beforeend', backlogHtml);
+      pendingContainer.insertAdjacentHTML("beforeend", backlogHtml);
     });
   }
   // Paint fallback local user metrics to display immediately
@@ -91,16 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Paint local mockup records to protect against empty displays
   if (complaintsContainer) {
-    complaintsContainer.innerHTML = ''; 
-    
+    complaintsContainer.innerHTML = "";
+
     const activeList = localcomplaints.slots.todays_focus_slot;
-    
-    activeList.forEach(complaint => {
-      let statusClass = 'pending';
+
+    activeList.forEach((complaint) => {
+      let statusClass = "pending";
       const finalstatus = complaint.status.toLowerCase();
-      if (finalstatus.includes('progress')) { statusClass = 'progress'; }
-      if (finalstatus.includes('resolved')) { statusClass = 'resolved'; }
-      
+      if (finalstatus.includes("progress")) {
+        statusClass = "progress";
+      }
+      if (finalstatus.includes("resolved")) {
+        statusClass = "resolved";
+      }
+
       const comphtml = `
         <li>
           <div>
@@ -111,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="${statusClass}">${complaint.status}</span>
         </li>
       `;
-      complaintsContainer.insertAdjacentHTML('beforeend', comphtml);
+      complaintsContainer.insertAdjacentHTML("beforeend", comphtml);
     });
   }
 
@@ -125,48 +133,53 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==========================================
 function triggerLiveDashboardFetch() {
   fetch(`${window.API_BASE_URL}/api/staff/dashboard`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Authorization': 'Bearer ' + access_token,
-      'Content-Type': 'application/json',
-      'ngrok-skip-browser-warning': 'true'
-    }
+      Authorization: "Bearer " + access_token,
+      "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "true",
+    },
   })
-  .then(res =>  {
-  // if(!res.ok) throw new Error('Failed to fetch');
-  if (res.status == 401){
-    alert('Please login first');
-    window.location.href = 'login.html'
-  }
-  if (res.status == 403){
-    alert('Forbidden');
-    window.location.href = 'home.html'
-  }
-  return res.json(); 
-})
-  .then(data => {
-    console.log(data);
-    if (data && data.slots && data.slots.todays_focus_slot) {
-      const complaintsContainer = document.getElementById('TodayIssues');
-      const nameElement = document.getElementById('dashboardUsername');
-      const staff_id = document.getElementById('staff_id');
-      const department = document.getElementById('department');
-      
-      if (staff_id && data.staff_id) staff_id.innerText = data.staff_id;
-      if (department && data.department) department.innerText = data.department;
-      if (nameElement && data.fullname) nameElement.innerText = data.fullname;
-      
-      if (complaintsContainer) {
-        complaintsContainer.innerHTML = ''; 
-        
-        data.slots.todays_focus_slot.forEach(complaint => {
-          let statusClass = 'pending';
-          const finalstatus = complaint.status.toLowerCase();
-          if (finalstatus.includes('progress')) { statusClass = 'progress'; }
-          if (finalstatus.includes('resolved')) { statusClass = 'resolved'; }
-          
-          const comphtml = `
-            <li>
+    .then((res) => {
+      // if(!res.ok) throw new Error('Failed to fetch');
+      if (res.status == 401) {
+        alert("Please login first");
+        window.location.href = "login.html";
+      }
+      if (res.status == 403) {
+        alert("Forbidden");
+        window.location.href = "home.html";
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log(data);
+      if (data && data.slots && data.slots.todays_focus_slot) {
+        const complaintsContainer = document.getElementById("TodayIssues");
+        const nameElement = document.getElementById("dashboardUsername");
+        const staff_id = document.getElementById("staff_id");
+        const department = document.getElementById("department");
+
+        if (staff_id && data.staff_id) staff_id.innerText = data.staff_id;
+        if (department && data.department)
+          department.innerText = data.department;
+        if (nameElement && data.fullname) nameElement.innerText = data.fullname;
+
+        if (complaintsContainer) {
+          complaintsContainer.innerHTML = "";
+
+          data.slots.todays_focus_slot.forEach((complaint) => {
+            let statusClass = "pending";
+            const finalstatus = complaint.status.toLowerCase();
+            if (finalstatus.includes("progress")) {
+              statusClass = "progress";
+            }
+            if (finalstatus.includes("resolved")) {
+              statusClass = "resolved";
+            }
+
+            const comphtml = `
+            <li class="complaint-item" data-id="${complaint.complaint_id}" style="cursor: pointer;">
               <div>
                 <strong>${complaint.title}</strong>
               </div>
@@ -175,19 +188,28 @@ function triggerLiveDashboardFetch() {
               <span class="${statusClass}">${complaint.status}</span>
             </li>
           `;
-          complaintsContainer.insertAdjacentHTML('beforeend', comphtml);
-        });
+            complaintsContainer.insertAdjacentHTML("beforeend", comphtml);
+          });
+        }
       }
-    }
-  })
-  .catch(err => console.error('Live fetch background sync error: ', err));
+    })
+    .catch((err) => console.error("Live fetch background sync error: ", err));
 }
+const complaintsContainer = document.getElementById("TodayIssues");
 
+complaintsContainer.addEventListener("click", (event) => {
+  const clickedItem = event.target.closest(".complaint-item");
+
+  if (clickedItem) {
+    const complaintId = clickedItem.getAttribute("data-id");
+
+    window.location.href = `complaint_details.html?id=${complaintId}`;
+  }
+});
 // ==========================================
 // 4. INTERACTION MANAGER (UI CONTROLS)
 // ==========================================
 function initializeUIControls() {
-  
   // 🔒 THE ONLY SIDEBAR EVENT LISTENER ALLOWED IN THE ENTIRE FILE
   const sidebar = document.getElementById("sidebar");
   const menuBtn = document.getElementById("menuBtn");
@@ -274,55 +296,45 @@ function initializeUIControls() {
 
 // Global scope exit declaration
 function logout() {
-  localStorage.removeItem('access_token');
-  window.location.replace('home.html');
+  localStorage.removeItem("access_token");
+  window.location.replace("home.html");
 }
 
+// document.addEventListener("DOMContentLoaded", () => {
+//   const complaints = JSON.parse(localStorage.getItem("complaints")) || [];
 
-document.addEventListener("DOMContentLoaded", () => {
+//   const issuesList = document.getElementById("TodayIssues");
 
-    const complaints =
-        JSON.parse(localStorage.getItem("complaints")) || [];
+//   complaints.forEach((complaint, index) => {
+//     const li = document.createElement("li");
 
-    const issuesList =
-        document.getElementById("TodayIssues");
+//     li.innerHTML = `
+//     <div class="complaint-title">
+//         <strong>${complaint.title}</strong>
+//         <p>Topic: ${complaint.topic || "General"}</p>
+//        <small>Anonymous: ${complaint.anonymous}</small>
+//     </div>
 
-    complaints.forEach((complaint, index) => {
+//     <div class="complaint-body" style="display:none;">
+//         <p><b>Topic:</b> ${complaint.title}</p>
+//         <p><b>Description:</b> ${complaint.description}</p>
+//         <p><b>Latitude:</b> ${complaint.latitude}</p>
+//         <p><b>Longitude:</b> ${complaint.longitude}</p>
+//         <p><b>Anonymous:</b> ${complaint.anonymous}</p>
+//         <p><b>Status:</b> ${complaint.status}</p>
+//     </div>
+// `;
 
-        const li = document.createElement("li");
+//     li.style.cursor = "pointer";
 
-    li.innerHTML = `
-    <div class="complaint-title">
-        <strong>${complaint.title}</strong>
-        <p>Topic: ${complaint.topic || "General"}</p>
-       <small>Anonymous: ${complaint.anonymous}</small>
-    </div>
+//     li.addEventListener("click", () => {
+//       localStorage.setItem("selectedComplaint", JSON.stringify(complaint));
 
-    <div class="complaint-body" style="display:none;">
-        <p><b>Topic:</b> ${complaint.title}</p>
-        <p><b>Description:</b> ${complaint.description}</p>
-        <p><b>Latitude:</b> ${complaint.latitude}</p>
-        <p><b>Longitude:</b> ${complaint.longitude}</p>
-        <p><b>Anonymous:</b> ${complaint.anonymous}</p>
-        <p><b>Status:</b> ${complaint.status}</p>
-    </div>
-`;
+//       window.location.href = "complaint_details.html";
+//     });
 
-        li.style.cursor = "pointer";
-
-       li.addEventListener("click", () => {
-
-    localStorage.setItem(
-        "selectedComplaint",
-        JSON.stringify(complaint)
-    );
-
-    window.location.href =
-        "complaint_details.html";
-});
-
-        issuesList.appendChild(li);
-    });
-
-});
-document.getElementById("complaintDetails").innerHTML = "END THE COMPLAINT DETAILS FILE";
+//     issuesList.appendChild(li);
+//   });
+// });
+document.getElementById("complaintDetails").innerHTML =
+  "END THE COMPLAINT DETAILS FILE";
