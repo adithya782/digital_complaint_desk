@@ -22,15 +22,24 @@ export default function AdminLayout() {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="staff"
+      <Tabs.Screen
+        name="offices"
         options={{
-          title: "Staff",
+          title: "Offices",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="briefcase" size={20} color={color} solid />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="staffs"
+        options={{
+          title: "Staffs",
           tabBarIcon: ({ color }) => (
             <FontAwesome6 name="users" size={20} color={color} />
           ),
         }}
-      /> */}
+      />
       <Tabs.Screen
         name="profile"
         options={{

@@ -19,7 +19,10 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao" }
+      }
     },
     "web": {
       "output": "static",
