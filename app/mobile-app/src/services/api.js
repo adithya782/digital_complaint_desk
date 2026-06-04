@@ -5,7 +5,8 @@ const IS_PRODUCTION = true; // 🔄 Flip this to true when deploying!
 
 const API_BASE_URL = IS_PRODUCTION
   ? "https://appear-eastbound-usable.ngrok-free.dev" // Your live backend domain (Supabase/Render/AWS)
-  : "http://127.0.0.1:5000"; // Your local Flask server
+  : // : "http://127.0.0.1:5000"; // Your local Flask server
+    "http://192.168.43.36:5000";
 
 export async function apiClient(endpoint, options = {}) {
   const token = await SecureStore.getItemAsync("access_token");
