@@ -325,3 +325,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+document.getElementById("complaintDetails").innerHTML = "END THE COMPLAINT DETAILS FILE";
