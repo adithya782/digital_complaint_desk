@@ -34,8 +34,6 @@ body{
 /* SIDEBAR */
 
 .sidebar{
-    width:260px;
-    background:#fff;
     border-right:1px solid #ddd;
     min-height:100vh;
     transition:0.3s;
@@ -43,11 +41,19 @@ body{
     left:0;
     top:0;
     z-index:1000;
-    padding-top:70px;
+  width:260px;
+
+  background:#071b64;
+
+  color:#fff;
+
+  padding:30px 20px;
 }
 
 .sidebar ul{
-    list-style:none;
+  list-style:none;
+
+  margin-top:60px;
 }
 
 .sidebar li{
