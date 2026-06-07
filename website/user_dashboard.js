@@ -6,14 +6,8 @@ const sidebar = document.getElementById("sidebar");
 
 // TOGGLE
 
-<<<<<<< Updated upstream
-menuBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("show");
-    sidebar.classList.toggle("collapsed");
-=======
 menuBtn.addEventListener("click", function () {
   sidebar.classList.toggle("close");
->>>>>>> Stashed changes
 });
 // SELECT ALL PAGE BUTTONS
 
