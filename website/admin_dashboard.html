@@ -9,8 +9,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="admin_dashboard.css" />
-    <link rel="stylesheet" href="darkmode.css">
     <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="darkmode.css">
 
     <!-- FONT AWESOME -->
     <link
@@ -84,9 +84,7 @@
         <i class="fa-solid fa-robot"></i>
 
         <span>Verify AI</span>
-
-      </button> -->
-
+            </button> -->
         <button onclick="auditResolution()">
           <i class="fa-solid fa-clipboard-check"></i>
 
@@ -108,18 +106,29 @@
     <div class="main-content">
       <!-- TOPBAR -->
 
-      <div class="topbar">
-        <div>
-          <h1>Admin Dashboard</h1>
+    <div class="topbar">
 
-          <p>Advanced Management System</p>
-        </div>
+  <div>
+    <h1>Admin Dashboard</h1>
+    <p>Advanced Management System</p>
+  </div>
 
-        <div class="profile">
-          <img src="https://i.pravatar.cc/40" alt="" />
-          <span id="fullname">Super Admin</span>
-        </div>
-      </div>
+  <div style="display:flex;align-items:center;gap:15px;">
+
+    <!-- DARK MODE BUTTON -->
+    <button id="darkModeToggle" class="toggle-btn">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <!-- PROFILE -->
+    <div class="profile">
+      <img src="https://i.pravatar.cc/40" alt="">
+      <span id="fullname">Super Admin</span>
+    </div>
+
+  </div>
+
+</div>
 
       <!-- DASHBOARD PAGE -->
 
