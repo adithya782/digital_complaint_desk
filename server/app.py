@@ -828,6 +828,28 @@ class DeleteOffice(Resource):
                 'error': 'Cannot delete: This Office has staff members assigned to it. Please reassign them first.'
             }, 409
 
+class Specific_Complaints(Resource):
+    @jwt_required()
+    def get(self,id):
+        claims = get_jwt()
+        role = claims.get('role')
+        if role != UserRole.STAFF.value:
+            return {"Unauthorized": 'No access'}, 403
+        complaint = db.session.get(Complaint, id)
+        if not complaint:
+            return {"message": "Complaint not found"}, 404
+        data = [{
+            'title':complaint.title,
+            'description': complaint.description,
+            'latitude': complaint.latitude,
+            'longitude': complaint.longitude,
+            'anonymous': True if not complaint.user_id else False,
+            'status': complaint.status
+        }]
+        
+        return data, 200
+        
+
 app.register_blueprint(auth_bp)
 
 
@@ -841,6 +863,7 @@ api.add_resource(createOffice, '/api/office/create')
 api.add_resource(FilteredOffices, '/api/offices')
 api.add_resource(verify_complaint, '/api/admin/verify_complaint')
 api.add_resource(DeactivateStaff, '/api/admin/delete_staff/<int:staff_id>', '/api/admin/delete_staff')
+api.add_resource(Specific_Complaints, '/api/complaints/<int:id>')
 
 if __name__ == '__main__':
     with app.app_context():
