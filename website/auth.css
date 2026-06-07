@@ -354,3 +354,55 @@ body{
   color:#6d52ff;
   font-weight:700;
 }
+ /* COMPLAINT FORM DARK MODE */
+
+body.dark textarea,
+body.dark select,
+body.dark input[type="file"] {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+}
+
+/* TEXTAREA PLACEHOLDER */
+body.dark textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* FILE INPUT */
+body.dark input[type="file"] {
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* FORM SECTIONS */
+body.dark .form-section,
+body.dark .location-section,
+body.dark .upload-section,
+body.dark .coordinate-box {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+}
+
+/* RADIO BUTTON TEXT */
+body.dark .radio-group label,
+body.dark .location-option label {
+    color: #ffffff !important;
+}
+
+/* LOCATION MESSAGE */
+body.dark .location-status,
+body.dark .success-message {
+    color: #22c55e !important;
+}
+
+/* FILE INPUT BUTTON */
+body.dark input[type="file"]::file-selector-button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}

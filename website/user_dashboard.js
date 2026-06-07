@@ -8,10 +8,9 @@ document.getElementById("sidebar");
 
 // TOGGLE
 
-menuBtn.addEventListener("click", function(){
-
-  sidebar.classList.toggle("close");
-
+menuBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("show");
+    sidebar.classList.toggle("collapsed");
 });
 // SELECT ALL PAGE BUTTONS
 
