@@ -9,26 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-<<<<<<< HEAD
-details.innerHTML = `
-    <h2>${complaint.title}</h2>
-
-    <p><b>Description:</b>
-    ${complaint.description}</p>
-
-    <p><b>Latitude:</b>
-    ${complaint.latitude}</p>
-
-    <p><b>Longitude:</b>
-    ${complaint.longitude}</p>
-
-    <p><b>Anonymous:</b>
-    ${complaint.anonymous}</p>
-
-    <p><b>Status:</b>
-    ${complaint.status}</p>
-`;
-=======
   // 2. Fetch the details from your API
   // Ensure API_BASE_URL is defined globally or replace with your actual domain
   const url = `${window.API_BASE_URL}/api/complaints/${complaintId}`;
@@ -62,4 +42,3 @@ details.innerHTML = `
       detailsContainer.innerHTML = `<p>Error loading complaint: ${err.message}</p>`;
     });
 });
->>>>>>> 592ae035679f8169cfab1e6e98965aa85e8ce973
