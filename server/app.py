@@ -478,7 +478,7 @@ class ProcessAndDispatchComplaint(Resource):
         )
         db.session.add(new_complaint)
         db.session.commit()
-        return {'message': 'Submitted, awaiting admin verification.'}, 201
+        return {'message': 'Submitted, awaiting admin verification.', 'id': new_complaint.complaint_id}, 201
         
 
 

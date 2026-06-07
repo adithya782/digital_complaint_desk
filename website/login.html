@@ -1,172 +1,143 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
+    <title>SafeCity Login</title>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="auth.css" />
 
-  <title>SafeCity Login</title>
+    <!-- FONT AWESOME -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
-  <link rel="stylesheet" href="auth.css">
-  <link rel="stylesheet" href="darkmode.css">
-  <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
 
-  <!-- FONT AWESOME -->
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <body>
+    <div class="container">
+      <!-- LEFT SIDE -->
 
-    <script src="https://accounts.google.com/gsi/client" async defer></script> 
+      <div class="left-panel">
+        <div class="logo">
+          <i class="fa-solid fa-shield-halved"></i>
 
+          <span>SafeCity</span>
+        </div>
 
+        <div class="left-content">
+          <h1>Welcome Back!</h1>
 
-</head>
+          <p>Login to continue and make your community safer.</p>
 
-<body>
+          <!-- FLOATING ICONS -->
 
-  <div class="container">
+          <div class="floating-icons">
+            <div class="sos">SOS</div>
 
-    <!-- LEFT SIDE -->
+            <div class="shield">
+              <i class="fa-solid fa-shield"></i>
+            </div>
 
-    <div class="left-panel">
+            <div class="message">
+              <i class="fa-solid fa-message"></i>
+            </div>
+          </div>
 
-      <div class="logo">
+          <!-- IMAGE -->
 
-        <i class="fa-solid fa-shield-halved"></i>
-
-        <span>SafeCity</span>
-
+          <img
+            src="https://img.officer.com/files/base/cygnus/ofcr/image/2022/05/16x9/raptorconnect.6283cc00d79b4.png?auto=format,compress&fit=fill&fill=blur&w=1200&h=630"
+          />
+        </div>
       </div>
 
-      <div class="left-content">
+      <!-- RIGHT SIDE -->
 
-        <h1>Welcome Back!</h1>
+      <div class="right-panel">
+        <div class="login-box">
+          <h1>Login</h1>
 
-        <p>
-          Login to continue and make
-          your community safer.
-        </p>
+          <p class="subtitle">Enter your details to login</p>
 
-        <!-- FLOATING ICONS -->
+          <!-- EMAIL -->
 
-        <div class="floating-icons">
+          <div class="input-box">
+            <i class="fa-regular fa-envelope"></i>
 
-          <div class="sos">
-            SOS
+            <input type="email" id="email" placeholder="Enter Email" />
           </div>
 
-          <div class="shield">
-            <i class="fa-solid fa-shield"></i>
+          <!-- PASSWORD -->
+
+          <div class="input-box">
+            <i class="fa-solid fa-lock"></i>
+
+            <input type="password" id="password" placeholder="Enter Password" />
           </div>
 
-          <div class="message">
-            <i class="fa-solid fa-message"></i>
+          <!-- OPTIONS -->
+
+          <div class="options">
+            <div class="remember">
+              <input type="checkbox" />
+
+              <span>Remember me</span>
+            </div>
+
+            <a href="#"> Forgot Password? </a>
           </div>
+          <!-- LOGIN BUTTON -->
 
-        </div>
+          <button class="login-btn" id="loginBtn" onclick="login()">
+            Login
+          </button>
 
-        <!-- IMAGE -->
+          <!-- SOCIAL LOGIN -->
 
-        <img src="https://img.officer.com/files/base/cygnus/ofcr/image/2022/05/16x9/raptorconnect.6283cc00d79b4.png?auto=format,compress&fit=fill&fill=blur&w=1200&h=630">
-
-      </div>
-
-    </div>
-
-    <!-- RIGHT SIDE -->
-
-    <div class="right-panel">
-
-      <div class="login-box">
-
-        <h1>Login</h1>
-
-        <p class="subtitle">
-          Enter your details to login
-        </p>
-
-        <!-- EMAIL -->
-
-        <div class="input-box">
-
-          <i class="fa-regular fa-envelope"></i>
-
-          <input
-          type="email"
-          id="email"
-          placeholder="Enter Email">
-
-        </div>
-
-        <!-- PASSWORD -->
-
-        <div class="input-box">
-
-          <i class="fa-solid fa-lock"></i>
-
-          <input
-          type="password"
-          id="password"
-          placeholder="Enter Password">
-        </div>
-
-        <!-- OPTIONS -->
-
-        <div class="options">
-
-          <div class="remember">
-
-            <input type="checkbox">
-
-            <span>Remember me</span>
-
-          </div>
-
-          <a href="#">
-            Forgot Password?
-          </a>
-
-        </div>
-        <!-- LOGIN BUTTON -->
-
-        <button class="login-btn" id="loginBtn" onclick="login()">
-          Login
-        </button>
-
-        <!-- SOCIAL LOGIN -->
-
-        <!-- <div class="divider">
+          <!-- <div class="divider">
 
           <span>Or login with</span>
 
         </div> -->
 
-        <div style="text-align: center; margin: 16px 0; color: #7e7b7b; font-size: 14px; font-weight: 500;">or</div>
+          <div
+            style="
+              text-align: center;
+              margin: 16px 0;
+              color: #888;
+              font-size: 14px;
+              font-weight: 500;
+            "
+          >
+            or
+          </div>
 
-        <div id="googleButtonDiv" style="display: flex; justify-content: center; width: 100%; min-height: 40px;"></div>
+          <div
+            id="googleButtonDiv"
+            style="
+              display: flex;
+              justify-content: center;
+              width: 100%;
+              min-height: 40px;
+            "
+          ></div>
 
+          <!-- REGISTER -->
 
-        <!-- REGISTER -->
+          <p class="login-text">
+            Don't have account?
 
-         <p class="login-text">
-
-          Don't have account?
-
-          <a href="regd.html">
-            Register
-          </a>
-
-        </p>
-
+            <a href="regd.html"> Register </a>
+          </p>
+        </div>
       </div>
-
     </div>
 
-  </div>
-
-  <script src="config.js"></script>
-  <script src="login.js"></script>
-  <script src="common-darkmode.js"></script>
-
-</body>
+    <script src="config.js"></script>
+    <script src="login.js"></script>
+  </body>
 </html>
