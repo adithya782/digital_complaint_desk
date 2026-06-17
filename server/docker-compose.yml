@@ -1,0 +1,71 @@
+services:
+  # Database Service
+  db:
+    image: postgres:15
+    command: ["postgres", "-c", "listen_addresses=*"]
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: digital_desk
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Redis (Broker)
+  redis:
+    image: redis:alpine
+    restart: always
+    networks:
+      - app-network
+
+  # Backend (Flask)
+  backend:
+    build: .
+    volumes:
+      - .:/app
+    env_file: .env
+    ports:
+      - "5005:5000"
+    depends_on:
+      - redis
+      - db
+    networks:
+      - app-network
+    command: gunicorn --bind 0.0.0.0:5000 app:app
+
+  # Celery Worker
+  worker:
+    build: .
+    command: celery -A tasks worker --loglevel=info
+    env_file: .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+    networks:
+      - app-network
+
+  # Celery Beat
+  beat:
+    build: .
+    command: celery -A tasks beat --loglevel=info
+    env_file: .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:
