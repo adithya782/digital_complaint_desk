@@ -765,7 +765,7 @@ class verify_complaint(Resource):
         
         complaints = Complaint.query.all()
         list_departments = Department.query.all()
-        unverified_complaints = [{"complaint_id": complaint.complaint_id,"title":complaint.title, "description":complaint.description, "department": complaint.department_id} for complaint in complaints if not complaint.is_verified]
+        unverified_complaints = [{"complaint_id": complaint.complaint_id,"title":complaint.title, "description":complaint.description, "department_id": complaint.department_id} for complaint in complaints if not complaint.is_verified]
         all_complaints = [{'complaint_id': complaint.complaint_id,"title":complaint.title, "description":complaint.description, "department_id": complaint.department_id,'is_verified': complaint.is_verified} for complaint in complaints]
         departments = [{'department_id': department.department_id, 'department_name': department.department_name} for department in list_departments]
     
