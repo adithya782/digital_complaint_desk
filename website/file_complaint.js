@@ -269,7 +269,9 @@ async function fileComplaint(e) {
           "Complaint id: " +
           result.id +
           "\n" +
-          "Please note this complaint id to track complaints",
+          "key:" +
+          result.key +
+          "Please note this complaint id and key to track complaints",
       );
 
       window.location.href = "user_dashboard.html";
