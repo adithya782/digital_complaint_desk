@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Track Complaint Portal</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .card {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+      }
+      .complaint-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .complaint-item:hover {
+        background: #f9f9f9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h3>Track Complaint</h3>
+      <div class="input-group">
+        <input
+          type="text"
+          id="complaintIdInput"
+          placeholder="Enter Complaint ID"
+        />
+        <button onclick="trackById()">Track</button>
+      </div>
+      <hr />
+      <h3>Your Recent Complaints</h3>
+      <div id="userComplaintsList">Loading...</div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch(`${window.API_BASE_URL}/api/my-complaints`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const list = document.getElementById("userComplaintsList");
+            list.innerHTML = data
+              .map(
+                (c) => `
+                    <div class="complaint-item" onclick="window.location.href='track_complaint.html?id=${c.complaint_id}'">
+                        <strong>${c.title}</strong><br>
+                        <small>Status: ${c.status}</small>
+                    </div>
+                `,
+              )
+              .join("");
+          })
+          .catch(
+            () =>
+              (document.getElementById("userComplaintsList").innerText =
+                "No complaints found."),
+          );
+      });
+
+      function trackById() {
+        const id = document.getElementById("complaintIdInput").value;
+        if (id) window.location.href = `track_complaint.html?id=${id}`;
+      }
+    </script>
+  </body>
+</html>

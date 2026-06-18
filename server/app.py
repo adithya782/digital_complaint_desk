@@ -412,7 +412,7 @@ class user_dashboard(Resource):
         user = db.session.get(User,id)
         user_complaints = []
         for complaint in user.complaints:
-            user_complaints.append({'title': complaint.title, 'description': complaint.description, 'status': complaint.status, 'created_at': complaint.created_at.isoformat() if complaint.created_at else None, 'updated_at': complaint.updated_at.isoformat() if complaint.updated_at else None})
+            user_complaints.append({'complaint_id': complaint.complaint_id,'title': complaint.title, 'description': complaint.description, 'status': complaint.status, 'created_at': complaint.created_at.isoformat() if complaint.created_at else None, 'updated_at': complaint.updated_at.isoformat() if complaint.updated_at else None})
         return {'user_id': user.user_id, 'fullname': user.fullname, 'complaints': user_complaints, 'phone': user.phone},200
 
 
