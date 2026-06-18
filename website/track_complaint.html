@@ -10,6 +10,7 @@
         padding: 25px;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        background: white;
       }
       .timeline {
         border-left: 2px solid #6d52ff;
@@ -18,6 +19,9 @@
       }
       .item {
         margin-bottom: 20px;
+      }
+      .error {
+        color: red;
       }
     </style>
   </head>
@@ -33,37 +37,54 @@
     <script>
       const id = new URLSearchParams(window.location.search).get("id");
 
-      // Fetch Details
-      fetch(`${window.API_BASE_URL}/api/complaints/${id}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          document.getElementById("complaintTitle").innerText = data[0].title;
-          document.getElementById("statusBadge").innerText = data[0].status;
-        });
+      if (!id) {
+        document.body.innerHTML =
+          "<div class='card'><h2>Error</h2><p>No Complaint ID found.</p></div>";
+      } else {
+        // 1. Fetch Details (Match this to your Specific_Complaints resource)
+        fetch(`${window.API_BASE_URL}/api/complaints/${id}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            // Note: If your API returns an object directly, remove the [0]
+            const c = Array.isArray(data) ? data[0] : data;
+            document.getElementById("complaintTitle").innerText = c.title;
+            document.getElementById("statusBadge").innerText = c.status;
+          })
+          .catch((err) => console.error("Details error:", err));
 
-      // Fetch Timeline
-      fetch(`${window.API_BASE_URL}/api/complaints/${id}/timeline`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      })
-        .then((res) => res.json())
-        .then((events) => {
-          document.getElementById("timelineList").innerHTML = events
-            .map(
-              (e) => `
-                <div class="item">
-                    <small>${new Date(e.timestamp).toLocaleDateString()}</small>
-                    <p>${e.description}</p>
-                </div>
+        // 2. Fetch Timeline (Matching your route: /api/complaint/timeline/<int:complaint_id>)
+        fetch(`${window.API_BASE_URL}/api/complaint/timeline/${id}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+          },
+        })
+          .then((res) => res.json())
+          .then((events) => {
+            const list = document.getElementById("timelineList");
+            if (events.length === 0) {
+              list.innerHTML = "<p>No updates yet.</p>";
+            } else {
+              list.innerHTML = events
+                .map(
+                  (e) => `
+              <div class="item">
+                <small>${new Date(e.timestamp).toLocaleDateString()}</small>
+                <p>${e.description}</p>
+              </div>
             `,
-            )
-            .join("");
-        });
+                )
+                .join("");
+            }
+          })
+          .catch((err) => {
+            document.getElementById("timelineList").innerHTML =
+              "<p class='error'>Failed to load timeline.</p>";
+          });
+      }
     </script>
   </body>
 </html>
