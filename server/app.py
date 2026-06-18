@@ -840,6 +840,8 @@ class Specific_Complaints(Resource):
     @jwt_required()
     def get(self,id):
         user_id = get_jwt_identity()
+        if not user_id:
+            return {"message": "Missing or invalid token"}, 401
         claims = get_jwt()
         role = claims.get('role')
         # if role != UserRole.STAFF.value:
