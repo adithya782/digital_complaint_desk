@@ -698,7 +698,7 @@ def assign_staff_to_complaint(complaint_id, dept_id, lat, lon):
             Complaint.status != 'Resolved', 
             func.date(Complaint.created_at) == today
         ).count()
-        if load < min_load:
+        if load <= min_load:
             min_load = load
             assigned_official = staff
             
