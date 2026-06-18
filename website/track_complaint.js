@@ -20,7 +20,8 @@ function fetchData(complaintId, key) {
       // Handle the Forbidden state
       console.log("Response Status:", res.status);
       if (res.status === 403) {
-        document.getElementById("keyEntrySection").style.display = "block";
+        const section = document.getElementById("keyEntrySection");
+        section.style.setProperty("display", "block", "important");
         document.getElementById("timelineList").innerHTML =
           "<p>Please enter the tracking key to view this complaint.</p>";
         throw new Error("Key Required");
