@@ -8,7 +8,7 @@ from datetime import date, timedelta, datetime, timezone
 from flask_restful import Api, reqparse, marshal_with, fields, Resource
 from flask_jwt_extended import create_access_token, get_jwt, jwt_required, get_jwt_identity, JWTManager
 from flask_cors import CORS
-from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction, Office, office_department
+from models import db, User, Complaint, Resolution, Staff, Department, UserRole, Transaction, Office, office_department, ComplaintEvent
 from dotenv import load_dotenv
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
@@ -747,6 +747,12 @@ class verify_complaint(Resource):
             db.session.commit()
             return {'message': f'Verified, but assignment failed: {info}'}, 200
 
+        db.session.commit()
+        assignment_event = ComplaintEvent(
+            complaint_id=complaint.complaint_id,
+            description=f"Complaint assigned to staff member: {info}",
+        )
+        db.session.add(assignment_event)
         db.session.commit()
         return {'message': f'Verified! Assignment status: {info}'}, 200
     
