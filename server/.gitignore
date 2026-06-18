@@ -25,3 +25,4 @@ instance/
 migrations/
 *.bak 
 *.dat
+celerybeat-schedule.dat
