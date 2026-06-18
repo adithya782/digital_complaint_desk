@@ -47,8 +47,17 @@ class Complaint(db.Model):
     longitude = db.Column(db.Float, nullable=False)
 
     resolution = db.relationship('Resolution',backref='original_complaint', uselist=False,lazy=True)
+    events = db.relationship('ComplaintEvent', backref='complaint', lazy=True, cascade="all, delete-orphan")
     staff_id = db.Column(db.Integer, db.ForeignKey('staffs.staff_id'), nullable=True,unique=False)
     department_id = db.Column(db.Integer, db.ForeignKey('departments.department_id'), nullable=True)
+
+class ComplaintEvent(db.Model):
+    __tablename__ = 'complaint_events'
+    event_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    complaint_id = db.Column(db.Integer, db.ForeignKey('complaints.complaint_id'), nullable=False)
+    description = db.Column(db.String(500), nullable=False) 
+    timestamp = db.Column(db.DateTime, server_default=db.func.current_timestamp())
+    staff_id = db.Column(db.Integer, db.ForeignKey('staffs.staff_id'), nullable=True)
 
 class Resolution(db.Model):
     __tablename__ = 'resolutions'
