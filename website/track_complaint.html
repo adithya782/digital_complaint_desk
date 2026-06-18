@@ -29,6 +29,17 @@
     <div class="card">
       <h2 id="complaintTitle">Loading...</h2>
       <p>Status: <b id="statusBadge">Loading...</b></p>
+
+      <div id="keyEntrySection" style="display: none; margin: 20px 0">
+        <p>This complaint requires a tracking key:</p>
+        <input
+          type="text"
+          id="manualKeyInput"
+          placeholder="Enter Tracking Key"
+        />
+        <button onclick="fetchWithKey()">Submit Key</button>
+      </div>
+
       <div class="timeline" id="timelineList"></div>
       <button onclick="history.back()">Back</button>
     </div>

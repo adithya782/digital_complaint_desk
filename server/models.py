@@ -39,6 +39,7 @@ class Complaint(db.Model):
     updated_at = db.Column(db.DateTime, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     priority = db.Column(db.String(20), default="Medium", nullable=False)
     deadline = db.Column(db.DateTime, nullable=True)
+    key = db.Column(db.String, nullable=True)
 
     evidence_url = db.Column(db.String(500), nullable=True) 
 
