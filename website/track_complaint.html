@@ -45,53 +45,20 @@
     </div>
 
     <script src="config.js"></script>
+    <script src="track_complaint.js"></script>
+
     <script>
-      const id = new URLSearchParams(window.location.search).get("id");
-
-      if (!id) {
-        document.body.innerHTML =
-          "<div class='card'><h2>Error</h2><p>No Complaint ID found.</p></div>";
-      } else {
-        // 1. Fetch Details (Match this to your Specific_Complaints resource)
-        fetch(`${window.API_BASE_URL}/api/complaints/${id}`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            // Note: If your API returns an object directly, remove the [0]
-            const c = Array.isArray(data) ? data[0] : data;
-            document.getElementById("complaintTitle").innerText = c.title;
-            document.getElementById("statusBadge").innerText = c.status;
-          })
-          .catch((err) => console.error("Details error:", err));
-
-        // 2. Fetch Timeline (Matching your route: /api/complaint/timeline/<int:complaint_id>)
-        fetch(`${window.API_BASE_URL}/api/complaint/timeline/${id}`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            // data now contains {title, status, timeline}
-            document.getElementById("complaintTitle").innerText = data.title;
-            document.getElementById("statusBadge").innerText = data.status;
-
-            const list = document.getElementById("timelineList");
-            list.innerHTML = data.timeline
-              .map(
-                (e) => `
-        <div class="item">
-            <small>${e.date}</small> <p><b>${e.step}:</b> ${e.note}</p>
-        </div>
-    `,
-              )
-              .join("");
-          })
-          .catch((err) => console.error("Error:", err));
-      }
+      // This is the only thing needed here now:
+      document.addEventListener("DOMContentLoaded", () => {
+        const id = new URLSearchParams(window.location.search).get("id");
+        if (!id) {
+          document.body.innerHTML =
+            "<div class='card'><h2>Error</h2><p>No Complaint ID found.</p></div>";
+        } else {
+          // Start the flow
+          fetchData(id, "");
+        }
+      });
     </script>
   </body>
 </html>
