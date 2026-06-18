@@ -51,38 +51,6 @@
     </div>
 
     <script src="config.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        fetch(`${window.API_BASE_URL}/api/my-complaints`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("access_token"),
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            const list = document.getElementById("userComplaintsList");
-            list.innerHTML = data
-              .map(
-                (c) => `
-                    <div class="complaint-item" onclick="window.location.href='track_complaint.html?id=${c.complaint_id}'">
-                        <strong>${c.title}</strong><br>
-                        <small>Status: ${c.status}</small>
-                    </div>
-                `,
-              )
-              .join("");
-          })
-          .catch(
-            () =>
-              (document.getElementById("userComplaintsList").innerText =
-                "No complaints found."),
-          );
-      });
-
-      function trackById() {
-        const id = document.getElementById("complaintIdInput").value;
-        if (id) window.location.href = `track_complaint.html?id=${id}`;
-      }
-    </script>
+    <script src="track_portal.js"></script>
   </body>
 </html>
