@@ -19,6 +19,7 @@ from sqlalchemy import func
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
+import secrets 
 
 # env_path = Path(__file__).resolve().parent / '.env'
 # load_dotenv(dotenv_path=env_path)
@@ -474,6 +475,7 @@ class ProcessAndDispatchComplaint(Resource):
             latitude=c_lat, longitude=c_lon, user_id=None if anonymous else user_id,
             staff_id=None,  # Explicitly None
             is_verified=False, # Explicitly False
+            key = secrets.token_hex(3).upper() if anonymous else None,
             evidence_url=evidence_url
         )
         db.session.add(new_complaint)
@@ -837,11 +839,26 @@ class DeleteOffice(Resource):
 class Specific_Complaints(Resource):
     @jwt_required()
     def get(self,id):
+        user_id = get_jwt_identity()
         claims = get_jwt()
         role = claims.get('role')
-        if role != UserRole.STAFF.value:
-            return {"Unauthorized": 'No access'}, 403
+        # if role != UserRole.STAFF.value:
+        #     return {"Unauthorized": 'No access'}, 403
         complaint = db.session.get(Complaint, id)
+        parser = reqparse.RequestParser()
+        if role == UserRole.USER.value:
+            if not complaint.user_id:
+                parser.add_argument('key', required=True)
+                data = parser.parse_args()
+                if data['key'] != complaint.key:
+                    return {"Incorrect KEY": 'No access'}, 403
+            if user_id != complaint.user.user_id:
+                return {"Unauthorized": 'No access'}, 403
+        elif role == UserRole.STAFF.value:
+            if user_id != complaint.staff.staff_id:
+                return {"Unauthorized": 'No access'}, 403
+        else:
+            return {"Unauthorized": 'No access'}, 403
         if not complaint:
             return {"message": "Complaint not found"}, 404
         data = [{
