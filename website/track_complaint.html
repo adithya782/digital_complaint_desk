@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Complaint Timeline</title>
+    <style>
+      .card {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .timeline {
+        border-left: 2px solid #6d52ff;
+        padding-left: 20px;
+        margin-top: 20px;
+      }
+      .item {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2 id="complaintTitle">Loading...</h2>
+      <p>Status: <b id="statusBadge">Loading...</b></p>
+      <div class="timeline" id="timelineList"></div>
+      <button onclick="history.back()">Back</button>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+      const id = new URLSearchParams(window.location.search).get("id");
+
+      // Fetch Details
+      fetch(`${window.API_BASE_URL}/api/complaints/${id}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          document.getElementById("complaintTitle").innerText = data[0].title;
+          document.getElementById("statusBadge").innerText = data[0].status;
+        });
+
+      // Fetch Timeline
+      fetch(`${window.API_BASE_URL}/api/complaints/${id}/timeline`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+        },
+      })
+        .then((res) => res.json())
+        .then((events) => {
+          document.getElementById("timelineList").innerHTML = events
+            .map(
+              (e) => `
+                <div class="item">
+                    <small>${new Date(e.timestamp).toLocaleDateString()}</small>
+                    <p>${e.description}</p>
+                </div>
+            `,
+            )
+            .join("");
+        });
+    </script>
+  </body>
+</html>
