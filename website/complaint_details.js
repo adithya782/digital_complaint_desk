@@ -28,9 +28,20 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       const complaint = data[0];
       // 3. Render the fetched data
+      let evidenceHtml = "";
+      if (complaint.evidence_url) {
+        evidenceHtml = `
+            <p><b>Evidence:</b></p>
+            <img src="${complaint.evidence_url}" alt="Evidence" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+        `;
+      } else {
+        evidenceHtml = `<p><b>Evidence:</b> No evidence provided.</p>`;
+      }
+
       detailsContainer.innerHTML = `
             <h2>${complaint.title}</h2>
             <p><b>Description:</b> ${complaint.description}</p>
+            ${evidenceHtml}
             <p><b>Latitude:</b> ${complaint.latitude}</p>
             <p><b>Longitude:</b> ${complaint.longitude}</p>
             <p><b>Anonymous:</b> ${complaint.anonymous ? "Yes" : "No"}</p>

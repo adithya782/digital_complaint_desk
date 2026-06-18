@@ -849,6 +849,7 @@ class Specific_Complaints(Resource):
             'description': complaint.description,
             'latitude': complaint.latitude,
             'longitude': complaint.longitude,
+            'evidence_url': complaint.evidence_url,
             'anonymous': True if not complaint.user_id else False,
             'status': complaint.status
         }]
