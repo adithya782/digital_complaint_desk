@@ -904,7 +904,22 @@ class Specific_Complaints(Resource):
 class Track(Resource):
     def get(self, complaint_id):
         complaint = Complaint.query.get_or_404(complaint_id)
+        current_user_id = get_jwt_identity()
+        claims = get_jwt() if current_user_id else {}
+        role = claims.get('role')
+
+        # SECURITY CHECK
+        is_owner = current_user_id and complaint.user_id == current_user_id
+        is_staff = role == UserRole.STAFF.value and (not complaint.staff or complaint.staff.staff_id == current_user_id)
         
+        # Check if they have permission
+        if not (is_owner or is_staff):
+            # If they aren't the owner/staff, check for the tracking key
+            key = request.args.get('key')
+            if not complaint.user_id and key == complaint.key:
+                pass # Authorized via Key
+            else:
+                return {"message": "Forbidden"}, 403
         # 1. Build the timeline (your existing logic)
         timeline = []
         timeline.append({"step": "Filed", "date": complaint.created_at.strftime('%Y-%m-%d %H:%M'), "note": "Complaint submitted by user"})
