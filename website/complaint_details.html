@@ -44,6 +44,20 @@
   <body>
     <div class="card" id="complaintDetails"></div>
 
+    <div class="card" id="actionSection" style="margin-top: 20px">
+      <h3>Update Status</h3>
+      <textarea
+        id="actionDescription"
+        placeholder="Enter inspection details or resolution notes..."
+        style="width: 100%; height: 80px"
+      ></textarea>
+      <br />
+      <button onclick="updateComplaint('In Progress')">Start Inspection</button>
+      <button onclick="updateComplaint('Resolved')" style="background: #28a745">
+        Mark Resolved
+      </button>
+    </div>
+
     <button onclick="history.back()">Back</button>
 
     <script src="complaint_details.js"></script>

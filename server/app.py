@@ -854,6 +854,33 @@ class Specific_Complaints(Resource):
         }]
         
         return data, 200
+    
+    def put(self, id):
+        data = request.get_json()
+        complaint = db.session.get(Complaint, id)
+        
+        # 1. Update Complaint Status
+        complaint.status = data.get('status')
+        
+        # 2. Log the event
+        new_event = ComplaintEvent(
+            complaint_id=id,
+            description=data.get('description'),
+            staff_id=get_jwt_identity() # Ensure you have the current staff's ID
+        )
+        
+        # 3. If resolved, create a Resolution record
+        if data.get('status') == 'Resolved':
+            res = Resolution(
+                complaint_id=id,
+                action_taken=data.get('description'),
+                staff_id=get_jwt_identity()
+            )
+            db.session.add(res)
+            
+        db.session.add(new_event)
+        db.session.commit()
+        return {"message": "Updated successfully"}, 200
 
 
 class Track(Resource):
