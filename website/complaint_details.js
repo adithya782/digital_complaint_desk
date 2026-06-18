@@ -42,3 +42,31 @@ document.addEventListener("DOMContentLoaded", () => {
       detailsContainer.innerHTML = `<p>Error loading complaint: ${err.message}</p>`;
     });
 });
+function updateComplaint(newStatus) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const complaintId = urlParams.get("id");
+  const description = document.getElementById("actionDescription").value;
+
+  if (!description) {
+    alert("Please provide details for this action.");
+    return;
+  }
+
+  fetch(`${window.API_BASE_URL}/api/complaints/${complaintId}`, {
+    method: "PUT", // Assuming you use PUT to update
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      status: newStatus,
+      description: description,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      alert("Status updated successfully!");
+      location.reload(); // Refresh to show new status
+    })
+    .catch((err) => console.error(err));
+}
