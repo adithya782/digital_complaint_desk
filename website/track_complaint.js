@@ -20,27 +20,26 @@ function fetchData(complaintId, key) {
     },
   })
     .then((res) => {
-      // If forbidden, show the key input
+      // 1. Check status first!
       if (res.status === 403) {
+        console.log("Status 403 detected: Showing key input.");
         document
           .getElementById("keyEntrySection")
           .style.setProperty("display", "block", "important");
         document.getElementById("timelineList").innerHTML =
           "<p>Please enter the tracking key to view this complaint.</p>";
-        document.getElementById("complaintTitle").innerText =
-          "Private Complaint";
-        document.getElementById("statusBadge").innerText = "Locked";
         throw new Error("Key Required");
       }
-      return res.json();
+
+      if (!res.ok) throw new Error("Server Error: " + res.status);
+
+      return res.json(); // Only parse if 200 OK
     })
     .then((data) => {
-      // Hide key section on success
       document.getElementById("keyEntrySection").style.display = "none";
 
-      // Update UI
       document.getElementById("complaintTitle").innerText =
-        data.title || "Complaint Details";
+        data.title || "Complaint";
       document.getElementById("statusBadge").innerText = data.status || "N/A";
 
       const container = document.getElementById("timelineList");
@@ -57,7 +56,7 @@ function fetchData(complaintId, key) {
     })
     .catch((err) => {
       if (err.message !== "Key Required") {
-        console.error("Fetch error:", err);
+        console.error("Critical Error:", err);
       }
     });
 }
