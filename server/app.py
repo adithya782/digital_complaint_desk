@@ -904,6 +904,7 @@ class Specific_Complaints(Resource):
         return {"message": "Success"}, 200
 
 class Track(Resource):
+    @jwt_required()
     def get(self, complaint_id):
         complaint = Complaint.query.get_or_404(complaint_id)
         current_user_id = get_jwt_identity()
