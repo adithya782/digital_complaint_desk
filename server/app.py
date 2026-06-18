@@ -886,38 +886,24 @@ class Specific_Complaints(Resource):
 
 class Track(Resource):
     def get(self, complaint_id):
-        # 1. Fetch the complaint (get_or_404 handles the 404 error if it doesn't exist)
         complaint = Complaint.query.get_or_404(complaint_id)
         
-        # 2. Build the timeline list
+        # 1. Build the timeline (your existing logic)
         timeline = []
-
-        # A. Add the initial 'Filed' event (from the main complaint record)
-        timeline.append({
-            "step": "Filed",
-            "date": complaint.created_at.strftime('%Y-%m-%d %H:%M'),
-            "note": "Complaint submitted by user"
-        })
-
-        # B. Add all intermediate events (using your new db.relationship!)
-        # We sort them by timestamp to ensure they appear in the correct order
-        events = sorted(complaint.events, key=lambda x: x.timestamp)
-        for event in events:
-            timeline.append({
-                "step": "Progress",
-                "date": event.timestamp.strftime('%Y-%m-%d %H:%M'),
-                "note": event.description
-            })
-
-        # C. Add the final Resolution (if it exists)
-        if complaint.resolution:
-            timeline.append({
-                "step": "Resolved",
-                "date": complaint.resolution.resolved_at.strftime('%Y-%m-%d %H:%M'),
-                "note": f"Action taken: {complaint.resolution.action_taken}"
-            })
+        timeline.append({"step": "Filed", "date": complaint.created_at.strftime('%Y-%m-%d %H:%M'), "note": "Complaint submitted by user"})
+        
+        for event in sorted(complaint.events, key=lambda x: x.timestamp):
+            timeline.append({"step": "Progress", "date": event.timestamp.strftime('%Y-%m-%d %H:%M'), "note": event.description})
             
-        return timeline
+        if complaint.resolution:
+            timeline.append({"step": "Resolved", "date": complaint.resolution.resolved_at.strftime('%Y-%m-%d %H:%M'), "note": f"Action taken: {complaint.resolution.action_taken}"})
+        
+        # 2. Return a dictionary containing BOTH metadata and timeline
+        return {
+            "title": complaint.title,
+            "status": complaint.status,
+            "timeline": timeline
+        }, 200
 
 app.register_blueprint(auth_bp)
     
