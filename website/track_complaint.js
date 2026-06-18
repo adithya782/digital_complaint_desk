@@ -18,6 +18,7 @@ function fetchData(complaintId, key) {
   })
     .then((res) => {
       // Handle the Forbidden state
+      console.log("Response Status:", res.status);
       if (res.status === 403) {
         document.getElementById("keyEntrySection").style.display = "block";
         document.getElementById("timelineList").innerHTML =
