@@ -880,6 +880,11 @@ function fetchAI(onlyPending) {
 
         // Inside your loop iterating over complaints:
         // Inside your complaints.forEach loop:
+        const isProcessed = item.is_verified;
+
+        // Inside your complaints.forEach loop:
+
+        // 1. Get the AI suggestion (assuming the field is item.ai_department_id)
         const defaultDeptId = item.department_id || item.ai_department_id;
 
         tbody.innerHTML += `
