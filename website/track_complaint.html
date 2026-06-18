@@ -63,27 +63,23 @@
           },
         })
           .then((res) => res.json())
-          .then((events) => {
+          .then((data) => {
+            // data now contains {title, status, timeline}
+            document.getElementById("complaintTitle").innerText = data.title;
+            document.getElementById("statusBadge").innerText = data.status;
+
             const list = document.getElementById("timelineList");
-            if (events.length === 0) {
-              list.innerHTML = "<p>No updates yet.</p>";
-            } else {
-              list.innerHTML = events
-                .map(
-                  (e) => `
-              <div class="item">
-                <small>${new Date(e.timestamp).toLocaleDateString()}</small>
-                <p>${e.description}</p>
-              </div>
-            `,
-                )
-                .join("");
-            }
+            list.innerHTML = data.timeline
+              .map(
+                (e) => `
+        <div class="item">
+            <small>${e.date}</small> <p><b>${e.step}:</b> ${e.note}</p>
+        </div>
+    `,
+              )
+              .join("");
           })
-          .catch((err) => {
-            document.getElementById("timelineList").innerHTML =
-              "<p class='error'>Failed to load timeline.</p>";
-          });
+          .catch((err) => console.error("Error:", err));
       }
     </script>
   </body>
