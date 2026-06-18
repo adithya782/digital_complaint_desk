@@ -857,20 +857,22 @@ class Specific_Complaints(Resource):
     
     def put(self, id):
         data = request.get_json()
+        is_final = data.get('is_final', False)
         complaint = db.session.get(Complaint, id)
         
-        # 1. Update Complaint Status
+        # 1. Update the main status
         complaint.status = data.get('status')
         
-        # 2. Log the event
+        # 2. Always log the event (for history/audit)
         new_event = ComplaintEvent(
             complaint_id=id,
             description=data.get('description'),
-            staff_id=get_jwt_identity() # Ensure you have the current staff's ID
+            staff_id=get_jwt_identity() # Ensure this grabs the current staff
         )
+        db.session.add(new_event)
         
-        # 3. If resolved, create a Resolution record
-        if data.get('status') == 'Resolved':
+        # 3. ONLY create a Resolution if it's the final step
+        if is_final:
             res = Resolution(
                 complaint_id=id,
                 action_taken=data.get('description'),
@@ -878,10 +880,8 @@ class Specific_Complaints(Resource):
             )
             db.session.add(res)
             
-        db.session.add(new_event)
         db.session.commit()
-        return {"message": "Updated successfully"}, 200
-
+        return {"message": "Success"}, 200
 
 class Track(Resource):
     def get(self, complaint_id):

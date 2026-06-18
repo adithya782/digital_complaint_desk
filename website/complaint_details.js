@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
       detailsContainer.innerHTML = `<p>Error loading complaint: ${err.message}</p>`;
     });
 });
-function updateComplaint(newStatus) {
+function updateComplaint(newStatus, isFinal) {
   const urlParams = new URLSearchParams(window.location.search);
   const complaintId = urlParams.get("id");
   const description = document.getElementById("actionDescription").value;
@@ -53,7 +53,7 @@ function updateComplaint(newStatus) {
   }
 
   fetch(`${window.API_BASE_URL}/api/complaints/${complaintId}`, {
-    method: "PUT", // Assuming you use PUT to update
+    method: "PUT",
     headers: {
       Authorization: "Bearer " + localStorage.getItem("access_token"),
       "Content-Type": "application/json",
@@ -61,12 +61,18 @@ function updateComplaint(newStatus) {
     body: JSON.stringify({
       status: newStatus,
       description: description,
+      is_final: isFinal, // Backend will use this to toggle Resolution creation
     }),
   })
     .then((res) => res.json())
     .then((data) => {
-      alert("Status updated successfully!");
-      location.reload(); // Refresh to show new status
+      alert("Action recorded successfully!");
+      // If it's final, redirect to dashboard; otherwise, stay to add more updates
+      if (isFinal) {
+        window.location.href = "staff_dashboard.html";
+      } else {
+        location.reload();
+      }
     })
     .catch((err) => console.error(err));
 }
