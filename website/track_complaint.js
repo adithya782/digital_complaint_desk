@@ -1,50 +1,57 @@
+// 1. Automatic initialization when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   const complaintId = new URLSearchParams(window.location.search).get("id");
-
-  // Initial load without a key
-  fetchData(complaintId, "");
+  if (!complaintId) {
+    document.body.innerHTML =
+      "<div class='card'><h2>Error</h2><p>No Complaint ID found.</p></div>";
+  } else {
+    fetchData(complaintId, "");
+  }
 });
 
+// 2. The main fetching function
 function fetchData(complaintId, key) {
-  // Use a query parameter for the key if it exists
   let timelineUrl = `${window.API_BASE_URL}/api/complaint/timeline/${complaintId}`;
   if (key) timelineUrl += `?key=${encodeURIComponent(key)}`;
 
-  // 1. Fetch Details & Timeline (Consolidated Logic)
   fetch(timelineUrl, {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("access_token"),
     },
   })
     .then((res) => {
-      // Handle the Forbidden state
-      console.log("Response Status:", res.status);
+      // If forbidden, show the key input
       if (res.status === 403) {
-        const section = document.getElementById("keyEntrySection");
-        section.style.setProperty("display", "block", "important");
+        document
+          .getElementById("keyEntrySection")
+          .style.setProperty("display", "block", "important");
         document.getElementById("timelineList").innerHTML =
           "<p>Please enter the tracking key to view this complaint.</p>";
+        document.getElementById("complaintTitle").innerText =
+          "Private Complaint";
+        document.getElementById("statusBadge").innerText = "Locked";
         throw new Error("Key Required");
       }
       return res.json();
     })
     .then((data) => {
-      // Hide key section if successful
+      // Hide key section on success
       document.getElementById("keyEntrySection").style.display = "none";
 
-      // Update Status (Assuming backend now returns title/status + timeline)
+      // Update UI
+      document.getElementById("complaintTitle").innerText =
+        data.title || "Complaint Details";
       document.getElementById("statusBadge").innerText = data.status || "N/A";
 
-      // Update Timeline
       const container = document.getElementById("timelineList");
       container.innerHTML = data.timeline
         .map(
           (e) => `
-        <div class="timeline-item">
-            <small style="color: #6c757d;">${e.date}</small>
-            <p><b>${e.step}:</b> ${e.note}</p>
-        </div>
-      `,
+            <div class="timeline-item">
+                <small style="color: #6c757d;">${e.date}</small>
+                <p><b>${e.step}:</b> ${e.note}</p>
+            </div>
+        `,
         )
         .join("");
     })
@@ -55,7 +62,7 @@ function fetchData(complaintId, key) {
     });
 }
 
-// Function triggered by the button in track_complaint.html
+// 3. Triggered by the "Submit Key" button
 function fetchWithKey() {
   const complaintId = new URLSearchParams(window.location.search).get("id");
   const key = document.getElementById("manualKeyInput").value;

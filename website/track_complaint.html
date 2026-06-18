@@ -17,11 +17,8 @@
         padding-left: 20px;
         margin-top: 20px;
       }
-      .item {
+      .timeline-item {
         margin-bottom: 20px;
-      }
-      .error {
-        color: red;
       }
     </style>
   </head>
@@ -30,8 +27,16 @@
       <h2 id="complaintTitle">Loading...</h2>
       <p>Status: <b id="statusBadge">Loading...</b></p>
 
-      <div id="keyEntrySection" style="display: none; margin: 20px 0">
-        <p>This complaint requires a tracking key:</p>
+      <div
+        id="keyEntrySection"
+        style="
+          display: none;
+          margin: 20px 0;
+          border: 1px solid #ddd;
+          padding: 15px;
+        "
+      >
+        <p>This complaint is private. Please enter the tracking key:</p>
         <input
           type="text"
           id="manualKeyInput"
@@ -46,19 +51,5 @@
 
     <script src="config.js"></script>
     <script src="track_complaint.js"></script>
-
-    <script>
-      // This is the only thing needed here now:
-      document.addEventListener("DOMContentLoaded", () => {
-        const id = new URLSearchParams(window.location.search).get("id");
-        if (!id) {
-          document.body.innerHTML =
-            "<div class='card'><h2>Error</h2><p>No Complaint ID found.</p></div>";
-        } else {
-          // Start the flow
-          fetchData(id, "");
-        }
-      });
-    </script>
   </body>
 </html>
