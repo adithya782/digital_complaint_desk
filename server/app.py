@@ -922,7 +922,7 @@ class Track(Resource):
             if not complaint.user_id and key == complaint.key:
                 pass # Authorized via Key
             else:
-                return {"message": "Forbidden"}, 403
+                return {"message": "Forbidden", "requires_key": (complaint.user_id is None)}, 403
         # 1. Build the timeline (your existing logic)
         timeline = []
         timeline.append({"step": "Filed", "date": complaint.created_at.strftime('%Y-%m-%d %H:%M'), "note": "Complaint submitted by user"})
