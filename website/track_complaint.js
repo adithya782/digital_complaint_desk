@@ -22,17 +22,19 @@ function fetchData(complaintId, key) {
     .then((res) => {
       // 1. Check status first!
       if (res.status === 403) {
-        console.log("Status 403 detected: Showing key input.");
-        document
-          .getElementById("keyEntrySection")
-          .style.setProperty("display", "block", "important");
-        document.getElementById("timelineList").innerHTML =
-          "<p>Please enter the tracking key to view this complaint.</p>";
-        throw new Error("Key Required");
+        return res.json().then((data) => {
+          if (data.requires_key) {
+            // ONLY show the key box if the server says it's required
+            document.getElementById("keyEntrySection").style.display = "block";
+            document.getElementById("timelineList").innerHTML =
+              "<p>Enter tracking key.</p>";
+          } else {
+            // Otherwise, tell the user they don't have access
+            alert("You do not have permission to view this.");
+          }
+          throw new Error("Access Denied");
+        });
       }
-
-      if (!res.ok) throw new Error("Server Error: " + res.status);
-
       return res.json(); // Only parse if 200 OK
     })
     .then((data) => {
