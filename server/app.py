@@ -913,7 +913,10 @@ class Track(Resource):
 
         # SECURITY CHECK
         is_owner = current_user_id and complaint.user_id == current_user_id
-        is_staff = role == UserRole.STAFF.value and (not complaint.staff or complaint.staff.staff_id == current_user_id)
+        is_staff = role == UserRole.STAFF.value and (not complaint.staff or complaint.staff_id == current_user_id)
+        print(f"DEBUG: current_user_id={current_user_id} (Type: {type(current_user_id)})")
+        print(f"DEBUG: complaint.user_id={complaint.user_id} (Type: {type(complaint.user_id)})")
+        print(f"DEBUG: is_owner={is_owner}")
         
         # Check if they have permission
         if not (is_owner or is_staff):
