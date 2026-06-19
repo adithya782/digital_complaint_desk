@@ -23,6 +23,7 @@ function fetchData(complaintId, key) {
       if (res.status === 403) {
         return res.json().then((data) => {
           // If the server says a key is required, then show the UI
+          console.log(data);
           if (data.requires_key) {
             document.getElementById("keyEntrySection").style.display = "block";
             document.getElementById("timelineList").innerHTML =
