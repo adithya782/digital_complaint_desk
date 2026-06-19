@@ -21,6 +21,21 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
 import secrets 
 
+# LOGGING
+import logging
+import sys
+
+# Configure logging to write to stdout
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
+logger = logging.getLogger(__name__)
+############################################
+
+
 # env_path = Path(__file__).resolve().parent / '.env'
 # load_dotenv(dotenv_path=env_path)
 load_dotenv()
@@ -914,9 +929,8 @@ class Track(Resource):
         # SECURITY CHECK
         is_owner = current_user_id and complaint.user_id == current_user_id
         is_staff = role == UserRole.STAFF.value and (not complaint.staff or complaint.staff_id == current_user_id)
-        print(f"DEBUG: current_user_id={current_user_id} (Type: {type(current_user_id)})")
-        print(f"DEBUG: complaint.user_id={complaint.user_id} (Type: {type(complaint.user_id)})")
-        print(f"DEBUG: is_owner={is_owner}")
+        logger.info(f"Current user ID: {current_user_id}")
+        logger.error(f"Failed to access complaint {complaint_id}")
         
         # Check if they have permission
         if not (is_owner or is_staff):
