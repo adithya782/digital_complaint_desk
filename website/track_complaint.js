@@ -22,17 +22,19 @@ function fetchData(complaintId, key) {
     .then((res) => {
       if (res.status === 403) {
         return res.json().then((data) => {
+          // If the server says a key is required, then show the UI
           if (data.requires_key) {
             document.getElementById("keyEntrySection").style.display = "block";
             document.getElementById("timelineList").innerHTML =
-              "<p>Please enter the tracking key.</p>";
-            return null; // Return null instead of throwing an error
+              "<p>Please enter the tracking key to view this complaint.</p>";
           } else {
-            alert("You do not have permission to view this.");
-            return null;
+            // Otherwise, show a proper "Access Denied" message
+            alert("You do not have permission to view this complaint.");
           }
+          throw new Error("Access Denied"); // Stop the chain
         });
       }
+
       if (!res.ok) throw new Error("Server Error: " + res.status);
       return res.json();
     })
