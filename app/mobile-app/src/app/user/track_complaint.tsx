@@ -23,25 +23,35 @@ export default function TrackComplaint() {
   const loadData = async (trackingKey = "") => {
     setLoading(true);
     try {
-      // Pass 'true' to ignore global 403 redirect in apiClient
       const response = await apiClient(
         `/api/complaint/timeline/${id}${trackingKey ? `?key=${trackingKey}` : ""}`,
         { method: "GET" },
         true,
       );
 
-      // If we get a response, the complaint is accessible
       if (response) {
         setData(response);
         setNeedsKey(false);
-      } else {
-        // If response is null, the backend returned 403 (Forbidden/Key Required)
-        setNeedsKey(true);
       }
     } catch (err: any) {
-      // If it's a genuine network error, show an alert
-      Alert.alert("Error", err.message || "Failed to load complaint data.");
-      setNeedsKey(false);
+      // Check if the error returned from the server is 403
+      if (err.status === 403) {
+        // If the server explicitly says a key is required, show the input
+        if (err.data?.requires_key === true) {
+          setNeedsKey(true);
+        } else {
+          // PERMISSION DENIED: This is a restricted complaint you cannot access
+          Alert.alert(
+            "Access Denied",
+            "You do not have permission to view this complaint.",
+          );
+          router.back(); // Kick the user out to the previous screen
+        }
+      } else {
+        // General network/server error
+        Alert.alert("Error", err.message || "Failed to load complaint data.");
+        router.back();
+      }
     } finally {
       setLoading(false);
     }
