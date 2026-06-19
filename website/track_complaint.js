@@ -25,6 +25,7 @@ function fetchData(complaintId, key) {
         return res.json().then((data) => {
           if (data.requires_key) {
             // ONLY show the key box if the server says it's required
+            console.log("Server returned 403. Data received:", data);
             document.getElementById("keyEntrySection").style.display = "block";
             document.getElementById("timelineList").innerHTML =
               "<p>Enter tracking key.</p>";
