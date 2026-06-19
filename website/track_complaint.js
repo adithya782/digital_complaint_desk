@@ -20,25 +20,26 @@ function fetchData(complaintId, key) {
     },
   })
     .then((res) => {
-      // 1. Check status first!
       if (res.status === 403) {
         return res.json().then((data) => {
           if (data.requires_key) {
-            // ONLY show the key box if the server says it's required
-            console.log("Server returned 403. Data received:", data);
             document.getElementById("keyEntrySection").style.display = "block";
             document.getElementById("timelineList").innerHTML =
-              "<p>Enter tracking key.</p>";
+              "<p>Please enter the tracking key.</p>";
+            return null; // Return null instead of throwing an error
           } else {
-            // Otherwise, tell the user they don't have access
             alert("You do not have permission to view this.");
+            return null;
           }
-          throw new Error("Access Denied");
         });
       }
-      return res.json(); // Only parse if 200 OK
+      if (!res.ok) throw new Error("Server Error: " + res.status);
+      return res.json();
     })
     .then((data) => {
+      // Add this check to prevent crashing if data is null (from the 403 path)
+      if (!data) return;
+
       document.getElementById("keyEntrySection").style.display = "none";
 
       document.getElementById("complaintTitle").innerText =
