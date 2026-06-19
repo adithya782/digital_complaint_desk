@@ -73,7 +73,7 @@ export default function StaffDashboard() {
       subtitle: "Track issues",
       color: "#8b5cf6",
       icon: "chart-line",
-      route: "/user/complaint_status" as Href,
+      route: "/user/track_portal" as Href,
     },
     {
       id: "4",
@@ -95,7 +95,7 @@ export default function StaffDashboard() {
       >
         {/* 1. Header/User Info */}
         <Text style={styles.headerTitle}>
-          Welcome, {data?.fullname || "USER"}
+          Welcome, {dashboardData?.fullname || "USER"}
         </Text>
         <View style={styles.cardsGrid}>
           {actions.map((action) => (

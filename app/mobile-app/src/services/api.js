@@ -4,58 +4,54 @@ import { Alert } from "react-native";
 const IS_PRODUCTION = true; // 🔄 Flip this to true when deploying!
 
 const API_BASE_URL = IS_PRODUCTION
-  ? "https://appear-eastbound-usable.ngrok-free.dev" // Your live backend domain (Supabase/Render/AWS)
+  ? "https://digital-complaint-desk-server.onrender.com" // Your live backend domain (Supabase/Render/AWS)
   : // : "http://127.0.0.1:5000"; // Your local Flask server
     "http://192.168.43.36:5000";
 
-export async function apiClient(endpoint, options = {}) {
+export async function apiClient(
+  endpoint,
+  options = {},
+  ignoreAuthErrors = false,
+) {
   const token = await SecureStore.getItemAsync("access_token");
-  const method = options.method || "GET";
-  const isFormData = options.body instanceof FormData;
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method: method,
+    ...options,
     headers: {
-      ...(!isFormData ? { "Content-Type": "application/json" } : {}),
-      "ngrok-skip-browser-warning": "true",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(!options.body || !(options.body instanceof FormData)
+        ? { "Content-Type": "application/json" }
+        : {}),
+      Authorization: token ? `Bearer ${token}` : "",
       ...options.headers,
     },
-    // If it's FormData, pass the body directly.
-    // Otherwise, stringify the body if it exists.
-    body: isFormData
-      ? options.body
-      : options.body
+    body:
+      options.body && !(options.body instanceof FormData)
         ? JSON.stringify(options.body)
-        : null,
+        : options.body,
   });
 
-  // 1. Handle 401 Unauthorized
+  // Handle 401: Always force logout
   if (response.status === 401) {
     await SecureStore.deleteItemAsync("access_token");
-    Alert.alert("Session Expired", "Please log in again.");
     router.replace("/home/login");
     return null;
   }
 
-  // 2. Handle 403 Forbidden
+  // Handle 403: Only logout if NOT ignoring errors
   if (response.status === 403) {
-    Alert.alert("Forbidden", "You do not have access.");
-    router.replace("/home");
+    if (!ignoreAuthErrors) {
+      Alert.alert("Forbidden", "You do not have access.");
+      router.replace("/home");
+      return null;
+    }
+    // If ignoring errors, we return null so the component can handle the 403
     return null;
   }
 
-  // 3. Check for general errors
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(errorData.error || "Request failed");
   }
 
-  // 4. Handle Empty Responses (Fix for 204 or empty string bodies)
-  const text = await response.text();
-  try {
-    return text ? JSON.parse(text) : null;
-  } catch (e) {
-    return text; // Return raw text if it's not JSON
-  }
+  return await response.json();
 }

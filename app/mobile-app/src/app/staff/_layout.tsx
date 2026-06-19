@@ -13,6 +13,15 @@ export default function StaffLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "profile",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="user-gear" size={20} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
