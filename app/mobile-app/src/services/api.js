@@ -30,28 +30,42 @@ export async function apiClient(
         : options.body,
   });
 
-  // Handle 401: Always force logout
+  // 1. Always attempt to parse the body if it's not a 204 (No Content)
+  let data = null;
+  try {
+    data = await response.json();
+  } catch (e) {
+    // Keep data as null if response is empty
+  }
+
+  // 2. Handle 401: Always force logout
   if (response.status === 401) {
     await SecureStore.deleteItemAsync("access_token");
     router.replace("/home/login");
     return null;
   }
 
-  // Handle 403: Only logout if NOT ignoring errors
+  // 3. Handle 403: Throw an error object with status and data
   if (response.status === 403) {
     if (!ignoreAuthErrors) {
       Alert.alert("Forbidden", "You do not have access.");
       router.replace("/home");
       return null;
     }
-    // If ignoring errors, we return null so the component can handle the 403
-    return null;
+    // IMPORTANT: Throw instead of returning null so the UI's catch block sees it
+    const error = new Error("Forbidden");
+    error.status = 403;
+    error.data = data; // Attach the JSON response (e.g., {requires_key: false})
+    throw error;
   }
 
+  // 4. Handle other non-200 status codes
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || "Request failed");
+    const error = new Error(data?.message || "Request failed");
+    error.status = response.status;
+    error.data = data;
+    throw error;
   }
 
-  return await response.json();
+  return data;
 }
