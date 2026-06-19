@@ -927,8 +927,18 @@ class Track(Resource):
         role = claims.get('role')
 
         # SECURITY CHECK
-        is_owner = current_user_id and int(complaint.user_id) == int(current_user_id)
-        is_staff = role == UserRole.STAFF.value and (not complaint.staff or int(complaint.staff_id) == int(current_user_id))
+        is_owner = (
+    current_user_id is not None and 
+    complaint.user_id is not None and 
+    int(complaint.user_id) == int(current_user_id)
+)
+        is_staff = (
+    role == UserRole.STAFF.value and 
+    (
+        not complaint.staff or 
+        (complaint.staff.staff_id is not None and int(complaint.staff.staff_id) == int(current_user_id))
+    )
+)
         # logger.info(f"Current user ID: {current_user_id}")
         # logger.info(f"Complaint's user ID: {complaint.user_id}")
         # logger.error(f"Failed to access complaint {complaint_id}")
