@@ -25,9 +25,30 @@ export default function StaffLayout() {
       />
       {/* Add your other tabs here */}
       <Tabs.Screen
+        name="track_portal"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="track_complaint"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
         name="file_complaint"
         options={{
           href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "profile",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="user-gear" size={20} color={color} />
+          ),
         }}
       />
     </Tabs>

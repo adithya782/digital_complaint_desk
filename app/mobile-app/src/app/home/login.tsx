@@ -8,6 +8,8 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  Alert,
+  Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
@@ -19,6 +21,8 @@ export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRoleModalVisible, setIsRoleModalVisible] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   const handleGoogleLogin = () => {
     console.log("Google Login pressed - implement Firebase/Auth here");
@@ -26,29 +30,27 @@ export default function LoginScreen() {
   async function manualLogin() {
     try {
       const endpoint = "/api/auth/login";
-      const body = JSON.stringify({
+      const body = {
         email: email,
         password: password,
-      });
+      };
       const options = {
         method: "POST",
-        headers: "",
+        headers: {},
         body: body,
       };
       const data = await apiClient(endpoint, options);
       if (data.success) {
         await SecureStore.setItemAsync("access_token", data.access_token);
 
-        // Navigation logic
-        if (data.role === "admin") {
-          router.replace("/admin/dashboard" as any);
-        } else if (data.role === "staff") {
-          router.replace("/staff/dashboard" as any);
+        if (data.role === "admin" || data.role === "staff") {
+          setUserRole(data.role);
+          setIsRoleModalVisible(true); // Open the custom modal
         } else {
           router.replace("/user/dashboard" as any);
         }
       } else {
-        alert(data.error || "Login failed");
+        Alert.alert("Login Failed", data.error || "Invalid credentials");
       }
     } catch (err: any) {
       alert(err.message);
@@ -117,6 +119,40 @@ export default function LoginScreen() {
             Register
           </Text>
         </Text>
+        <Modal visible={isRoleModalVisible} transparent animationType="fade">
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Welcome Back!</Text>
+              <Text style={styles.modalSubtitle}>
+                How would you like to proceed?
+              </Text>
+
+              <TouchableOpacity
+                style={styles.modalBtnSecondary}
+                onPress={() => router.replace("/user/dashboard" as any)}
+              >
+                <Text style={styles.modalBtnTextSecondary}>
+                  Continue as User
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.modalBtnPrimary}
+                onPress={() =>
+                  router.replace(
+                    userRole === "admin"
+                      ? "/admin/dashboard"
+                      : "/staff/dashboard",
+                  )
+                }
+              >
+                <Text style={styles.modalBtnTextPrimary}>
+                  {userRole === "admin" ? "Admin" : "Staff"} Dashboard
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </KeyboardAvoidingView>
   );
@@ -179,4 +215,37 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   googleBtnText: { fontWeight: "bold", fontSize: 16, color: "#555" },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalCard: {
+    backgroundColor: "#fff",
+    padding: 30,
+    borderRadius: 20,
+    width: "100%",
+    alignItems: "center",
+  },
+  modalTitle: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
+  modalSubtitle: { color: "#666", marginBottom: 25, textAlign: "center" },
+  modalBtnPrimary: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: "#2563eb",
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  modalBtnSecondary: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: "#f1f5f9",
+    borderRadius: 12,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+  modalBtnTextPrimary: { color: "#fff", fontWeight: "bold" },
+  modalBtnTextSecondary: { color: "#333", fontWeight: "bold" },
 });
