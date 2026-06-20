@@ -114,7 +114,7 @@ export default function FileComplaint() {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `https://appear-eastbound-usable.ngrok-free.dev/api/user/complaint`,
+      `https://digital-complaint-desk-server.onrender.com/api/user/complaint`,
     );
     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.setRequestHeader("ngrok-skip-browser-warning", "true");
