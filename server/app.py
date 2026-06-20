@@ -902,24 +902,33 @@ class Specific_Complaints(Resource):
         data = request.get_json()
         is_final = data.get('is_final', False)
         complaint = db.session.get(Complaint, id)
+        user_id = get_jwt_identity()
         
-        # 1. Update the main status
+        # 1. FIND THE STAFF RECORD
+        # We need the Primary Key (staff_id) of the staff member 
+        # who corresponds to the logged-in user_id
+        staff_member = Staff.query.filter_by(user_id=int(user_id)).first()
+        
+        if not staff_member:
+            return {"message": "Staff profile not found for this user"}, 403
+            
+        # 2. Update the main status
         complaint.status = data.get('status')
         
-        # 2. Always log the event (for history/audit)
+        # 3. Use staff_member.staff_id (the primary key in the staff table)
         new_event = ComplaintEvent(
             complaint_id=id,
             description=data.get('description'),
-            staff_id=get_jwt_identity() # Ensure this grabs the current staff
+            staff_id=staff_member.staff_id  # <--- CORRECT: Maps user 3 to staff 1
         )
         db.session.add(new_event)
         
-        # 3. ONLY create a Resolution if it's the final step
+        # 4. ONLY create a Resolution if it's the final step
         if is_final:
             res = Resolution(
                 complaint_id=id,
                 action_taken=data.get('description'),
-                staff_id=get_jwt_identity()
+                staff_id=staff_member.staff_id # <--- CORRECT: Maps user 3 to staff 1
             )
             db.session.add(res)
             
