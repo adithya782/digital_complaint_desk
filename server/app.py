@@ -943,9 +943,10 @@ class Track(Resource):
         claims = get_jwt() if current_user_id else {}
         role = claims.get('role')
 
-        # Safely determine staff/owner status
+        # 1. SAFELY determine staff/owner status
         is_staff = False
         if role == UserRole.STAFF.value and complaint.staff:
+            # Safely check if the staff record belongs to the current user
             if int(complaint.staff.user_id) == int(current_user_id):
                 is_staff = True
 
@@ -955,17 +956,18 @@ class Track(Resource):
             int(complaint.user_id) == int(current_user_id)
         )
         
-        # SAFE LOGGING: Use a ternary or helper to check if staff exists before accessing user_id
-        staff_info = complaint.staff.user_id if complaint.staff else "None"
+        # 2. SAFE LOGGING: Use a conditional for the staff ID
+        staff_user_id = complaint.staff.user_id if complaint.staff else "None"
+        
         logger.info(f"Current user ID: {current_user_id}")
-        logger.info(f"Complaint staff user ID: {staff_info}")
+        logger.info(f"Complaint staff user ID: {staff_user_id}")
         logger.info(f"Complaint's user ID: {complaint.user_id}")
         
-        # Permission logic remains the same...
+        # 3. Proceed with permission check
         if not (is_owner or is_staff):
             key = request.args.get('key')
             if not complaint.user_id and key == complaint.key:
-                pass 
+                pass # Authorized via Key
             else:
                 return {"message": "Forbidden", "requires_key": (complaint.user_id is None)}, 403
 
