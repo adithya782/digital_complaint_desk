@@ -862,6 +862,8 @@ class Specific_Complaints(Resource):
         # if role != UserRole.STAFF.value:
         #     return {"Unauthorized": 'No access'}, 403
         complaint = db.session.get(Complaint, id)
+        if not complaint:
+            return {"message": "Complaint not found"}, 404
         parser = reqparse.RequestParser()
         if role == UserRole.USER.value:
             if not complaint.user_id:
