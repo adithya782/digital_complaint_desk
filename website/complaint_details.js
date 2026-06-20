@@ -52,6 +52,32 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
       detailsContainer.innerHTML = `<p>Error loading complaint: ${err.message}</p>`;
     });
+  fetch(`${window.API_BASE_URL}/api/complaint/timeline/${complaintId}`, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+      "ngrok-skip-browser-warning": "true",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      const timelineList = document.getElementById("timelineList");
+
+      // Clear loading or existing
+      timelineList.innerHTML = "";
+
+      // Loop through the timeline array provided by Flask
+      data.timeline.forEach((step) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${step.step}</strong> (${step.date})<br>
+          <small>${step.note}</small>
+          <hr>
+        `;
+        timelineList.appendChild(li);
+      });
+    })
+    .catch((err) => console.error("Timeline error:", err));
 });
 function updateComplaint(newStatus, isFinal) {
   const urlParams = new URLSearchParams(window.location.search);
