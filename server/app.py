@@ -854,7 +854,7 @@ class DeleteOffice(Resource):
 class Specific_Complaints(Resource):
     @jwt_required()
     def get(self,id):
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         if not user_id:
             return {"message": "Missing or invalid token"}, 401
         claims = get_jwt()
