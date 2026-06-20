@@ -38,15 +38,28 @@ document.addEventListener("DOMContentLoaded", () => {
         evidenceHtml = `<p><b>Evidence:</b> No evidence provided.</p>`;
       }
 
-      // Inside your first .then() block where you render complaintDetails
+      // Build the HTML structure
       detailsContainer.innerHTML = `
-    <h2>${complaint.title}</h2>
-    <div class="data-row"><span class="label">Status:</span><span class="value">${complaint.status}</span></div>
-    <div class="data-row"><span class="label">Anonymous:</span><span class="value">${complaint.anonymous ? "Yes" : "No"}</span></div>
-    <hr>
-    <p><b>Description:</b><br>${complaint.description}</p>
-    <p><b>Location:</b> ${complaint.latitude}, ${complaint.longitude}</p>
-    ${complaint.evidence_url ? `<img src="${complaint.evidence_url}" style="width:100%; border-radius:8px; margin-top:10px;">` : ""}
+    <h2 style="margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
+        ${complaint.title}
+    </h2>
+    
+    <div class="info-grid">
+        <div class="data-row"><span class="label">Status:</span> <span class="value badge">${complaint.status}</span></div>
+        <div class="data-row"><span class="label">Anonymous:</span> <span class="value">${complaint.anonymous ? "Yes" : "No"}</span></div>
+        <div class="data-row"><span class="label">Location:</span> <span class="value">${complaint.latitude}, ${complaint.longitude}</span></div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <p class="label" style="margin-bottom: 5px;">Description:</p>
+        <p style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #6d52ff;">
+            ${complaint.description}
+        </p>
+    </div>
+
+    <div style="margin-top: 20px;">
+        ${evidenceHtml}
+    </div>
 `;
     })
     .catch((err) => {
