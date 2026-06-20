@@ -874,7 +874,13 @@ class Specific_Complaints(Resource):
             if user_id != complaint.user.user_id:
                 return {"Unauthorized": 'No access'}, 403
         elif role == UserRole.STAFF.value:
+            print(f"DEBUG: Checking Staff Auth. Token User ID: {user_id}")
+            if not complaint.staff:
+                print("DEBUG: Complaint has no staff assigned.")
+                return {"message": "Complaint not assigned to any staff"}, 403
+            staff_user_id = getattr(complaint.staff, 'user_id', None)
             if user_id != complaint.staff.user.user_id:
+                print(f"DEBUG: Mismatch! Token ID {user_id} vs Staff User ID {staff_user_id}")
                 return {"Unauthorized": 'No access'}, 403
         else:
             return {"Unauthorized": 'No access'}, 403
