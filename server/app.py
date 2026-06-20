@@ -948,6 +948,7 @@ class Track(Resource):
     )
 )
         logger.info(f"Current user ID: {current_user_id}, {type(current_user_id)}")
+        logger.info(f"Complaint staff user ID: {current_user_id}, {type(complaint.staff.user_id)}")
         logger.info(f"Complaint's user ID: {complaint.user_id}, {type(complaint.user_id)}")
         logger.error(f"Failed to access complaint {complaint_id}, {type(complaint_id)}")
         
