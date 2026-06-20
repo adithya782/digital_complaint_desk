@@ -12,6 +12,7 @@ import {
 import { FontAwesome6 } from "@expo/vector-icons";
 import { apiClient } from "@/services/api";
 import RNPickerSelect from "react-native-picker-select";
+import { useRouter } from "expo-router"; // Add this
 
 export default function StaffDashboard() {
   const [data, setData] = useState<any>(null); // Main state for all dashboard data
@@ -21,6 +22,12 @@ export default function StaffDashboard() {
   const [selectedComplaint, setSelectedComplaint] = useState<any>(null);
   const [selectedDept, setSelectedDept] = useState<number | null>(null);
   const [dashboardData, setDashboardData] = useState<any>(null);
+  const router = useRouter();
+
+  const handlePressComplaint = (complaint: any) => {
+    // This pushes the ID to your dynamic route: app/complaints/[id].tsx
+    router.push(`/staff/complaints/${complaint.complaint_id}` as any);
+  };
 
   // Unified Fetch Function
   async function loadData() {
@@ -122,7 +129,7 @@ export default function StaffDashboard() {
             <TouchableOpacity
               key={complaint.complaint_id}
               style={styles.complaintItem}
-              onPress={() => openModal(complaint)}
+              onPress={() => handlePressComplaint(complaint)}
             >
               <Text style={styles.strong}>{complaint.title}</Text>
               <Text style={styles.desc1}>{complaint.description}</Text>
@@ -137,7 +144,7 @@ export default function StaffDashboard() {
         })}
       </ScrollView>
 
-      {/* Modal for Details */}
+      {/* Modal for Details
       <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
@@ -150,7 +157,7 @@ export default function StaffDashboard() {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }

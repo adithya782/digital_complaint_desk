@@ -53,7 +53,9 @@ export default function LoginScreen() {
         Alert.alert("Login Failed", data.error || "Invalid credentials");
       }
     } catch (err: any) {
-      alert(err.message);
+      Alert.alert("Error", err.data.error || err.message);
+      setEmail("");
+      setPassword("");
     }
   }
 

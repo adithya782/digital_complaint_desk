@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
 import { apiClient } from "../../services/api";
 
 export default function TrackComplaint() {
@@ -19,7 +19,13 @@ export default function TrackComplaint() {
   const [key, setKey] = useState("");
   const [needsKey, setNeedsKey] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setKey("");
+      };
+    }, []),
+  );
   const loadData = async (trackingKey = "") => {
     setLoading(true);
     try {
@@ -32,6 +38,7 @@ export default function TrackComplaint() {
       if (response) {
         setData(response);
         setNeedsKey(false);
+        setKey("");
       }
     } catch (err: any) {
       // Check if the error returned from the server is 403

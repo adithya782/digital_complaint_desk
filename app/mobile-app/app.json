@@ -21,7 +21,9 @@
       },
       "predictiveBackGestureEnabled": false,
       "config": {
-        "googleMaps": { "apiKey": "AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao" }
+        "googleMaps": {
+          "apiKey": "AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao"
+        }
       }
     },
     "web": {
@@ -41,7 +43,8 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
