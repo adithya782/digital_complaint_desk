@@ -38,15 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
         evidenceHtml = `<p><b>Evidence:</b> No evidence provided.</p>`;
       }
 
+      // Inside your first .then() block where you render complaintDetails
       detailsContainer.innerHTML = `
-            <h2>${complaint.title}</h2>
-            <p><b>Description:</b> ${complaint.description}</p>
-            ${evidenceHtml}
-            <p><b>Latitude:</b> ${complaint.latitude}</p>
-            <p><b>Longitude:</b> ${complaint.longitude}</p>
-            <p><b>Anonymous:</b> ${complaint.anonymous ? "Yes" : "No"}</p>
-            <p><b>Status:</b> ${complaint.status}</p>
-        `;
+    <h2>${complaint.title}</h2>
+    <div class="data-row"><span class="label">Status:</span><span class="value">${complaint.status}</span></div>
+    <div class="data-row"><span class="label">Anonymous:</span><span class="value">${complaint.anonymous ? "Yes" : "No"}</span></div>
+    <hr>
+    <p><b>Description:</b><br>${complaint.description}</p>
+    <p><b>Location:</b> ${complaint.latitude}, ${complaint.longitude}</p>
+    ${complaint.evidence_url ? `<img src="${complaint.evidence_url}" style="width:100%; border-radius:8px; margin-top:10px;">` : ""}
+`;
     })
     .catch((err) => {
       console.error(err);

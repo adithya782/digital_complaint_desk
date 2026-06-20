@@ -95,6 +95,29 @@
         display: block;
         margin: 0 auto;
       }
+      /* Add to your existing <style> block */
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .data-row:last-child {
+        border: none;
+      }
+      .label {
+        font-weight: 600;
+        color: #555;
+      }
+      .value {
+        color: #1a1a1a;
+      }
+
+      #timelineList {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0 0 0;
+      }
     </style>
   </head>
   <body>
@@ -104,24 +127,22 @@
       <ul id="timelineList"></ul>
     </div>
 
-    <div class="card" id="actionSection" style="margin-top: 20px">
+    <div class="card" id="actionSection">
       <h3>Update Status</h3>
       <textarea
         id="actionDescription"
-        placeholder="Enter inspection details or resolution notes..."
-        style="width: 100%; height: 80px"
+        placeholder="Enter inspection details..."
       ></textarea>
-      <br />
-      <button onclick="updateComplaint('In Progress', false)">
-        Update Progress
-      </button>
-      <button
-        onclick="updateComplaint('Resolved', true)"
-        style="background: #28a745"
-      >
-        Mark Resolved
-      </button>
+      <div class="btn-group">
+        <button onclick="updateComplaint('In Progress', false)">
+          Update Progress
+        </button>
+        <button class="resolved" onclick="updateComplaint('Resolved', true)">
+          Mark Resolved
+        </button>
+      </div>
     </div>
+    <button class="back-btn" onclick="history.back()">Back</button>
 
     <button onclick="history.back()">Back</button>
 
