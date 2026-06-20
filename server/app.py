@@ -943,44 +943,43 @@ class Track(Resource):
         claims = get_jwt() if current_user_id else {}
         role = claims.get('role')
 
-        # 1. Safely determine is_staff
-        # Only check staff.user_id if staff exists!
+        # Safely determine staff/owner status
         is_staff = False
         if role == UserRole.STAFF.value and complaint.staff:
-            # Safely check if the staff record belongs to the current user
             if int(complaint.staff.user_id) == int(current_user_id):
                 is_staff = True
 
-        # 2. Check if they are the owner
         is_owner = (
             current_user_id is not None and 
             complaint.user_id is not None and 
             int(complaint.user_id) == int(current_user_id)
         )
-        logger.info(f"Current user ID: {current_user_id}, {type(current_user_id)}")
-        logger.info(f"Complaint staff user ID: {current_user_id}, {type(complaint.staff.user_id)}")
-        logger.info(f"Complaint's user ID: {complaint.user_id}, {type(complaint.user_id)}")
-        logger.error(f"Failed to access complaint {complaint_id}, {type(complaint_id)}")
         
-        # Check if they have permission
+        # SAFE LOGGING: Use a ternary or helper to check if staff exists before accessing user_id
+        staff_info = complaint.staff.user_id if complaint.staff else "None"
+        logger.info(f"Current user ID: {current_user_id}")
+        logger.info(f"Complaint staff user ID: {staff_info}")
+        logger.info(f"Complaint's user ID: {complaint.user_id}")
+        
+        # Permission logic remains the same...
         if not (is_owner or is_staff):
-            # If they aren't the owner/staff, check for the tracking key
             key = request.args.get('key')
             if not complaint.user_id and key == complaint.key:
-                pass # Authorized via Key
+                pass 
             else:
                 return {"message": "Forbidden", "requires_key": (complaint.user_id is None)}, 403
-        # 1. Build the timeline (your existing logic)
+
+        # BUILD TIMELINE (This will now show "Filed" even if no staff is assigned)
         timeline = []
         timeline.append({"step": "Filed", "date": complaint.created_at.strftime('%Y-%m-%d %H:%M'), "note": "Complaint submitted by user"})
         
+        # This will only loop if events exist, so it gracefully handles unassigned complaints
         for event in sorted(complaint.events, key=lambda x: x.timestamp):
             timeline.append({"step": "Progress", "date": event.timestamp.strftime('%Y-%m-%d %H:%M'), "note": event.description})
             
         if complaint.resolution:
             timeline.append({"step": "Resolved", "date": complaint.resolution.resolved_at.strftime('%Y-%m-%d %H:%M'), "note": f"Action taken: {complaint.resolution.action_taken}"})
         
-        # 2. Return a dictionary containing BOTH metadata and timeline
         return {
             "title": complaint.title,
             "status": complaint.status,
