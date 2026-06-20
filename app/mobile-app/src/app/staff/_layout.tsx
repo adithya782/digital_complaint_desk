@@ -22,6 +22,12 @@ export default function StaffLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="complaints/[id]"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

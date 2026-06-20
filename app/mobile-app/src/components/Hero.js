@@ -28,7 +28,7 @@ export default function Hero() {
 
         <TouchableOpacity
           style={styles.registerBtn}
-          onPress={() => router.push("/register")}
+          onPress={() => router.push("/home/register")}
         >
           <Text style={styles.btnText}>Register</Text>
         </TouchableOpacity>

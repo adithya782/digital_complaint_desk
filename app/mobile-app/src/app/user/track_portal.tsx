@@ -36,6 +36,7 @@ export default function TrackPortal() {
       return;
     }
     router.push(`/user/track_complaint?id=${manualId.trim()}` as any);
+    setManualId("");
   };
 
   return (

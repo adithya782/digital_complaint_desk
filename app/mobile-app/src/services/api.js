@@ -14,6 +14,7 @@ export async function apiClient(
   ignoreAuthErrors = false,
 ) {
   const token = await SecureStore.getItemAsync("access_token");
+  console.log("DEBUG: Token found in SecureStore:", token);
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -42,7 +43,7 @@ export async function apiClient(
   if (response.status === 401) {
     await SecureStore.deleteItemAsync("access_token");
     router.replace("/home/login");
-    return null;
+    throw new Error("Unauthorized");
   }
 
   // 3. Handle 403: Throw an error object with status and data
