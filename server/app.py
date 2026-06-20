@@ -944,12 +944,12 @@ class Track(Resource):
     role == UserRole.STAFF.value and 
     (
         not complaint.staff or 
-        (complaint.staff.staff_id is not None and int(complaint.staff.staff_id) == int(current_user_id))
+        (complaint.staff.user_id is not None and int(complaint.staff.user_id) == int(current_user_id))
     )
 )
-        # logger.info(f"Current user ID: {current_user_id}")
-        # logger.info(f"Complaint's user ID: {complaint.user_id}")
-        # logger.error(f"Failed to access complaint {complaint_id}")
+        logger.info(f"Current user ID: {current_user_id}, {type(current_user_id)}")
+        logger.info(f"Complaint's user ID: {complaint.user_id}, {type(complaint.user_id)}")
+        logger.error(f"Failed to access complaint {complaint_id}, {type(complaint_id)}")
         
         # Check if they have permission
         if not (is_owner or is_staff):
