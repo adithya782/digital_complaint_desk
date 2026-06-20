@@ -943,19 +943,20 @@ class Track(Resource):
         claims = get_jwt() if current_user_id else {}
         role = claims.get('role')
 
-        # SECURITY CHECK
+        # 1. Safely determine is_staff
+        # Only check staff.user_id if staff exists!
+        is_staff = False
+        if role == UserRole.STAFF.value and complaint.staff:
+            # Safely check if the staff record belongs to the current user
+            if int(complaint.staff.user_id) == int(current_user_id):
+                is_staff = True
+
+        # 2. Check if they are the owner
         is_owner = (
-    current_user_id is not None and 
-    complaint.user_id is not None and 
-    int(complaint.user_id) == int(current_user_id)
-)
-        is_staff = (
-    role == UserRole.STAFF.value and 
-    (
-        not complaint.staff or 
-        (complaint.staff.user_id is not None and int(complaint.staff.user_id) == int(current_user_id))
-    )
-)
+            current_user_id is not None and 
+            complaint.user_id is not None and 
+            int(complaint.user_id) == int(current_user_id)
+        )
         logger.info(f"Current user ID: {current_user_id}, {type(current_user_id)}")
         logger.info(f"Complaint staff user ID: {current_user_id}, {type(complaint.staff.user_id)}")
         logger.info(f"Complaint's user ID: {complaint.user_id}, {type(complaint.user_id)}")
