@@ -3,151 +3,404 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Case Inspection Console</title>
 
-    <title>Complaint Details</title>
-    <!-- <link rel="stylesheet" href="darkmode.css" /> -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="style.css" />
 
     <style>
+      /* --- SYSTEM DESIGN CORE (ADAPTED FOR CYBER CARBON & CIRCUIT MINT) --- */
+      :root {
+        /* Premium Non-White Field-Ops Canvas Gradients */
+        --body-gradient: linear-gradient(
+          135deg,
+          #0b0f17 0%,
+          #111827 50%,
+          #0f172a 100%
+        );
+
+        /* Structural Glassmorphism Tints & Micro-Borders */
+        --panel-bg: rgba(
+          22,
+          30,
+          49,
+          0.75
+        ); /* Darkened carbon chassis with high-clarity translucency */
+        --border-light: rgba(
+          16,
+          185,
+          129,
+          0.12
+        ); /* Subtle glowing matrix border */
+
+        /* Text & Readout Scale optimized for low-fatigue operations */
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+
+        /* Functional Interaction Anchors (Neon Luminescence Variants) */
+        --primary-accent: #10b981; /* Circuit Mint Core */
+        --success-emerald: #10b981; /* Operational Mint Active State */
+        --success-hover: #059669; /* Deep Operational Mint Transition */
+        --action-dark: rgba(
+          15,
+          23,
+          42,
+          0.6
+        ); /* Core Embedded Terminal Housing */
+        --action-dark-hover: rgba(30, 41, 59, 0.8);
+        --active-blue: #38bdf8; /* Kinetic Sky Blue Accent */
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #f0f2f5;
-        color: #333;
-        padding: 20px;
-        line-height: 1.6;
+        background: var(--body-gradient);
+        background-attachment: fixed; /* Anchor matrix canvas cascade lock */
+        color: var(--text-main);
+        min-height: 100vh;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
       }
 
-      .card {
-        background: #fff;
-        padding: 25px;
+      /* --- UNIFIED CONSOLE WRAPPER --- */
+      .console-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      /* --- INTEGRATED NAV / HEADER BAR (FIXED) --- */
+      .console-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--panel-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 16px 24px;
         border-radius: 12px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
+        border: 1px solid var(--border-light);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
       }
 
-      h2,
-      h3 {
-        color: #1a1a1a;
-        margin-top: 0;
+      .header-navigation-group {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .back-action-node {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid var(--border-light);
+        color: var(--text-main);
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+
+      .back-action-node:hover {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: var(--primary-accent);
+        color: var(--primary-accent);
+        transform: translateX(-2px);
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+      }
+
+      .header-title-set h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-main);
+        line-height: 1.2;
+      }
+
+      .header-title-set p {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 3px;
+      }
+
+      .header-system-tag {
+        background: rgba(15, 23, 42, 0.4);
+        color: var(--primary-accent);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        border: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+      }
+
+      /* --- TACTICAL SPLIT GRID --- */
+      .console-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        gap: 24px;
+        align-items: start;
+      }
+
+      /* --- UNIFIED INTERFACE PANELS --- */
+      .console-panel {
+        background: var(--panel-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid var(--border-light);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .panel-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .console-panel h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid var(--border-light);
+        padding-bottom: 12px;
+      }
+
+      /* --- HIGH-DENSITY REGISTRY FIELDS --- */
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(241, 245, 249, 0.05);
+        font-size: 14px;
+      }
+
+      .data-row:last-child {
+        border: none;
+      }
+
+      .label {
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      .value {
+        color: var(--text-main);
+        font-weight: 500;
+      }
+
+      /* --- TIMELINE LOG ARCHITECTURE --- */
+      #timelineList {
+        list-style: none;
+        padding: 0;
       }
 
       .timeline-item {
-        border-left: 3px solid #6d52ff;
-        padding-left: 15px;
-        margin-bottom: 20px;
+        border-left: 2px solid var(--border-light);
+        padding-left: 20px;
+        padding-bottom: 20px;
         position: relative;
+        font-size: 13.5px;
+        color: var(--text-muted);
+      }
+
+      .timeline-item:last-child {
+        border-left: 2px solid transparent;
+        padding-bottom: 0;
       }
 
       .timeline-item::before {
         content: "";
         position: absolute;
-        left: -8px;
-        top: 0;
-        width: 12px;
-        height: 12px;
-        background: #6d52ff;
+        left: -6px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        background: #111827;
+        border: 2px solid var(--active-blue);
         border-radius: 50%;
       }
 
-      textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-sizing: border-box; /* Ensures padding doesn't break width */
-        margin-bottom: 10px;
-        font-family: inherit;
+      .timeline-item:first-child::before {
+        background: var(--active-blue);
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
       }
 
+      /* --- INPUT ARCHITECTURES --- */
+      textarea {
+        width: 100%;
+        min-height: 110px;
+        padding: 14px;
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        box-sizing: border-box;
+        margin-bottom: 16px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text-main);
+        background-color: rgba(15, 23, 42, 0.4);
+        resize: vertical;
+        transition: all 0.2s ease;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-accent);
+        background-color: rgba(30, 41, 59, 0.8);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+      }
+
+      /* --- INTERACTIVE ACTION EXECUTORS --- */
       .btn-group {
         display: flex;
-        gap: 10px;
+        gap: 12px;
       }
 
       button {
         flex: 1;
-        padding: 12px;
-        border: none;
+        padding: 13px;
+        border: 1px solid var(--border-light);
         border-radius: 8px;
-        background: #6d52ff;
-        color: white;
-        font-weight: bold;
+        background: rgba(148, 163, 184, 0.1);
+        color: var(--text-main);
+        font-size: 14px;
+        font-weight: 600;
         cursor: pointer;
-        transition: background 0.3s;
+        transition: all 0.15s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
       }
 
       button:hover {
-        background: #5841d9;
+        background: rgba(148, 163, 184, 0.18);
+        border-color: var(--text-muted);
       }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
       button.resolved {
-        background: #28a745;
+        background: var(--success-emerald);
+        border-color: var(--success-emerald);
+        color: #0b0f17;
       }
+
       button.resolved:hover {
-        background: #218838;
+        background: var(--success-hover);
+        border-color: var(--success-hover);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
       }
 
-      .back-btn {
-        background: #6c757d;
-        max-width: 600px;
-        display: block;
-        margin: 0 auto;
-      }
-      /* Add to your existing <style> block */
-      .data-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
-        border-bottom: 1px solid #f0f0f0;
-      }
-      .data-row:last-child {
-        border: none;
-      }
-      .label {
-        font-weight: 600;
-        color: #555;
-      }
-      .value {
-        color: #1a1a1a;
+      .hidden {
+        display: none !important;
       }
 
-      #timelineList {
-        list-style: none;
-        padding: 0;
-        margin: 20px 0 0 0;
+      /* --- LAYOUT BREAKOUTS --- */
+      @media (max-width: 900px) {
+        .console-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
+
   <body>
-    <div class="card" id="complaintDetails"></div>
-    <div class="card" id="timelineSection" style="margin-top: 20px">
-      <h3>Complaint Timeline</h3>
-      <ul id="timelineList"></ul>
+    <div class="console-container">
+      <header class="console-header">
+        <div class="header-navigation-group">
+          <button
+            class="back-action-node"
+            onclick="history.back()"
+            title="Return to Overview"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div class="header-title-set">
+            <h2>Case Inspection Console</h2>
+            <p>Secure Operational Management Node</p>
+          </div>
+        </div>
+
+        <div class="header-system-tag">
+          <i class="fa-solid fa-shield-halved"></i> Inspector Mode
+        </div>
+      </header>
+
+      <main class="console-grid">
+        <section class="console-panel" id="complaintDetails">
+          <h3><i class="fa-solid fa-folder-open"></i> Core Registry Data</h3>
+        </section>
+
+        <div class="panel-stack">
+          <section class="console-panel" id="timelineSection">
+            <h3>
+              <i class="fa-solid fa-clock-rotate-left"></i> Case Lifecycle Trail
+            </h3>
+            <ul id="timelineList"></ul>
+          </section>
+
+          <section class="console-panel" id="actionSection">
+            <h3>
+              <i class="fa-solid fa-gavel"></i> Append Operational Directives
+            </h3>
+            <textarea
+              id="actionDescription"
+              placeholder="Input explicit inspection statements, field analysis notes, or legal compliance entries..."
+            ></textarea>
+
+            <div class="btn-group">
+              <button onclick="updateComplaint('In Progress', false)">
+                <i class="fa-solid fa-spinner"></i> Log Progress Track
+              </button>
+              <button
+                class="resolved"
+                onclick="updateComplaint('Resolved', true)"
+              >
+                <i class="fa-solid fa-check-double"></i> Authorize & Close Case
+              </button>
+            </div>
+          </section>
+        </div>
+      </main>
     </div>
 
-    <div class="card" id="actionSection">
-      <h3>Update Status</h3>
-      <textarea
-        id="actionDescription"
-        placeholder="Enter inspection details..."
-      ></textarea>
-      <div class="btn-group">
-        <button onclick="updateComplaint('In Progress', false)">
-          Update Progress
-        </button>
-        <button class="resolved" onclick="updateComplaint('Resolved', true)">
-          Mark Resolved
-        </button>
-      </div>
-    </div>
-    <button class="back-btn" onclick="history.back()">Back</button>
-
-    <!-- <button onclick="history.back()">Back</button> -->
-
-    <script src="complaint_details.js"></script>
-    <!-- <script src="common-darkmode.js"></script> -->
     <script src="config.js"></script>
+    <script src="complaint_details.js"></script>
   </body>
 </html>

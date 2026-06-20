@@ -1,258 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-
-  <meta charset="UTF-8">
-
-  <meta name="viewport"
-  content="width=device-width, initial-scale=1.0">
-
-  <title>Officer Dashboard</title>
-
-  <!-- CSS -->
-
-  <link rel="stylesheet"
-  href="staff_dashboard.css">
-  <!-- <link rel="stylesheet" href="darkmode.css"> -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- FONT AWESOME -->
-
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-</head>
-
-<body>
-
-  <!-- MENU BUTTON -->
-
-  <button class="menu-btn" id="menuBtn">
-
-    <i class="fa-solid fa-bars"></i>
-
-  </button>
-
- <!-- SIDEBAR -->
-
-<div class="sidebar" id="sidebar">
-
-  <!-- MENU -->
-
-  <ul>
-
-    <!-- DASHBOARD -->
-
-    <li>
-
-      <button class="side-btn active">
-
-        <i class="fa-solid fa-house"></i>
-
-        <span class="text">Dashboard</span>
-
-      </button>
-
-    </li>
-
-    <!-- HISTORY -->
-
-    <li>
-
-      <button class="side-btn">
-
-        <i class="fa-solid fa-file-lines"></i>
-
-        <span class="text">History</span>
-
-      </button>
-
-    </li>
-
-    <!-- TRANSACTIONS -->
-
-    <li>
-
-      <button class="side-btn">
-
-        <i class="fa-solid fa-money-bill"></i>
-
-        <span class="text">Transactions</span>
-
-      </button>
-
-    </li>
-
-    <!-- PROFILE -->
-
-    <li>
-        
-      <button class="side-btn">
-
-        <i class="fa-solid fa-user"></i>
-
-        <span class="text">Profile</span>
-
-      </button>
-
-    </li>
-
-    <!-- LOGOUT -->
-
-    <li>
-
-      <button class="side-btn">
-
-        <i class="fa-solid fa-right-from-bracket"></i>
-
-        <span class="text">Logout</span>
-
-      </button>
-
-    </li>
-
-  </ul>
-
-</div>
-
-  <!-- MAIN CONTENT -->
-
-  <div class="main-content">
-
-    <!-- TOPBAR -->
-
-    <div class="topbar">
-
-      <h2>
-        Welcome, Officer <span id="dashboardUsername"> x </span> 👋
-      </h2>
-
-     
-
-    </div>
-
-    <!-- STAT BUTTONS -->
-
-    <div class="stats">
-
-      <button class="stat-card blue">
-
-        <div>
-
-          <h4>Today's Issues</h4>
-
-          <h2>12</h2>
-
-        </div>
-
-        <i class="fa-solid fa-file-circle-plus"></i>
-
-      </button>
-
-      <button class="stat-card orange">
-
-        <div>
-
-          <h4>Pending Issues</h4>
-
-          <h2>25</h2>
-
-        </div>
-
-        <i class="fa-solid fa-clock"></i>
-
-      </button>
-
-      <button class="stat-card green">
-
-        <div>
-
-          <h4>Resolved Today</h4>
-
-          <h2>8</h2>
-
-        </div>
-
-        <i class="fa-solid fa-circle-check"></i>
-
-      </button>
-
-      <button class="stat-card purple">
-
-        <div>
-
-          <h4>Total Reports</h4>
-
-          <h2>156</h2>
-
-        </div>
-
-        <i class="fa-solid fa-chart-line"></i>
-
-      </button>
-
-    </div>
-
-    <!-- CONTENT SECTION -->
-
-    <div class="content-grid">
-
-      <!-- LEFT -->
-  <div class="issues-box">
-
-    <h3>Today's Issues</h3>
-
-    <ul id="TodayIssues"></ul>
-
-    <div id="complaintDetails"
-         style="
-         margin-top:15px;
-         padding:15px;
-         background:#f8f9fa;
-         border-radius:10px;">
-    </div>
-
-</div>
-
-      <!-- RIGHT -->
-    <div class="profile-box" id="profileBox">
-    <img src="https://tse2.mm.bing.net/th/id/OIP.Vh2OQraISqT4SE80nDJ1aQHaGj?cb=thfvnextfalcon&rs=1&pid=ImgDetMain&o=7&rm=3" alt="officer profile">
-    
-  <h3>---DETAILS---</h3>
-
-    <div class="profile-details hidden">
-        <p><b>ID:</b> <span id="staff_id">4730</span></p>
-        <p><b>Department:</b> <span id="department"> CIC Operations </span></p>
-        <!-- <p><b>Status:</b> Active Officer</p> -->
-    </div>
-</div>
-
-    </div>
-
-    <!-- QUICK ACTION -->
-
-    <div class="quick-actions">
-
-    <button class="action-btn msg-btn" onclick="sendMessage()">
-        <i class="fa-solid fa-message"></i>
-        Send Message
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Officer Command Dashboard</title>
+
+    <link rel="stylesheet" href="staff_dashboard.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <button class="menu-btn" id="menuBtn">
+      <i class="fa-solid fa-bars"></i>
     </button>
 
-    <button class="action-btn report-btn" onclick="generateReport()">
-        <i class="fa-solid fa-file-lines"></i>
-        Generate Report
-    </button>
-
-</div>
+    <div class="sidebar" id="sidebar">
+      <div class="logo">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span class="text">STAFF DASHBOARD</span>
+      </div>
+      <ul>
+        <li>
+          <button class="side-btn active">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span class="text">Overview</span>
+          </button>
+        </li>
+        <li>
+          <button class="side-btn">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span class="text">Issue History</span>
+          </button>
+        </li>
+        <li>
+          <button class="side-btn">
+            <i class="fa-solid fa-layer-group"></i>
+            <span class="text">Departments</span>
+          </button>
+        </li>
+        <li>
+          <button class="side-btn">
+            <i class="fa-solid fa-user-gear"></i>
+            <span class="text">Profile Settings</span>
+          </button>
+        </li>
+        <li>
+          <button class="side-btn logout-item" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="text">Secure Logout</span>
+          </button>
+        </li>
+      </ul>
     </div>
 
-  </div>
+    <div class="main-content">
+      <div class="topbar">
+        <div>
+          <h2>
+            Welcome Back, Officer <span id="dashboardUsername">x</span> 👋
+          </h2>
+          <p class="subtitle">System Operational Center Dashboard</p>
+        </div>
+      </div>
 
-  <!-- JS -->
-  <script src="config.js"></script>
-  <script src="staff_dashboard.js"></script>
-  <!-- <script src="common-darkmode.js"></script> -->
+      <div class="stats">
+        <button class="stat-card blue">
+          <div class="card-data">
+            <h4>Incoming</h4>
+            <h2>12</h2>
+          </div>
+          <i class="fa-solid fa-folder-plus"></i>
+        </button>
 
-</body>
+        <button class="stat-card orange">
+          <div class="card-data">
+            <h4>Pending Review</h4>
+            <h2>25</h2>
+          </div>
+          <i class="fa-solid fa-spinner fa-spin-hover"></i>
+        </button>
+
+        <button class="stat-card green">
+          <div class="card-data">
+            <h4>Resolved Today</h4>
+            <h2>8</h2>
+          </div>
+          <i class="fa-solid fa-check-double"></i>
+        </button>
+
+        <button class="stat-card slate">
+          <div class="card-data">
+            <h4>Total Lifecycle Records</h4>
+            <h2>156</h2>
+          </div>
+          <i class="fa-solid fa-database"></i>
+        </button>
+      </div>
+
+      <div class="content-grid">
+        <div class="issues-box">
+          <div class="box-header">
+            <h3>
+              <i class="fa-solid fa-list-check"></i> Action Item Priority Queue
+            </h3>
+          </div>
+          <ul id="TodayIssues"></ul>
+          <div id="complaintDetails" class="hidden"></div>
+        </div>
+
+        <div class="profile-box" id="profileBox">
+          <div class="avatar-wrapper">
+            <img
+              src="https://tse2.mm.bing.net/th/id/OIP.Vh2OQraISqT4SE80nDJ1aQHaGj?cb=thfvnextfalcon&rs=1&pid=ImgDetMain&o=7&rm=3"
+              alt="Officer Profile Record"
+            />
+            <span class="badge-online"></span>
+          </div>
+          <h3>Officer Credentials</h3>
+          <div class="profile-details">
+            <p><b>Registry ID:</b> <span id="staff_id">4730</span></p>
+            <p>
+              <b>Unit Assignment:</b>
+              <span id="department">CIC Operations</span>
+            </p>
+            <p>
+              <b>Clearance Tier:</b>
+              <span class="clearance-badge">Active Duty</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+        <button class="action-btn msg-btn" onclick="sendMessage()">
+          <i class="fa-solid fa-paper-plane"></i> Dispatch Secure Broadcast
+        </button>
+        <button class="action-btn report-btn" onclick="generateReport()">
+          <i class="fa-solid fa-file-shield"></i> Compile Audit Statement
+        </button>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="staff_dashboard.js"></script>
+  </body>
 </html>

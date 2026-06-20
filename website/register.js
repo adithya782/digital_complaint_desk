@@ -44,7 +44,23 @@ function handleGoogleCredentialResponse(response) {
           window.location.href = "complete-profile.html";
         } else {
           alert("Login completely successful!");
-          window.location.href = "dashboard.html";
+          if (data.user.role == "admin") {
+            // alert('AUTHENTICATION DONE, It is an admin user');
+            if (!confirm("Wanna login as USER?"))
+              window.location.replace("admin_dashboard.html");
+            window.location.replace("user_dashboard.html");
+          } else if (data.user.role == "staff") {
+            if (!confirm("Wanna login as USER?"))
+              window.location.replace("staff_dashboard.html");
+            window.location.replace("user_dashboard.html");
+          } else if (data.user.role == "user") {
+            alert("Welcome back!");
+            window.location.href = "user_dashboard.html";
+            // }
+          } else {
+            // alert(data.error || data.message)
+            alert("something went wrong");
+          }
         }
       } else {
         alert("Authentication failed: " + (data.error || "Unknown Error"));

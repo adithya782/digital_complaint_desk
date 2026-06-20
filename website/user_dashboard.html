@@ -2,43 +2,526 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Citizen Dashboard</title>
-
-    <!-- CSS -->
-
-    <link rel="stylesheet" href="user_dashboard.css" />
-
-    <!-- FONT AWESOME -->
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- THEME VARIABLES: DISTINCT CITIZEN OCEANIC TEAL PALETTE --- */
+      :root {
+        --primary: #00d2ff; /* Vibrant Cyan/Teal replacing the previous purple */
+        --sos-red: #ff4f5e;
+        --msg-green: #2ecc71;
+        --blue-accent: #0084ff;
+        --bg-gradient: linear-gradient(
+          -45deg,
+          #060b14,
+          #0a1c2a,
+          #0f3142,
+          #081622
+        ); /* Deep Marine Matte Steel Canvas */
+        --glass-bg: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.01)
+        );
+        --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* --- ANIMATED CANVAS --- */
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        background: var(--bg-gradient);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+
+      /* --- MENU HAMBURGER BUTTON --- */
+      .menu-btn {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 45px;
+        height: 45px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        z-index: 1001;
+        transition: all 0.3s ease;
+      }
+
+      .menu-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+      }
+
+      /* --- SIDEBAR PANEL CONTAINER --- */
+      .sidebar {
+        min-height: 100vh;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        width: 260px;
+        background: rgba(6, 11, 20, 0.5);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 30px 15px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar ul {
+        list-style: none;
+        margin-top: 70px;
+      }
+
+      .sidebar li {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 14px 20px;
+        cursor: pointer;
+        border-radius: 14px;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 15px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar li:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #ffffff;
+      }
+
+      .sidebar li.active {
+        background: rgba(0, 210, 255, 0.1);
+        color: #ffffff;
+        border: 1px solid rgba(0, 210, 255, 0.25);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+      }
+
+      .sidebar i {
+        width: 20px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      /* SIDEBAR COLLAPSED UTILITIES */
+      .sidebar.collapsed,
+      .sidebar.close {
+        width: 78px;
+      }
+      .sidebar.collapsed .text,
+      .sidebar.close .text {
+        display: none;
+      }
+      .sidebar.collapsed li,
+      .sidebar.close li {
+        justify-content: center;
+        padding: 14px 0;
+      }
+
+      /* --- MAIN INTERFACE WINDOW --- */
+      .main-content {
+        flex: 1;
+        margin-left: 260px;
+        padding: 40px;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        width: calc(100% - 260px);
+      }
+
+      .sidebar.collapsed ~ .main-content,
+      .sidebar.close ~ .main-content {
+        margin-left: 78px;
+        width: calc(100% - 78px);
+      }
+
+      /* --- TOP NAVBAR BRANDING --- */
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        padding-left: 50px;
+      }
+
+      .topbar h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .topbar h2 span {
+        color: #fff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      }
+
+      .profile {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #ffffff;
+        font-size: 18px;
+        transition: all 0.3s ease;
+      }
+
+      .profile:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* --- UTILITY GRID ACTIONS --- */
+      @keyframes float-animation {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .page-buttons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+      }
+
+      .page-btn {
+        border: var(--glass-border);
+        border-radius: 24px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: white;
+        cursor: pointer;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        text-align: left;
+        animation: float-animation 6s ease-in-out infinite;
+      }
+
+      .page-btn:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .page-btn:nth-child(3) {
+        animation-delay: 1s;
+      }
+      .page-btn:nth-child(4) {
+        animation-delay: 1.5s;
+      }
+
+      .page-btn:hover {
+        transform: translateY(-12px) scale(1.02);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .page-btn i {
+        font-size: 32px;
+        transition: transform 0.3s ease;
+      }
+
+      .page-btn:hover i {
+        transform: scale(1.1) rotate(3deg);
+      }
+      .page-btn h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .page-btn p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      /* ACTIVE COMPONENT NEON HOVER OVERRIDES */
+      .green-btn:hover {
+        border-color: var(--msg-green);
+        box-shadow: 0 0 25px rgba(46, 204, 113, 0.25);
+      }
+      .green-btn i {
+        color: var(--msg-green);
+      }
+
+      .blue-btn:hover {
+        border-color: var(--blue-accent);
+        box-shadow: 0 0 25px rgba(0, 132, 255, 0.25);
+      }
+      .blue-btn i {
+        color: var(--blue-accent);
+      }
+
+      .purple-btn:hover {
+        border-color: var(--primary);
+        box-shadow: 0 0 25px rgba(0, 210, 255, 0.25);
+      }
+      .purple-btn i {
+        color: var(--primary);
+      }
+
+      .red-btn:hover {
+        border-color: var(--sos-red);
+        box-shadow: 0 0 25px rgba(255, 79, 94, 0.25);
+      }
+      .red-btn i {
+        color: var(--sos-red);
+      }
+
+      /* --- SUB PANEL MODULE CONNECTIONS --- */
+      .bottom-section {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+      }
+
+      .complaints-box,
+      .sos-box {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: var(--glass-border);
+        padding: 30px;
+        border-radius: 30px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      }
+
+      .complaints-box h3,
+      .sos-box h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+      }
+
+      .complaints-box h3 {
+        color: #ffffff;
+      }
+      .sos-box h3 {
+        color: var(--sos-red);
+      }
+
+      /* LIST RENDER INTERFACE ELEMENTS */
+      #complaintsList {
+        list-style: none;
+      }
+      #complaintsList li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 20px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.01);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+      }
+
+      #complaintsList li:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+      }
+
+      #complaintsList li strong {
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+        font-size: 15px;
+      }
+
+      /* DATA STATUS NODE PILLS */
+      #complaintsList span {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+        letter-spacing: 0.5px;
+      }
+
+      #complaintsList span.pending {
+        background: rgba(255, 193, 7, 0.12);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.25);
+      }
+
+      #complaintsList span.progress {
+        background: rgba(0, 132, 255, 0.12);
+        color: var(--blue-accent);
+        border: 1px solid rgba(0, 132, 255, 0.25);
+      }
+
+      #complaintsList span.resolved {
+        background: rgba(46, 204, 113, 0.12);
+        color: var(--msg-green);
+        border: 1px solid rgba(46, 204, 113, 0.25);
+      }
+
+      /* SOS INTERACTION NODES */
+      .sos-box p {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 14px;
+        margin-bottom: 25px;
+        line-height: 1.6;
+      }
+
+      .sos-buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      .call-btn,
+      .msg-btn {
+        flex: 1;
+        border: none;
+        padding: 14px;
+        border-radius: 14px;
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .call-btn {
+        background: var(--sos-red);
+      }
+      .call-btn:hover {
+        background: #ff6b76;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(255, 79, 94, 0.35);
+      }
+
+      .msg-btn {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .msg-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-4px);
+      }
+
+      .sos-box small {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 12px;
+      }
+      .sos-box small i {
+        color: var(--sos-red);
+      }
+
+      /* --- MEDIA ADAPTATION BOUNDARIES --- */
+      @media (max-width: 992px) {
+        .bottom-section {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.show {
+          transform: translateX(0);
+          width: 260px;
+        }
+        .sidebar.show .text {
+          display: inline;
+        }
+        .main-content {
+          margin-left: 0;
+          width: 100%;
+          padding: 20px;
+          padding-top: 90px;
+        }
+        .sidebar.collapsed ~ .main-content,
+        .sidebar.close ~ .main-content {
+          margin-left: 0;
+          width: 100%;
+        }
+        .page-buttons {
+          grid-template-columns: 1fr;
+        }
+        .topbar {
+          padding-left: 0;
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <!-- MENU BUTTON -->
-
     <button id="menuBtn" class="menu-btn">
       <i class="fa-solid fa-bars"></i>
     </button>
 
-    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <ul>
         <li class="active">
           <i class="fa-solid fa-house"></i>
           <span class="text">Dashboard</span>
         </li>
-
         <li>
           <i class="fa-solid fa-user"></i>
           <span class="text">Profile</span>
         </li>
-
         <li onclick="logout()">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span class="text">Logout</span>
@@ -46,26 +529,15 @@
       </ul>
     </div>
 
-    <!-- MAIN CONTENT -->
-
     <div class="main-content">
-      <!-- TOPBAR -->
-
       <div class="topbar">
         <h2>Welcome, <span id="dashboardUsername">user</span> 👋</h2>
-
         <div class="profile">
           <i class="fa-regular fa-bell"></i>
         </div>
       </div>
 
-      <!-- DASHBOARD CARDS -->
-
-      <!-- PAGE BUTTONS -->
-
       <div class="page-buttons">
-        <!-- FILE COMPLAINT -->
-
         <button
           class="page-btn green-btn"
           onclick="window.location.href = 'file_complaint.html'"
@@ -77,19 +549,16 @@
           </div>
         </button>
 
-        <!-- MY COMPLAINTS -->
-
-        <button class="page-btn blue-btn">
+        <button
+          class="page-btn blue-btn"
+          onclick="window.location.href = 'my_complaints.html'"
+        >
           <i class="fa-solid fa-list-check"></i>
-
           <div>
             <h3>My Complaints</h3>
-
             <p>View all complaints</p>
           </div>
         </button>
-
-        <!-- STATUS -->
 
         <a
           href="track_portal.html"
@@ -103,58 +572,189 @@
           </div>
         </a>
 
-        <!-- SOS -->
-
         <button class="page-btn red-btn">
           <i class="fa-solid fa-phone"></i>
-
           <div>
             <h3>SOS</h3>
-
             <p>Emergency help support</p>
           </div>
         </button>
       </div>
 
-      <!-- BOTTOM SECTION -->
-
       <div class="bottom-section">
-        <!-- RECENT COMPLAINTS -->
-
         <div class="complaints-box">
           <h3>Recent Complaints</h3>
           <ul id="complaintsList"></ul>
         </div>
-        <!-- QUICK SOS -->
 
         <div class="sos-box">
           <h3>Quick SOS</h3>
-
           <p>Need immediate help? Press the SOS button.</p>
-
           <div class="sos-buttons">
             <button class="call-btn">
-              <i class="fa-solid fa-phone"></i>
-
-              Call
+              <i class="fa-solid fa-phone"></i> Call
             </button>
-
             <button class="msg-btn">
-              <i class="fa-solid fa-message"></i>
-
-              Message
+              <i class="fa-solid fa-message"></i> Message
             </button>
           </div>
-
           <small>
-            <i class="fa-solid fa-location-dot"></i>
-
-            Your location will be shared
+            <i class="fa-solid fa-location-dot"></i> Your location will be
+            shared
           </small>
         </div>
       </div>
     </div>
+
     <script src="config.js"></script>
-    <script src="user_dashboard.js"></script>
+    <script>
+      // SIDEBAR COLLAPSE TOGGLES
+      const menuBtn = document.getElementById("menuBtn");
+      const sidebar = document.getElementById("sidebar");
+
+      menuBtn.addEventListener("click", function () {
+        sidebar.classList.toggle("close");
+        sidebar.classList.toggle("collapsed");
+        if (window.innerWidth <= 768) {
+          sidebar.classList.toggle("show");
+        }
+      });
+
+      // INTERACTION CAPTURE ACTIONS
+      const buttons = document.querySelectorAll(".page-btn");
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.tagName.toLowerCase() !== "a" && !btn.parentElement.href) {
+            alert(btn.innerText.split("\n")[0] + " button clicked");
+            console.log("Real button working:", btn);
+          }
+        });
+      });
+
+      // SOS EVENT HANDLERS
+      document.querySelector(".call-btn").addEventListener("click", () => {
+        alert("Calling Emergency Contact, phone: " + phone);
+      });
+
+      document.querySelector(".msg-btn").addEventListener("click", () => {
+        alert("Opening Emergency Message");
+      });
+
+      // LOCAL FALLBACK DATA STRUCT
+      const localcomplaints = {
+        user_id: 42,
+        fullname: "Sriram Kumar",
+        phone: "+91 98765 43210",
+        complaints: [
+          {
+            title: "Street Light Not Working",
+            description:
+              "The street light near the main intersection has been flickering and completely turned off since last night.",
+            category: "Electrical",
+            status: "In Progress",
+            created_at: "2026-05-20T21:30:00",
+            updated_at: "2026-05-21T09:15:22",
+          },
+          {
+            title: "Garbage Overflow",
+            description:
+              "The public dustbin outside the community park is overflowing. Stray animals are scattering the waste on the road.",
+            category: "Sanitation",
+            status: "Resolved",
+            created_at: "2026-05-18T08:00:12",
+            updated_at: "2026-05-19T14:45:00",
+          },
+          {
+            title: "Water Leakage",
+            description:
+              "A main water pipeline broke near the sector 3 commercial block. Significant amounts of water are flooding the street.",
+            category: "Water Supply",
+            status: "pending",
+            created_at: "2026-05-22T16:20:05",
+            updated_at: "2026-05-22T16:20:05",
+          },
+          {
+            title: "Pothole on Main Road",
+            description:
+              "A deep pothole has opened up right after the flyover down-ramp. It is extremely dangerous for two-wheelers at night.",
+            category: "Road Infrastructure",
+            status: "pending",
+            created_at: "2026-05-22T11:10:00",
+            updated_at: "2026-05-22T11:10:00",
+          },
+        ],
+      };
+
+      let phone = "";
+
+      // SECURE DASHBOARD DESERIALIZATION DESPATCH
+      fetch(`${window.API_BASE_URL}/api/user/dashboard`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("access_token"),
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+      })
+        .then((res) => {
+          if (res.status == 401) {
+            alert("Please login first");
+            window.location.href = "login.html";
+          }
+          if (res.status == 403) {
+            alert("Forbidden");
+            window.location.href = "home.html";
+            localStorage.removeItem("access_token");
+          }
+          return res.json();
+        })
+        .then((data) => {
+          const name = document.getElementById("dashboardUsername");
+          if (name && data.fullname) {
+            name.innerText = data.fullname;
+
+            const complaintsContainer =
+              document.getElementById("complaintsList");
+            if (complaintsContainer) {
+              phone = data.phone;
+              complaintsContainer.innerHTML = "";
+              const hasBackendComplaints =
+                data.complaints && data.complaints.length > 0;
+              const activeList = hasBackendComplaints
+                ? data.complaints
+                : localcomplaints.complaints;
+
+              activeList.forEach((complaint) => {
+                let statusClass = "pending";
+                const finalstatus = complaint.status.toLowerCase();
+                if (finalstatus.includes("progress")) {
+                  statusClass = "progress";
+                }
+                if (finalstatus.includes("resolved")) {
+                  statusClass = "resolved";
+                }
+                const comphtml = `
+                  <li>
+                    <div>
+                      <strong>${complaint.title}</strong>
+                    </div>
+                    <span class="${statusClass}"> ${complaint.status} </span>
+                  </li>
+                `;
+                complaintsContainer.insertAdjacentHTML("beforeend", comphtml);
+              });
+            }
+          }
+        })
+        .catch((err) => {
+          console.error("Dashboard error: ", err);
+        });
+
+      function logout() {
+        if (!confirm("You sure wanna logout?")) return;
+        localStorage.removeItem("access_token");
+        window.location.replace("home.html");
+      }
+    </script>
   </body>
 </html>

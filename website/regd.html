@@ -2,136 +2,440 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>SafeCity Register</title>
-
-    <!-- CSS -->
-
-    <link rel="stylesheet" href="regd.css" />
-    <!-- <link rel="stylesheet" href="darkmode.css"> -->
-    <link rel="stylesheet" href="style.css" />
-
-    <!-- FONT AWESOME -->
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
-    <!-- Google OAuth-->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+      /* --- THEME VARIABLES FROM HOME PAGE --- */
+      :root {
+        --primary: #6d52ff;
+        --sos-red: #ff4f5e;
+        --msg-green: #2ecc71;
+        --blue-accent: #2d8cff;
+        --bg-gradient: linear-gradient(
+          -45deg,
+          #0f172a,
+          #2e1065,
+          #4c1d95,
+          #1e1b4b
+        );
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* --- ANIMATED BACKGROUND FROM HOME PAGE --- */
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        background: var(--bg-gradient);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      /* --- EXACT GLASSMORPHISM CONTAINER --- */
+      .container {
+        width: 1100px;
+        height: 750px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.01)
+        );
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 40px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        display: flex;
+        overflow: hidden;
+      }
+
+      /* --- LEFT PANEL --- */
+      .left-panel {
+        width: 45%;
+        /* Subtle deep tint to separate sides cleanly while remaining glass */
+        background: rgba(15, 23, 42, 0.3);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-icon {
+        background: var(--primary);
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+      }
+
+      .logo h2 {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .left-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .left-content h1 {
+        font-size: 38px;
+        margin-bottom: 10px;
+        color: #ffffff;
+      }
+
+      .left-content p {
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 40px;
+        line-height: 1.5;
+      }
+
+      /* --- FLOATING VISUAL WRAPPER & ANIMATION FROM HOME PAGE --- */
+      @keyframes float-animation {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+      }
+
+      .left-visual-wrapper {
+        position: relative;
+        width: 260px;
+        margin: 0 auto;
+      }
+
+      .left-visual-wrapper img {
+        width: 100%;
+        display: block;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.3));
+      }
+
+      .float-badge {
+        position: absolute;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        font-weight: bold;
+        animation: float-animation 4s ease-in-out infinite;
+      }
+
+      .sos {
+        width: 55px;
+        height: 55px;
+        background: var(--sos-red);
+        top: -20px;
+        left: -20px;
+        border-radius: 50%;
+        font-size: 14px;
+        animation-delay: 0s;
+      }
+
+      .shield {
+        width: 65px;
+        height: 65px;
+        background: var(--primary);
+        bottom: 10px;
+        left: -35px;
+        border-radius: 18px;
+        font-size: 22px;
+        animation-delay: 0.5s;
+      }
+
+      .message {
+        width: 55px;
+        height: 55px;
+        background: var(--msg-green);
+        top: 30px;
+        right: -25px;
+        border-radius: 18px;
+        font-size: 18px;
+        animation-delay: 1s;
+      }
+
+      /* --- RIGHT PANEL --- */
+      .right-panel {
+        width: 55%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        background: transparent; /* Allows main container glassmorphism to show */
+      }
+
+      .register-box {
+        width: 100%;
+        max-width: 440px;
+      }
+
+      .register-box h1 {
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 5px;
+        color: #ffffff;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 25px;
+      }
+
+      /* GLASS ROLE BUTTONS (User / Staff) */
+      .role-buttons {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .role {
+        flex: 1;
+        height: 45px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .role:hover {
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #ffffff;
+      }
+
+      .role.active {
+        border-color: var(--primary);
+        color: #ffffff;
+        background: rgba(109, 82, 255, 0.2);
+        box-shadow: 0 0 15px rgba(109, 82, 255, 0.4);
+      }
+
+      /* GLASS INPUT BOXES */
+      .input-box {
+        width: 100%;
+        height: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        padding: 0 15px;
+        margin-bottom: 15px;
+        background: rgba(255, 255, 255, 0.03);
+        transition: all 0.3s ease;
+      }
+
+      .input-box:focus-within {
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: 0 0 15px rgba(109, 82, 255, 0.3);
+      }
+
+      .input-box i {
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .input-box input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        padding-left: 12px;
+        font-size: 14px;
+        color: #ffffff;
+      }
+
+      /* Clean fallback placeholder styling for modern visibility */
+      .input-box input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* REGISTER CALL TO ACTION BUTTON */
+      .register-btn {
+        width: 100%;
+        height: 50px;
+        border: none;
+        border-radius: 14px;
+        background: var(--primary);
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .register-btn:hover {
+        background: #7e67ff;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(109, 82, 255, 0.4);
+      }
+
+      /* INTERACTION TEXT LINKS */
+      .login-link {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .login-link a {
+        text-decoration: none;
+        color: var(--primary);
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .login-link a:hover {
+        color: #7e67ff;
+        text-shadow: 0 0 8px rgba(109, 82, 255, 0.6);
+      }
+    </style>
   </head>
 
   <body>
-    <!-- MAIN CONTAINER -->
-
     <div class="container">
-      <!-- LEFT PANEL -->
-
       <div class="left-panel">
-        <!-- LOGO -->
-
         <div class="logo">
-          <i class="fa-solid fa-shield-halved"></i>
-
-          <span>SafeCity</span>
+          <div class="logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <h2>SafeCity</h2>
         </div>
-
-        <!-- LEFT CONTENT -->
 
         <div class="left-content">
           <h1>Create Account</h1>
+          <p>Join SafeCity and help create<br />a safer community together.</p>
 
-          <p>Register your account and make your city safer.</p>
-
-          <!-- FLOAT ICONS -->
-
-          <div class="floating-icons">
-            <div class="sos">SOS</div>
-
-            <div class="shield">
+          <div class="left-visual-wrapper">
+            <div class="float-badge sos">SOS</div>
+            <div class="float-badge shield">
               <i class="fa-solid fa-shield"></i>
             </div>
-
-            <div class="message">
+            <div class="float-badge message">
               <i class="fa-solid fa-message"></i>
             </div>
+            <img
+              src="https://img.officer.com/files/base/cygnus/ofcr/image/2022/05/16x9/raptorconnect.6283cc00d79b4.png"
+              alt="SafeCity Shield"
+            />
           </div>
-
-          <!-- IMAGE -->
-
-          <img
-            src="https://img.officer.com/files/base/cygnus/ofcr/image/2022/05/16x9/raptorconnect.6283cc00d79b4.png?auto=format,compress&fit=fill&fill=blur&w=1200&h=630"
-          />
         </div>
       </div>
 
-      <!-- RIGHT PANEL -->
-
       <div class="right-panel">
-        <!-- REGISTER BOX -->
-
         <div class="register-box">
           <h1>Register</h1>
+          <p class="subtitle">Create your new account</p>
 
-          <p class="subtitle">Fill your details</p>
-
-          <!-- FULL NAME -->
+          <!-- <div class="role-buttons">
+            <button class="role active" id="userBtn">
+              <i class="fa-solid fa-user"></i> User
+            </button>
+            <button class="role" id="staffBtn">
+              <i class="fa-solid fa-user-shield"></i> Staff
+            </button>
+          </div> -->
 
           <div class="input-box">
             <i class="fa-solid fa-user"></i>
-
-            <input type="text" placeholder="Full Name" id="fullname" />
+            <input type="text" placeholder="Enter Full Name" id="fullname" />
           </div>
-
-          <!-- PHONE -->
-
-          <div class="input-box">
-            <i class="fa-solid fa-phone"></i>
-
-            <input type="tel" placeholder="Phone Number" id="phone" />
-          </div>
-
-          <!-- EMAIL -->
-
           <div class="input-box">
             <i class="fa-regular fa-envelope"></i>
-
-            <input type="email" placeholder="Email Address" id="email" />
+            <input type="email" placeholder="Enter Email" id="email" />
           </div>
-
-          <!-- PASSWORD -->
-
+          <div class="input-box">
+            <i class="fa-solid fa-phone"></i>
+            <input type="text" placeholder="Enter Phone Number" id="phone" />
+          </div>
           <div class="input-box">
             <i class="fa-solid fa-lock"></i>
-
             <input
               type="password"
-              id="password"
               placeholder="Create Password"
+              id="password"
             />
           </div>
-          <!-- CONFIRM PASSWORD -->
-
           <div class="input-box">
             <i class="fa-solid fa-lock"></i>
-
             <input
               type="password"
-              id="confirmPassword"
               placeholder="Confirm Password"
+              id="confirmPassword"
             />
           </div>
 
-          <!-- REGISTER BUTTON -->
+          <button class="register-btn">Create Account</button>
 
-          <button class="register-btn">Register</button>
           <div
             style="
               text-align: center;
-              margin: 16px 0;
-              color: #888;
+              margin: 18px 0;
+              color: rgba(255, 255, 255, 0.4);
               font-size: 14px;
               font-weight: 500;
             "
@@ -149,20 +453,14 @@
             "
           ></div>
 
-          <!-- LOGIN -->
-
-          <p class="login-text">
-            Already have an account?
-
-            <a href="login.html"> Login </a>
+          <p class="login-link">
+            Already have an account? <a href="login.html">Login</a>
           </p>
         </div>
       </div>
     </div>
 
-    <!-- JS -->
-    <script src="config.js"></script>
     <script src="register.js"></script>
-    <!-- <script src="common-darkmode.js"></script> -->
+    <script src="config.js"></script>
   </body>
 </html>
