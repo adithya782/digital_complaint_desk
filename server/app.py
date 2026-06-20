@@ -872,7 +872,7 @@ class Specific_Complaints(Resource):
             if user_id != complaint.user.user_id:
                 return {"Unauthorized": 'No access'}, 403
         elif role == UserRole.STAFF.value:
-            if user_id != complaint.staff.staff_id:
+            if user_id != complaint.staff.user.user_id:
                 return {"Unauthorized": 'No access'}, 403
         else:
             return {"Unauthorized": 'No access'}, 403
