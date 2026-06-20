@@ -879,7 +879,7 @@ class Specific_Complaints(Resource):
                 logger.error("DEBUG: Complaint has no staff assigned.")
                 return {"message": "Complaint not assigned to any staff"}, 403
             staff_user_id = getattr(complaint.staff, 'user_id', None)
-            if user_id != complaint.staff.user.user_id:
+            if user_id != staff_user_id:
                 logger.error(f"DEBUG: Mismatch! Token ID {type(user_id)} vs Staff User ID {type(staff_user_id)}")
                 return {"Unauthorized": 'No access'}, 403
         else:
