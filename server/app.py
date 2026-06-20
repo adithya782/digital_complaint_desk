@@ -897,7 +897,7 @@ class Specific_Complaints(Resource):
         }]
         
         return data, 200
-    
+    @jwt_required()
     def put(self, id):
         data = request.get_json()
         is_final = data.get('is_final', False)
