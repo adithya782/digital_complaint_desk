@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complaint Details</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- THEME VARIABLES: DISTINCT CITIZEN OCEANIC TEAL PALETTE --- */
+      :root {
+        --primary: #00d2ff;
+        --sos-red: #ff4f5e;
+        --msg-green: #2ecc71;
+        --blue-accent: #0084ff;
+        --bg-gradient: linear-gradient(
+          -45deg,
+          #060b14,
+          #0a1c2a,
+          #0f3142,
+          #081622
+        );
+        --glass-bg: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.01)
+        );
+        --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* --- ANIMATED BACKGROUND --- */
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        background: var(--bg-gradient);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 40px 20px;
+      }
+
+      .container {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      /* --- NAVIGATION HEADER --- */
+      .header-actions {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      .back-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        transform: translateX(-3px);
+      }
+
+      /* --- DETAILS & TIMELINE CARD ARCHITECTURE --- */
+      .card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: var(--glass-border);
+        padding: 30px;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        margin-bottom: 25px;
+      }
+
+      h2 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 15px;
+        letter-spacing: 0.5px;
+      }
+
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #ffffff;
+      }
+
+      /* --- META DATA STRUCTURE GRID --- */
+      .info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 25px;
+      }
+
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .data-row:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 14px;
+      }
+
+      .value {
+        color: #ffffff;
+        font-size: 14px;
+      }
+
+      /* --- COMPLEX STATUS COLORED BADGES --- */
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+      .status-badge.pending {
+        background: rgba(255, 193, 7, 0.12);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.25);
+      }
+      .status-badge.progress {
+        background: rgba(0, 132, 255, 0.12);
+        color: var(--blue-accent);
+        border: 1px solid rgba(0, 132, 255, 0.25);
+      }
+      .status-badge.resolved {
+        background: rgba(46, 204, 113, 0.12);
+        color: var(--msg-green);
+        border: 1px solid rgba(46, 204, 113, 0.25);
+      }
+
+      .description-box {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 18px;
+        border-radius: 14px;
+        border-left: 4px solid var(--primary);
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+      }
+
+      .evidence-container img {
+        max-width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-top: 10px;
+      }
+
+      /* --- NEON TIMELINE STYLING ENGINE --- */
+      #timelineList {
+        list-style: none;
+        border-left: 2px dashed rgba(255, 255, 255, 0.15);
+        padding-left: 25px;
+        margin-left: 5px;
+      }
+
+      .timeline-item {
+        position: relative;
+        margin-bottom: 25px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+      }
+
+      .timeline-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -32px;
+        top: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 0 10px var(--primary);
+        border: 2px solid #0a1c2a;
+      }
+
+      .timeline-item strong {
+        color: #ffffff;
+      }
+
+      .timeline-note {
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      /* COMPATIBILITY FALLBACK RENDERING STATE */
+      .loading-text {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.4);
+        padding: 40px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-actions">
+        <button class="back-btn" onclick="history.back()">
+          <i class="fa-solid fa-arrow-left"></i> Back to Feed
+        </button>
+      </div>
+
+      <div class="card" id="complaintDetails">
+        <div class="loading-text">
+          <i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px"></i>
+          Loading data parameters...
+        </div>
+      </div>
+
+      <div class="card" id="timelineSection">
+        <h3>Resolution Pathway</h3>
+        <ul id="timelineList">
+          <p class="loading-text" style="padding: 10px 0">
+            Acquiring system events...
+          </p>
+        </ul>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const complaintId = urlParams.get("id");
+        const detailsContainer = document.getElementById("complaintDetails");
+
+        if (!complaintId) {
+          detailsContainer.innerHTML =
+            "<p class='loading-text'>Error: No valid parameter context targeting ID.</p>";
+          return;
+        }
+
+        // 1. DATA CONTEXT ACQUISITION
+        fetch(`${window.API_BASE_URL}/api/complaints/${complaintId}`, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        })
+          .then((response) => {
+            if (!response.ok)
+              throw new Error("Failed to fetch target profiles.");
+            return response.json();
+          })
+          .then((data) => {
+            const complaint = data[0];
+
+            // Build Status Badge CSS Variant
+            let badgeClass = "pending";
+            const currentStatus = (complaint.status || "").toLowerCase();
+            if (currentStatus.includes("progress")) badgeClass = "progress";
+            if (currentStatus.includes("resolved")) badgeClass = "resolved";
+
+            // Process attachment nodes safely
+            let evidenceHtml = `<p class="label">Evidence Stack:</p><p class="value" style="margin-top: 5px; color: rgba(255,255,255,0.4);">No media provided.</p>`;
+            if (complaint.evidence_url) {
+              evidenceHtml = `
+                <p class="label">Evidence Stack:</p>
+                <div class="evidence-container">
+                  <img src="${complaint.evidence_url}" alt="Attachment Field Data Component">
+                </div>
+              `;
+            }
+
+            // Render details into components
+            detailsContainer.innerHTML = `
+              <h2>${complaint.title || "Untitled Issue"}</h2>
+              
+              <div class="info-grid">
+                <div class="data-row">
+                  <span class="label">Current State Status:</span> 
+                  <span class="status-badge ${badgeClass}">${complaint.status || "Unknown"}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Identity Shield Profile (Anonymous):</span> 
+                  <span class="value">${complaint.anonymous ? "Protected (Yes)" : "Public User"}</span>
+                </div>
+                <div class="data-row">
+                  <span class="label">Telemetry Map Coordinates:</span> 
+                  <span class="value">${complaint.latitude || "0.000"}, ${complaint.longitude || "0.000"}</span>
+                </div>
+              </div>
+
+              <div style="margin-bottom: 25px;">
+                <p class="label" style="margin-bottom: 8px;">Detailed Statement Summary:</p>
+                <div class="description-box">
+                  ${complaint.description || "No descriptions specified."}
+                </div>
+              </div>
+
+              <div>
+                ${evidenceHtml}
+              </div>
+            `;
+          })
+          .catch((err) => {
+            console.error(err);
+            detailsContainer.innerHTML = `<p class='loading-text' style='color: var(--sos-red);'>Error running structural composition: ${err.message}</p>`;
+          });
+
+        // 2. TIMELINE DYNAMIC ASYNC ENGINE LOOP
+        fetch(`${window.API_BASE_URL}/api/complaint/timeline/${complaintId}`, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+            "ngrok-skip-browser-warning": "true",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            const timelineList = document.getElementById("timelineList");
+            timelineList.innerHTML = "";
+
+            if (!data.timeline || data.timeline.length === 0) {
+              timelineList.innerHTML =
+                "<p class='loading-text' style='padding:10px 0;'>No lifecycle milestones logged yet.</p>";
+              return;
+            }
+
+            data.timeline.forEach((step) => {
+              const li = document.createElement("li");
+              li.className = "timeline-item";
+
+              // Humanize timeline timestamps safely
+              const stepDate = step.date
+                ? new Date(step.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : "Date Unspecified";
+
+              li.innerHTML = `
+                <strong>${step.step || "Status Verified Check"}</strong><br>
+                <small style="color: rgba(255,255,255,0.35); font-size: 11px;">${stepDate}</small>
+                <p class="timeline-note">${step.note || "No comments accompanied this change status record."}</p>
+              `;
+              timelineList.appendChild(li);
+            });
+          })
+          .catch((err) => {
+            console.error("Timeline acquisition error:", err);
+            document.getElementById("timelineList").innerHTML =
+              "<p class='loading-text' style='color: var(--sos-red);'>Timeline interface synchronization offline.</p>";
+          });
+      });
+    </script>
+  </body>
+</html>

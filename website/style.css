@@ -1,3 +1,11 @@
+:root {
+  --primary: #6d52ff;
+  --sos-red: #ff4f5e;
+  --msg-green: #2ecc71;
+  --blue-accent: #2d8cff;
+  --bg-gradient: linear-gradient(-45deg, #0f172a, #2e1065, #4c1d95, #1e1b4b);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,98 +13,102 @@
   font-family: "Poppins", sans-serif;
 }
 
-body {
-  background: #f5f7ff;
-  padding: 20px;
+/* body {
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  min-height: 100vh;
+  padding: 40px 20px;
+} */
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-/* MAIN BOX */
+body {
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  min-height: 100vh;
+  /* Use flexbox to center the container perfectly on the screen */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Reduces the external padding */
+}
+
 .container {
-  background: #fff;
-  border-radius: 22px;
+  max-width: 1400px;
+  width: 95%;
+  /* Removed top margin because body flexbox handles the centering */
+  margin: 0 auto;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.01)
+  );
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 40px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 /* NAVBAR */
 .navbar {
-  background: #071540;
-  height: 75px;
-  padding: 0 35px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 25px 50px;
+  background: rgba(0, 0, 0, 0.2);
 }
-
 .logo {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 .logo-icon {
-  width: 38px;
-  height: 38px;
+  background: var(--primary);
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
-  background: #0d1d56;
-
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.logo-icon i {
+  justify-content: center;
   color: #fff;
-  font-size: 18px;
 }
-
 .logo h2 {
   color: #fff;
-  font-size: 22px;
 }
-
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 35px;
+  gap: 30px;
 }
-
 .nav-links a {
+  color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  color: #fff;
-  font-size: 14px;
-  transition: 0.3s;
+  font-weight: 500;
 }
-
 .nav-links a:hover,
 .nav-links .active {
-  color: #8c74ff;
+  color: #fff;
 }
-
 .nav-btns {
   display: flex;
-  gap: 12px;
-}
-
-.login-btn {
-  padding: 10px 24px;
-  border-radius: 10px;
-  background: transparent;
-  border: 1px solid #8c74ff;
-  color: #2f0dd6;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.register-btn {
-  padding: 10px 24px;
-  border-radius: 10px;
-  border: none;
-  background: #6d52ff;
-  color: #fff;
-  cursor: pointer;
-  font-weight: 500;
+  gap: 15px;
 }
 
 /* HERO */
@@ -104,263 +116,219 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding: 60px 70px;
-  position: relative;
+  padding: 100px 120px; /* More space on left/right */
+  gap: 100px;
 }
-
-/* LEFT */
 .hero-left h1 {
-  font-size: 58px;
-  line-height: 1.1;
-  color: #0b1231;
-  margin-bottom: 25px;
-}
-
-.hero-left p {
-  color: #666;
-  font-size: 18px;
-  line-height: 1.8;
-  margin-bottom: 35px;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.outline-btn {
-  padding: 13px 35px;
-  border-radius: 12px;
-  border: 1px solid #6d52ff;
-  background: #fff;
-  color: #6d52ff;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.purple-btn {
-  padding: 13px 35px;
-  border-radius: 12px;
-  border: none;
-  background: #6d52ff;
+  font-size: 55px;
   color: #fff;
-  font-weight: 600;
+  margin-bottom: 20px;
+}
+.hero-left p {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 30px;
+}
+/* Base Button Styles */
+.login-btn,
+.register-btn {
+  padding: 12px 30px;
+  border-radius: 12px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
 }
 
-/* RIGHT */
+/* Login Button: Hollow to Solid effect */
+/* Base Styles */
+.login-btn,
+.register-btn {
+  padding: 12px 30px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* LOGIN BUTTON: Stays transparent, but gets a beautiful "Border Glow" */
+.login-btn {
+  background: rgba(255, 255, 255, 0.03); /* Extremely subtle glass base */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.08); /* Subtle highlight */
+  border-color: var(--primary);
+  transform: translateY(-5px);
+  /* A glow that matches the border, but keeps the center clear */
+  box-shadow: 0 0 15px rgba(109, 82, 255, 0.4);
+}
+
+/* REGISTER BUTTON: Remains your primary solid call-to-action */
+.register-btn {
+  background: var(--primary);
+  border: none;
+  color: #fff;
+}
+
+.register-btn:hover {
+  background: #7e67ff;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(109, 82, 255, 0.4);
+}
+/* 1. HERO RIGHT: The Anchor */
 .hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   position: relative;
+  /* Add padding to ensure the absolutely positioned icons have room to breathe */
+  padding: 40px;
 }
 
-.hero-right img {
-  width: 430px;
+/* 2. FLOATING WRAPPER: The Boundary */
+.floating-wrapper {
+  position: relative;
+  display: inline-block; /* Keeps the wrapper tight to the image */
 }
 
-/* FLOATING BOXES */
+/* 3. FLOATING ICONS: Refined Positioning */
 .floating {
   position: absolute;
-  border-radius: 16px;
-  color: #fff;
-  font-weight: 600;
-
+  width: 70px;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  color: #fff;
+  font-size: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10; /* Higher than the image */
+  animation: float 4s ease-in-out infinite;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Relative to the floating-wrapper */
 .sos {
-  width: 70px;
-  height: 70px;
-  background: #ff4f5e;
-  right: 400px;
-  left: 0px;
+  background: var(--sos-red);
+  top: -20px;
+  left: -20px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .shield {
-  width: 70px;
-  height: 70p;
-  background: #6d52ff;
-
-  top: 190px; /*moves the box down*/
-  left: 100px;
-
-  font-size: 28px;
+  background: var(--primary);
+  bottom: -20px;
+  left: -30px;
 }
 
 .msg {
-  width: 70px;
-  height: 70px;
-  background: #28c76f;
-  top: 90px;
-  right: 0;
-  font-size: 28px;
+  background: var(--msg-green);
+  top: 40px;
+  right: -40px;
 }
 
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* 4. IMAGE: Constrained */
+.hero-right img {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1; /* Image stays behind icons */
+}
 /* FEATURES */
+/* 1. Add this Keyframe for the gentle floating movement */
+@keyframes float-animation {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 .features {
-  padding: 0 45px 40px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  padding: 0 50px 50px;
 }
 
 .feature-card {
-  background: #fff;
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.05);
   padding: 25px;
-
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-
-  border: 1px solid #edf0ff;
-  transition: 0.3s;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s ease;
+  cursor: pointer;
+  /* Apply floating animation here */
+  animation: float-animation 6s ease-in-out infinite;
 }
 
+/* 2. Responsiveness on Hover */
 .feature-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-15px) scale(1.02);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
 
-.icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 16px;
-
+/* 3. Floating Icons inside the cards */
+.icon-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
   display: flex;
-  justify-content: center;
   align-items: center;
-
+  justify-content: center;
   color: #fff;
-  font-size: 22px;
+  margin-bottom: 15px;
+  font-size: 20px;
+  transition: transform 0.3s ease;
 }
 
-.purple {
-  background: #6d52ff;
+/* Make the icon "jump" or float slightly when the card is hovered */
+.feature-card:hover .icon-box {
+  transform: translateY(-5px) rotate(5deg);
 }
 
-.blue {
-  background: #2d8cff;
+/* Color Classes (keep these as they are) */
+.p-purple {
+  background: var(--primary);
 }
-
-.red {
-  background: #ff5b5b;
+.p-blue {
+  background: var(--blue-accent);
 }
-
-.green {
-  background: #22c55e;
+.p-red {
+  background: var(--sos-red);
+}
+.p-green {
+  background: var(--msg-green);
 }
 
 .feature-card h3 {
-  font-size: 18px;
-  margin-bottom: 6px;
-  color: #111827;
+  color: #fff;
+  margin-bottom: 5px;
 }
-
 .feature-card p {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
-  line-height: 1.6;
-}
-
-/* RESPONSIVE */
-@media (max-width: 1100px) {
-  .hero {
-    flex-direction: column;
-    text-align: center;
-    gap: 50px;
-  }
-
-  .hero-buttons {
-    justify-content: center;
-  }
-
-  .features {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 750px) {
-  .navbar {
-    flex-direction: column;
-    height: auto;
-    padding: 20px;
-    gap: 20px;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero {
-    padding: 40px 20px;
-  }
-
-  .hero-left h1 {
-    font-size: 42px;
-  }
-
-  .hero-right img {
-    width: 300px;
-  }
-
-  .features {
-    grid-template-columns: 1fr;
-    padding: 20px;
-  }
-}
-/* DARK MODE BUTTON */
-.dark-btn {
-  width: 45px;
-  height: 45px;
-  border: none;
-  border-radius: 12px;
-  background: #ffffff20;
-  color: #fff;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-/* DARK MODE BODY */
-body.dark-mode {
-  background: #0f172a;
-}
-
-/* CONTAINER */
-body.dark-mode .container {
-  background: #111827;
-}
-
-/* HERO TEXT */
-body.dark-mode .hero-left h1 {
-  color: #fff;
-}
-
-body.dark-mode .hero-left p {
-  color: #cbd5e1;
-}
-
-/* FEATURE CARDS */
-body.dark-mode .feature-card {
-  background: #1e293b;
-  border: 1px solid #334155;
-}
-
-body.dark-mode .feature-card h3 {
-  color: #fff;
-}
-
-body.dark-mode .feature-card p {
-  color: #cbd5e1;
-}
-
-/* BUTTONS */
-body.dark-mode .outline-btn {
-  background: #1e293b;
-  color: #fff;
-  border: 1px solid #6d52ff;
 }

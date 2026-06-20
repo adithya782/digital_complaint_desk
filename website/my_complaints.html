@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Complaints</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* --- THEME VARIABLES: DISTINCT CITIZEN OCEANIC TEAL PALETTE --- */
+      :root {
+        --primary: #00d2ff;
+        --sos-red: #ff4f5e;
+        --msg-green: #2ecc71;
+        --blue-accent: #0084ff;
+        --bg-gradient: linear-gradient(
+          -45deg,
+          #060b14,
+          #0a1c2a,
+          #0f3142,
+          #081622
+        );
+        --glass-bg: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.01)
+        );
+        --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* --- ANIMATED BACKGROUND --- */
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        background: var(--bg-gradient);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 40px 20px;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      /* --- NAVIGATION HEADER --- */
+      .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .back-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        transform: translateX(-3px);
+      }
+
+      h2 {
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      /* --- CONTROLS: FILTERS & SEARCH --- */
+      .controls-wrapper {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: var(--glass-border);
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .search-box {
+        position: relative;
+        width: 100%;
+      }
+
+      .search-box i {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.3);
+        font-size: 16px;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 14px 14px 14px 48px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .search-box input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        outline: none;
+      }
+
+      .filter-tabs {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .tab {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.6);
+        padding: 8px 18px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .tab:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+      }
+
+      .tab.active {
+        background: rgba(0, 210, 255, 0.12);
+        color: #ffffff;
+        border-color: var(--primary);
+        box-shadow: 0 0 12px rgba(0, 210, 255, 0.2);
+      }
+
+      /* --- COMPLAINT CARDS COMPONENT --- */
+      .complaints-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .complaint-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: var(--glass-border);
+        padding: 25px;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        cursor: pointer; /* INTERACTIVE FEED ACTION HOOK */
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .complaint-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 12px;
+      }
+
+      .card-header h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .category-tag {
+        font-size: 11px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 3px 10px;
+        border-radius: 6px;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+
+      .description {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 15px;
+      }
+
+      .meta-date {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* STATUS BADGES */
+      .status-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+        letter-spacing: 0.5px;
+      }
+
+      .status-badge.pending {
+        background: rgba(255, 193, 7, 0.12);
+        color: #ffc107;
+        border: 1px solid rgba(255, 193, 7, 0.25);
+      }
+
+      .status-badge.progress {
+        background: rgba(0, 132, 255, 0.12);
+        color: var(--blue-accent);
+        border: 1px solid rgba(0, 132, 255, 0.25);
+      }
+
+      .status-badge.resolved {
+        background: rgba(46, 204, 113, 0.12);
+        color: var(--msg-green);
+        border: 1px solid rgba(46, 204, 113, 0.25);
+      }
+
+      /* EMPTY STATE RENDERING */
+      .no-data {
+        text-align: center;
+        padding: 50px 20px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .no-data i {
+        font-size: 40px;
+        margin-bottom: 15px;
+        color: rgba(255, 255, 255, 0.15);
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 20px 10px;
+        }
+        .card-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header-actions">
+        <a href="user_dashboard.html" class="back-btn">
+          <i class="fa-solid fa-arrow-left"></i> Dashboard
+        </a>
+        <h2>My Complaints</h2>
+      </div>
+
+      <div class="controls-wrapper">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="searchBar"
+            placeholder="Search by title or category..."
+            oninput="filterComplaints()"
+          />
+        </div>
+        <div class="filter-tabs">
+          <button class="tab active" onclick="switchTab(this, 'all')">
+            All
+          </button>
+          <button class="tab" onclick="switchTab(this, 'pending')">
+            Pending
+          </button>
+          <button class="tab" onclick="switchTab(this, 'progress')">
+            In Progress
+          </button>
+          <button class="tab" onclick="switchTab(this, 'resolved')">
+            Resolved
+          </button>
+        </div>
+      </div>
+
+      <div class="complaints-feed" id="complaintsFeed">
+        <div class="no-data">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <p>Loading your complaint history...</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+      let masterComplaintsList = [];
+      let currentFilterStatus = "all";
+
+      // BACKEND PAYLOAD FALLBACK DATA WITH IDENTIFIER KEYS DEFINED
+      const localcomplaints = [
+        {
+          id: "101",
+          title: "Street Light Not Working",
+          description:
+            "The street light near the main intersection has been flickering and completely turned off since last night.",
+          category: "Electrical",
+          status: "In Progress",
+          created_at: "2026-05-20T21:30:00",
+        },
+        {
+          id: "102",
+          title: "Garbage Overflow",
+          description:
+            "The public dustbin outside the community park is overflowing. Stray animals are scattering the waste on the road.",
+          category: "Sanitation",
+          status: "Resolved",
+          created_at: "2026-05-18T08:00:12",
+        },
+        {
+          id: "103",
+          title: "Water Leakage",
+          description:
+            "A main water pipeline broke near the sector 3 commercial block. Significant amounts of water are flooding the street.",
+          category: "Water Supply",
+          status: "Pending",
+          created_at: "2026-05-22T16:20:05",
+        },
+        {
+          id: "104",
+          title: "Pothole on Main Road",
+          description:
+            "A deep pothole has opened up right after the flyover down-ramp. It is extremely dangerous for two-wheelers at night.",
+          category: "Road Infrastructure",
+          status: "Pending",
+          created_at: "2026-05-22T11:10:00",
+        },
+      ];
+
+      // INITIAL DATA DESERIALIZATION LOOP
+      document.addEventListener("DOMContentLoaded", () => {
+        fetch(`${window.API_BASE_URL}/api/user/dashboard`, {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("access_token"),
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        })
+          .then((res) => {
+            if (res.status == 401) {
+              window.location.href = "login.html";
+            }
+            return res.json();
+          })
+          .then((data) => {
+            const hasBackendComplaints =
+              data.complaints && data.complaints.length > 0;
+            masterComplaintsList = hasBackendComplaints
+              ? data.complaints
+              : localcomplaints;
+            renderComplaints(masterComplaintsList);
+          })
+          .catch((err) => {
+            console.error("Error fetching complaints feed:", err);
+            masterComplaintsList = localcomplaints;
+            renderComplaints(masterComplaintsList);
+          });
+      });
+
+      // NAVIGATION HOOK ENGINE FOR DETAILED VIEWPORTS
+      function navigateToDetails(id) {
+        console.log("Routing to details page with ID:", id);
+        if (!id) {
+          console.error("Navigation Rejected: ID is blank or undefined.");
+          alert(
+            "Error: Unable to find a unique database ID for this complaint.",
+          );
+          return;
+        }
+
+        // CRITICAL CHECK: Ensure this matches your actual detailed view HTML file name!
+        window.location.href = `user_complaint_details.html?id=${id}`;
+      }
+
+      // CORE VIEW ENGINE DOM GENERATOR
+      function renderComplaints(list) {
+        const feed = document.getElementById("complaintsFeed");
+        feed.innerHTML = "";
+
+        if (list.length === 0) {
+          feed.innerHTML = `
+        <div class="no-data">
+          <i class="fa-regular fa-folder-open"></i>
+          <p>No complaints matched your parameters.</p>
+        </div>`;
+          return;
+        }
+
+        list.forEach((item) => {
+          // 🚀 FIXED: Fallback chain to handle standard ID, MongoDB ObjectId (_id), or relational keys
+          const resolvedId = item.id || item._id || item.complaint_id || "";
+
+          let statusClass = "pending";
+          const finalstatus = (item.status || "").toLowerCase();
+          if (finalstatus.includes("progress")) statusClass = "progress";
+          if (finalstatus.includes("resolved")) statusClass = "resolved";
+
+          const dateOptions = {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          };
+          const formattedDate = new Date(item.created_at).toLocaleDateString(
+            "en-US",
+            dateOptions,
+          );
+
+          // ATTACH NAVIGATION ONCLICK INJECTION POINT
+          const cardHtml = `
+        <div class="complaint-card" onclick="navigateToDetails('${resolvedId}')">
+          <span class="category-tag">${item.category || "General"}</span>
+          <div class="card-header">
+            <h3>${item.title || "Untitled Issue"}</h3>
+          </div>
+          <p class="description">${item.description || "No description provided."}</p>
+          <div class="card-footer">
+            <div class="meta-date">
+              <i class="fa-regular fa-calendar"></i> Filed on ${formattedDate}
+            </div>
+            <span class="status-badge ${statusClass}">${item.status || "Pending"}</span>
+          </div>
+        </div>
+      `;
+          feed.insertAdjacentHTML("beforeend", cardHtml);
+        });
+      }
+
+      // CONTROL MECHANICS FILTER EVENT ACTIONS
+      function switchTab(element, statusQuery) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        element.classList.add("active");
+        currentFilterStatus = statusQuery;
+        filterComplaints();
+      }
+
+      function filterComplaints() {
+        const searchInput = document
+          .getElementById("searchBar")
+          .value.toLowerCase();
+
+        const filtered = masterComplaintsList.filter((complaint) => {
+          const titleText = (complaint.title || "").toLowerCase();
+          const categoryText = (complaint.category || "general").toLowerCase();
+
+          const matchesSearch =
+            titleText.includes(searchInput) ||
+            categoryText.includes(searchInput);
+
+          let matchesTab = false;
+          const compStatus = (complaint.status || "").toLowerCase();
+
+          if (currentFilterStatus === "all") {
+            matchesTab = true;
+          } else if (currentFilterStatus === "pending") {
+            matchesTab = compStatus === "pending";
+          } else if (currentFilterStatus === "progress") {
+            matchesTab = compStatus.includes("progress");
+          } else if (currentFilterStatus === "resolved") {
+            matchesTab = compStatus.includes("resolved");
+          }
+
+          return matchesSearch && matchesTab;
+        });
+
+        renderComplaints(filtered);
+      }
+    </script>
+  </body>
+</html>
