@@ -69,11 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
       // Loop through the timeline array provided by Flask
       data.timeline.forEach((step) => {
         const li = document.createElement("li");
+        li.className = "timeline-item"; // Apply the new styling class
         li.innerHTML = `
-          <strong>${step.step}</strong> (${step.date})<br>
-          <small>${step.note}</small>
-          <hr>
-        `;
+    <strong>${step.step}</strong> <br>
+    <small style="color: #666;">${step.date}</small><br>
+    <p style="margin: 5px 0 0 0;">${step.note}</p>
+  `;
         timelineList.appendChild(li);
       });
     })
