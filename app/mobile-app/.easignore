@@ -1,0 +1,11 @@
+# Correctly anchor the directories to the root and omit trailing slashes
+/node_modules
+/android
+/ios
+/.expo
+
+# Additional recommended rules for Expo / React Native
+/.git
+/web-build
+/web-report
+/.tmp
