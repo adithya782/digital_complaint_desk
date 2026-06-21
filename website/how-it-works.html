@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How It Works - SafeCity</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="navbar">
+        <div class="logo">
+          <div class="logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <h2>SafeCity</h2>
+        </div>
+        <nav>
+          <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a class="active" href="#">How It Works</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="nav-btns">
+          <a href="login.html"><button class="login-btn">Login</button></a>
+          <a href="regd.html"><button class="register-btn">Register</button></a>
+        </div>
+      </header>
+
+      <section class="work-section" style="padding: 60px 120px; color: white">
+        <h1>How SafeCity Works</h1>
+        <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 40px">
+          Our system connects citizens with local authorities in real-time.
+        </p>
+
+        <div
+          class="steps-grid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+          "
+        >
+          <div class="feature-card">
+            <h3>1. Report</h3>
+            <p>Identify an issue or emergency and submit it via the app.</p>
+          </div>
+          <div class="feature-card">
+            <h3>2. Notify</h3>
+            <p>The system instantly alerts the nearest response team.</p>
+          </div>
+          <div class="feature-card">
+            <h3>3. Resolve</h3>
+            <p>Track the progress of your report until it is resolved.</p>
+          </div>
+        </div>
+
+        <div
+          class="download-box"
+          style="
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+          "
+        >
+          <h2>Get the Mobile Version</h2>
+          <p style="margin-bottom: 20px">
+            Take SafeCity with you wherever you go.
+          </p>
+          <a
+            href="https://expo.dev/artifacts/eas/mOojzHCeyAzG4u1nzjkUfs6B2F-JLpULJq71Ewijf_Q.apk"
+            download
+            class="register-btn"
+            style="text-decoration: none; display: inline-block"
+          >
+            <i class="fa-solid fa-download"></i> Download APK
+          </a>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
