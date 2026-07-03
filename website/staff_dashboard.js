@@ -170,10 +170,10 @@ function triggerLiveDashboardFetch() {
         if (nameElement && data.fullname) nameElement.innerText = data.fullname;
 
         if (data.workload_summary) {
-          incoming_count = data.workload_summary.total_active_issues;
-          pending_count = data.workload_summary.pending_complaints;
-          total_count = data.workload_summary.total_complaints;
-          resolved_count = data.workload_summary.resolved_complaints;
+          incoming_count.innerText = data.workload_summary.total_active_issues;
+          pending_count.innerText = data.workload_summary.pending_complaints;
+          total_count.innerText = data.workload_summary.total_complaints;
+          resolved_count.innerText = data.workload_summary.resolved_complaints;
         }
 
         if (complaintsContainer) {
