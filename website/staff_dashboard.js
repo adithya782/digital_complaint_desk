@@ -159,11 +159,22 @@ function triggerLiveDashboardFetch() {
         const nameElement = document.getElementById("dashboardUsername");
         const staff_id = document.getElementById("staff_id");
         const department = document.getElementById("department");
+        const total_count = document.getElementById("total_count");
+        const pending_count = document.getElementById("pending_count");
+        const resolved_count = document.getElementById("resolved_count");
+        const incoming_count = document.getElementById("incoming_count");
 
         if (staff_id && data.staff_id) staff_id.innerText = data.staff_id;
         if (department && data.department)
           department.innerText = data.department;
         if (nameElement && data.fullname) nameElement.innerText = data.fullname;
+
+        if (data.workload_summary) {
+          incoming_count = data.workload_summary.total_active_issues;
+          pending_count = data.workload_summary.pending_complaints;
+          total_count = data.workload_summary.total_complaints;
+          resolved_count = data.workload_summary.resolved_complaints;
+        }
 
         if (complaintsContainer) {
           complaintsContainer.innerHTML = "";

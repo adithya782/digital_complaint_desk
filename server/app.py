@@ -510,6 +510,9 @@ class staff_dashboard(Resource):
         user = db.session.get(User, user_id)
         staff = user.staff
         complaints = Complaint.query.filter(Complaint.staff_id==staff.staff_id, Complaint.status !='Resolved').all()
+        total = Complaint.query.count()
+        pending = Complaint.query.filter_by(status='pending').count()
+        resolved = Complaint.query.filter_by(status='resolved').count()
         now = datetime.now(timezone.utc)
         scored_complaints = []
         for complaint in complaints:
@@ -554,7 +557,10 @@ class staff_dashboard(Resource):
             'department': staff.department.department_name,
             'workload_summary': {
                 'total_active_issues': len(scored_complaints),
-                'daily_capacity_limit': DAILY_CAPACITY
+                'daily_capacity_limit': DAILY_CAPACITY,
+                'total_complaints': total,
+                'pending_complaints': pending,
+                'resolved_complaints':resolved
             },
             'slots': {
                 'todays_focus_slot': todays_slot,
