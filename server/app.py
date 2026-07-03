@@ -503,7 +503,7 @@ class staff_dashboard(Resource):
         user = db.session.get(User, user_id)
         staff = user.staff
         complaints = Complaint.query.filter(Complaint.staff_id==staff.staff_id, Complaint.status !='Resolved').all()
-        total = Complaint.query.filter(Complaint.staff_id==staff.staff_id,).count()
+        total = Complaint.query.filter(Complaint.staff_id==staff.staff_id).count()
         pending = Complaint.query.filter(Complaint.staff_id==staff.staff_id,Complaint.status=='Pending').count()
         resolved = Complaint.query.filter(Complaint.staff_id==staff.staff_id,Complaint.status=='Resolved').count()
         now = datetime.now(timezone.utc)
