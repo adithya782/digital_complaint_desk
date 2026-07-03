@@ -504,8 +504,8 @@ class staff_dashboard(Resource):
         staff = user.staff
         complaints = Complaint.query.filter(Complaint.staff_id==staff.staff_id, Complaint.status !='Resolved').all()
         total = Complaint.query.filter(Complaint.staff_id==staff.staff_id,).count()
-        pending = Complaint.query.filter(Complaint.staff_id==staff.staff_id,Complaint.status=='pending').count()
-        resolved = Complaint.query.filter(Complaint.staff_id==staff.staff_id,Complaint.status=='resolved').count()
+        pending = Complaint.query.filter(Complaint.staff_id==staff.staff_id,Complaint.status=='Pending').count()
+        resolved = Complaint.query.filter(Complaint.staff_id==staff.staff_id,Complaint.status=='Resolved').count()
         now = datetime.now(timezone.utc)
         scored_complaints = []
         for complaint in complaints:
