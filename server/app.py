@@ -21,11 +21,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
 import secrets 
 
-# LOGGING
+
 import logging
 import sys
 
-# Configure logging to write to stdout
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] %(message)s',
@@ -46,16 +46,13 @@ prod_url = os.environ.get('DATABASE_URL')
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY")
 
-# Initialize your storage client using the environment variables
 supabase_storage: Client = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 if prod_url:
-    # Handle SQLAlchemy syntax requirements for production strings
     if prod_url.startswith("postgres://"):
         prod_url = prod_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = prod_url
 else:
-    # Use the local configurations loaded by python-dotenv
     user = os.environ.get('DB_USER')
     password = os.environ.get('DB_PASSWORD')
     host = os.environ.get('DB_HOST')
@@ -119,7 +116,6 @@ def google_auth():
         
         if not user:
             user = User(fullname = full_name, email = email, google_id = google_id, auth_provider = 'google', role=UserRole.USER.value)
-            # Password: None, phone -> null as of now, will be updated later
             db.session.add(user)
             db.session.commit()
         
@@ -286,11 +282,9 @@ def register_staff():
             staff_record = Staff.query.filter_by(user_id=existing_user.user_id).first()
             
             if staff_record:
-                # If they exist, just update their details
                 staff_record.department_id = data['department_id']
                 staff_record.office_id = data['office_id']
             else:
-                # If they don't have a record, create a new one
                 new_staff = Staff(
                     user_id=existing_user.user_id,
                     department_id=data['department_id'],
@@ -313,7 +307,7 @@ def register_staff():
             role=UserRole.STAFF.value
         )
         db.session.add(new_user)
-        db.session.flush() # Flushes record to grab the new primary key ID
+        db.session.flush() 
 
         new_staff = Staff(
             user_id=new_user.user_id,
@@ -448,7 +442,6 @@ class ProcessAndDispatchComplaint(Resource):
         description = request.form.get('description')
         latitude = request.form.get('latitude')
         longitude = request.form.get('longitude')
-        # Handle boolean conversion from form string
         anonymous = request.form.get('isAnonymous') == 'true'
         
         evidence_file = request.files.get('evidence')
@@ -481,15 +474,15 @@ class ProcessAndDispatchComplaint(Resource):
                 model_pipeline = pickle.load(f)
             predicted_dept_name = model_pipeline.predict([description])[0]
         except Exception:
-            predicted_dept_name = "Law, Order & Public Safety" # Or handle as None
+            predicted_dept_name = "Law, Order & Public Safety" 
             
         dept = Department.query.filter_by(department_name=predicted_dept_name).first()
 
         new_complaint = Complaint(
             title=title, description=description, department_id=dept.department_id if dept else None,
             latitude=c_lat, longitude=c_lon, user_id=None if anonymous else user_id,
-            staff_id=None,  # Explicitly None
-            is_verified=False, # Explicitly False
+            staff_id=None,  
+            is_verified=False, 
             key = secrets.token_hex(3).upper() if anonymous else None,
             evidence_url=evidence_url
         )
@@ -604,23 +597,19 @@ class createDepartment(Resource):
 class DeleteDepartment(Resource):
     @jwt_required()
     def delete(self, id):
-        # 1. Verify Admin access
         claims = get_jwt()
         if claims.get('role') !=UserRole.ADMIN.value:
             return {"error": "Unauthorized"}, 403
             
-        # 2. Query the department
         dept = db.session.get(Department, id)
         if not dept:
             return {"error": "Department not found"}, 404
             
-        # 3. Attempt to delete
         try:
             db.session.delete(dept)
             db.session.commit()
             return {'message': 'Department deleted successfully'}, 200
         except IntegrityError:
-            # This triggers if 'RESTRICT' constraint blocks the deletion
             db.session.rollback()
             return {
                 'error': 'Cannot delete: This department has staff members assigned to it. Please reassign them first.'
@@ -677,7 +666,6 @@ class FilteredOffices(Resource):
     @jwt_required()
     def get(self):
         dept_id = request.args.get('department_id')
-        # Query offices that have the specific department
         offices = Office.query.join(Office.departments).filter(Department.department_id == dept_id).all()
         
         data = [{
@@ -754,7 +742,6 @@ class verify_complaint(Resource):
         complaint.department_id = int(actual_dept_id)
         complaint.is_verified = True 
 
-        # Handle the assignment attempt
         success, info = assign_staff_to_complaint(
             complaint.complaint_id, 
             complaint.department_id, 
@@ -763,8 +750,7 @@ class verify_complaint(Resource):
         )
 
         if not success:
-            # Instead of failing, you could still commit the verification 
-            # but warn the admin about the assignment
+
             db.session.commit()
             return {'message': f'Verified, but assignment failed: {info}'}, 200
 
@@ -798,7 +784,6 @@ class verify_complaint(Resource):
 class DeactivateStaff(Resource):
     @jwt_required()
     def get(self):
-        # 1. Verification
         if get_jwt().get('role') != UserRole.ADMIN.value:
             return {'error': 'Unauthorized'}, 403
             
@@ -815,16 +800,14 @@ class DeactivateStaff(Resource):
         return {'message': 'success', 'staffs': data, 'departments':departments}, 200
     @jwt_required()
     def post(self, staff_id):
-        # 1. Verification
         staff_id = int(staff_id)
         if get_jwt().get('role') != UserRole.ADMIN.value:
             return {'error': 'Unauthorized'}, 403
             
-        staff = db.session.get(Staff, staff_id) # Or User, depending on your model
+        staff = db.session.get(Staff, staff_id) 
         if not staff:
             return {'message': 'Staff not found'}, 404
             
-        # 2. Revert the role
         staff.user.role = UserRole.USER.value 
         db.session.commit()
         
@@ -833,23 +816,19 @@ class DeactivateStaff(Resource):
 class DeleteOffice(Resource):
     @jwt_required()
     def delete(self, id):
-        # 1. Verify Admin access
         claims = get_jwt()
         if claims.get('role') != UserRole.ADMIN.value:
             return {"error": "Unauthorized"}, 403
             
-        # 2. Query the department
         office = db.session.get(Office,id)
         if not office:
             return {"error": "Office not found"}, 404
             
-        # 3. Attempt to delete
         try:
             db.session.delete(office)
             db.session.commit()
             return {'message': 'Office deleted successfully'}, 200
         except IntegrityError:
-            # This triggers if 'RESTRICT' constraint blocks the deletion
             db.session.rollback()
             return {
                 'error': 'Cannot delete: This Office has staff members assigned to it. Please reassign them first.'
@@ -908,31 +887,27 @@ class Specific_Complaints(Resource):
         complaint = db.session.get(Complaint, id)
         user_id = get_jwt_identity()
         
-        # 1. FIND THE STAFF RECORD
-        # We need the Primary Key (staff_id) of the staff member 
-        # who corresponds to the logged-in user_id
+     
         staff_member = Staff.query.filter_by(user_id=int(user_id)).first()
         
         if not staff_member:
             return {"message": "Staff profile not found for this user"}, 403
             
-        # 2. Update the main status
         complaint.status = data.get('status')
         
-        # 3. Use staff_member.staff_id (the primary key in the staff table)
         new_event = ComplaintEvent(
             complaint_id=id,
             description=data.get('description'),
-            staff_id=staff_member.staff_id  # <--- CORRECT: Maps user 3 to staff 1
+            staff_id=staff_member.staff_id  
         )
         db.session.add(new_event)
         
-        # 4. ONLY create a Resolution if it's the final step
+        
         if is_final:
             res = Resolution(
                 complaint_id=id,
                 action_taken=data.get('description'),
-                staff_id=staff_member.staff_id # <--- CORRECT: Maps user 3 to staff 1
+                staff_id=staff_member.staff_id 
             )
             db.session.add(res)
             
@@ -947,10 +922,8 @@ class Track(Resource):
         claims = get_jwt() if current_user_id else {}
         role = claims.get('role')
 
-        # 1. SAFELY determine staff/owner status
         is_staff = False
         if role == UserRole.STAFF.value and complaint.staff:
-            # Safely check if the staff record belongs to the current user
             if int(complaint.staff.user_id) == int(current_user_id):
                 is_staff = True
 
@@ -960,26 +933,22 @@ class Track(Resource):
             int(complaint.user_id) == int(current_user_id)
         )
         
-        # 2. SAFE LOGGING: Use a conditional for the staff ID
         staff_user_id = complaint.staff.user_id if complaint.staff else "None"
         
         logger.info(f"Current user ID: {current_user_id}")
         logger.info(f"Complaint staff user ID: {staff_user_id}")
         logger.info(f"Complaint's user ID: {complaint.user_id}")
         
-        # 3. Proceed with permission check
         if not (is_owner or is_staff):
             key = request.args.get('key')
             if not complaint.user_id and key == complaint.key:
-                pass # Authorized via Key
+                pass 
             else:
                 return {"message": "Forbidden", "requires_key": (complaint.user_id is None)}, 403
 
-        # BUILD TIMELINE (This will now show "Filed" even if no staff is assigned)
         timeline = []
         timeline.append({"step": "Filed", "date": complaint.created_at.strftime('%Y-%m-%d %H:%M'), "note": "Complaint submitted by user"})
         
-        # This will only loop if events exist, so it gracefully handles unassigned complaints
         for event in sorted(complaint.events, key=lambda x: x.timestamp):
             timeline.append({"step": "Progress", "date": event.timestamp.strftime('%Y-%m-%d %H:%M'), "note": event.description})
             
