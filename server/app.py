@@ -691,7 +691,7 @@ class FilteredOffices(Resource):
 
 def assign_staff_to_complaint(complaint_id, dept_id, lat, lon):
     """Utility to assign the closest office and least-busy staff member."""
-    # 1. Find Closest Office
+    
     matching_offices = Office.query.join(
         office_department, Office.office_id == office_department.c.office_id
     ).filter(office_department.c.department_id == dept_id).all()
@@ -699,7 +699,7 @@ def assign_staff_to_complaint(complaint_id, dept_id, lat, lon):
     assigned_office = None
     closest_dist = float('inf')
     
-    # Assuming a simple distance_calculate function exists
+    
     for office in matching_offices:
         dist = distance_calculate(lat, lon, office.latitude, office.longitude)
         if dist < closest_dist:
@@ -709,7 +709,6 @@ def assign_staff_to_complaint(complaint_id, dept_id, lat, lon):
     if not assigned_office:
         return False, "No office found"
 
-    # 2. Find Available Staff with minimum load
     available_staff = Staff.query.filter_by(office_id=assigned_office.office_id, department_id=dept_id).all()
     assigned_official = None
     min_load = float('inf')
@@ -725,7 +724,6 @@ def assign_staff_to_complaint(complaint_id, dept_id, lat, lon):
             min_load = load
             assigned_official = staff
             
-    # 3. Update the database
     if assigned_official:
         complaint = db.session.get(Complaint, complaint_id)
         complaint.staff_id = assigned_official.staff_id
