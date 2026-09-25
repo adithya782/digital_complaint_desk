@@ -1,64 +1,64 @@
 // ==========================================
 // 1. DATA MODELS & LOCAL CONFIGURATION
 // ==========================================
-const localcomplaints = {
-  officer_name: "Officer Ramesh Kumar",
-  workload_summary: {
-    total_active_issues: 8,
-    daily_capacity_limit: 5,
-  },
-  slots: {
-    todays_focus_slot: [
-      {
-        complaint_id: 101,
-        title: "🚨 Main Water Line Burst",
-        description:
-          "Massive water leakage near the main junction. Road flooding completely.",
-        status: "In Progress",
-        priority: "High",
-        deadline: "2026-05-23T18:00:00Z",
-        days_remaining: 0.1,
-        calculated_score: 40.0,
-      },
-      {
-        complaint_id: 102,
-        title: "⚡ Streetlight Cable Sparking",
-        description:
-          "Live wires exposed near the public park entrance. Hazardous condition.",
-        status: "Pending",
-        priority: "High",
-        deadline: "2026-05-24T12:00:00Z",
-        days_remaining: 0.9,
-        calculated_score: 4.4,
-      },
-      {
-        complaint_id: 103,
-        title: "🕳️ Dangerous Deep Pothole",
-        description:
-          "Large pothole in the middle of the third lane causing severe traffic slowdowns.",
-        status: "Pending",
-        priority: "Medium",
-        deadline: "2026-05-25T14:30:00Z",
-        days_remaining: 2.0,
-        calculated_score: 1.0,
-      },
-    ],
-    tomorrows_slot: [
-      {
-        complaint_id: 104,
-        title: "🗑️ Public Dustbin Overflowing",
-        description:
-          "Garbage collection missed for three consecutive cycles near block C market.",
-        status: "Pending",
-        priority: "Low",
-        deadline: "2026-05-27T09:00:00Z",
-        days_remaining: 3.8,
-        calculated_score: 0.26,
-      },
-    ],
-    future_backlog_slot: [],
-  },
-};
+// const localcomplaints = {
+//   officer_name: "Officer Ramesh Kumar",
+//   workload_summary: {
+//     total_active_issues: 8,
+//     daily_capacity_limit: 5,
+//   },
+//   slots: {
+//     todays_focus_slot: [
+//       {
+//         complaint_id: 101,
+//         title: "🚨 Main Water Line Burst",
+//         description:
+//           "Massive water leakage near the main junction. Road flooding completely.",
+//         status: "In Progress",
+//         priority: "High",
+//         deadline: "2026-05-23T18:00:00Z",
+//         days_remaining: 0.1,
+//         calculated_score: 40.0,
+//       },
+//       {
+//         complaint_id: 102,
+//         title: "⚡ Streetlight Cable Sparking",
+//         description:
+//           "Live wires exposed near the public park entrance. Hazardous condition.",
+//         status: "Pending",
+//         priority: "High",
+//         deadline: "2026-05-24T12:00:00Z",
+//         days_remaining: 0.9,
+//         calculated_score: 4.4,
+//       },
+//       {
+//         complaint_id: 103,
+//         title: "🕳️ Dangerous Deep Pothole",
+//         description:
+//           "Large pothole in the middle of the third lane causing severe traffic slowdowns.",
+//         status: "Pending",
+//         priority: "Medium",
+//         deadline: "2026-05-25T14:30:00Z",
+//         days_remaining: 2.0,
+//         calculated_score: 1.0,
+//       },
+//     ],
+//     tomorrows_slot: [
+//       {
+//         complaint_id: 104,
+//         title: "🗑️ Public Dustbin Overflowing",
+//         description:
+//           "Garbage collection missed for three consecutive cycles near block C market.",
+//         status: "Pending",
+//         priority: "Low",
+//         deadline: "2026-05-27T09:00:00Z",
+//         days_remaining: 3.8,
+//         calculated_score: 0.26,
+//       },
+//     ],
+//     future_backlog_slot: [],
+//   },
+// };
 
 const access_token = localStorage.getItem("access_token");
 
@@ -89,39 +89,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   // Paint fallback local user metrics to display immediately
-  if (nameElement) {
-    nameElement.innerText = localcomplaints.officer_name;
-  }
+  // if (nameElement) {
+  //   nameElement.innerText = localcomplaints.officer_name;
+  // }
 
   // Paint local mockup records to protect against empty displays
-  if (complaintsContainer) {
-    complaintsContainer.innerHTML = "";
+  // if (complaintsContainer) {
+  //   complaintsContainer.innerHTML = "";
 
-    const activeList = localcomplaints.slots.todays_focus_slot;
+  //   const activeList = localcomplaints.slots.todays_focus_slot;
 
-    activeList.forEach((complaint) => {
-      let statusClass = "pending";
-      const finalstatus = complaint.status.toLowerCase();
-      if (finalstatus.includes("progress")) {
-        statusClass = "progress";
-      }
-      if (finalstatus.includes("resolved")) {
-        statusClass = "resolved";
-      }
+  //   activeList.forEach((complaint) => {
+  //     let statusClass = "pending";
+  //     const finalstatus = complaint.status.toLowerCase();
+  //     if (finalstatus.includes("progress")) {
+  //       statusClass = "progress";
+  //     }
+  //     if (finalstatus.includes("resolved")) {
+  //       statusClass = "resolved";
+  //     }
 
-      const comphtml = `
-        <li>
-          <div>
-            <strong>${complaint.title}</strong>
-          </div>
-          <p>${complaint.description}</p>
-          <p>Priority: <strong>${complaint.priority}</strong></p>
-          <span class="${statusClass}">${complaint.status}</span>
-        </li>
-      `;
-      complaintsContainer.insertAdjacentHTML("beforeend", comphtml);
-    });
-  }
+  //     const comphtml = `
+  //       <li>
+  //         <div>
+  //           <strong>${complaint.title}</strong>
+  //         </div>
+  //         <p>${complaint.description}</p>
+  //         <p>Priority: <strong>${complaint.priority}</strong></p>
+  //         <span class="${statusClass}">${complaint.status}</span>
+  //       </li>
+  //     `;
+  //     complaintsContainer.insertAdjacentHTML("beforeend", comphtml);
+  //   });
+  // }
 
   // Initialize background network updates and UI event setups
   triggerLiveDashboardFetch();
@@ -247,10 +247,10 @@ function initializeUIControls() {
       button.classList.add("active-card");
 
       const title = button.querySelector("h4").innerText;
-      if (title === "Today's Issues") alert("Opening Today's Issues");
-      else if (title === "Pending Issues") alert("Opening Pending Issues");
-      else if (title === "Resolved Today") alert("Opening Resolved Issues");
-      else if (title === "Total Reports") alert("Opening Total Reports");
+      // if (title === "Today's Issues") alert("Opening Today's Issues");
+      // else if (title === "Pending Issues") alert("Opening Pending Issues");
+      // else if (title === "Resolved Today") alert("Opening Resolved Issues");
+      // else if (title === "Total Reports") alert("Opening Total Reports");
     });
   });
 
@@ -262,11 +262,11 @@ function initializeUIControls() {
       button.classList.add("active");
 
       const btnText = button.querySelector(".text").innerText;
-      if (btnText === "Dashboard") alert("Dashboard Opened");
-      else if (btnText === "History") alert("History Opened");
-      else if (btnText === "Transactions") alert("Transactions Opened");
-      else if (btnText === "Profile") alert("Profile Opened");
-      else if (btnText === "Logout") {
+      // if (btnText === "Dashboard") alert("Dashboard Opened");
+      // else if (btnText === "History") alert("History Opened");
+      // else if (btnText === "Transactions") alert("Transactions Opened");
+      // else if (btnText === "Profile") alert("Profile Opened");
+      if (btnText === "Logout") {
         let checkLogout = confirm("Are you sure want to logout?");
         if (checkLogout) logout();
       }
@@ -277,22 +277,22 @@ function initializeUIControls() {
   const msgBtn = document.querySelector(".msg-btn");
   const reportBtn = document.querySelector(".report-btn");
 
-  if (msgBtn) {
-    msgBtn.addEventListener("click", () => {
-      alert("Message feature opened");
-    });
-  }
+  // if (msgBtn) {
+  //   msgBtn.addEventListener("click", () => {
+  //     alert("Message feature opened");
+  //   });
+  // }
 
-  if (reportBtn) {
-    reportBtn.addEventListener("click", () => {
-      let reportId = "RPT" + Math.floor(Math.random() * 1000);
-      alert("Report Generated: " + reportId);
+  // if (reportBtn) {
+  //   reportBtn.addEventListener("click", () => {
+  //     let reportId = "RPT" + Math.floor(Math.random() * 1000);
+  //     alert("Report Generated: " + reportId);
 
-      const p = document.createElement("p");
-      p.textContent = "New Report: " + reportId;
-      document.body.appendChild(p);
-    });
-  }
+  //     const p = document.createElement("p");
+  //     p.textContent = "New Report: " + reportId;
+  //     document.body.appendChild(p);
+  //   });
+  // }
 
   // Inspector expansion panel trigger
   const profileBox = document.getElementById("profileBox");
@@ -347,5 +347,5 @@ function logout() {
 //     issuesList.appendChild(li);
 //   });
 // });
-document.getElementById("complaintDetails").innerHTML =
-  "END THE COMPLAINT DETAILS FILE";
+// document.getElementById("complaintDetails").innerHTML =
+//   "END THE COMPLAINT DETAILS FILE";

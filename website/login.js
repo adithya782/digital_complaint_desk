@@ -112,7 +112,7 @@ function login() {
             }
           }
           if (data.role == "user") {
-            alert("AUTHENTICATION DONE, It is a common user");
+            // alert("AUTHENTICATION DONE, It is a common user");
             window.location.href = "user_dashboard.html";
           }
         } else {

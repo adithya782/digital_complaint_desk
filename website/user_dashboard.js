@@ -17,7 +17,7 @@ const buttons = document.querySelectorAll(".page-btn");
 
 buttons.forEach((btn) => {
   btn.addEventListener("click", () => {
-    alert(btn.innerText + " button clicked");
+    // alert(btn.innerText + " button clicked");
 
     console.log("Real button working:", btn);
   });
