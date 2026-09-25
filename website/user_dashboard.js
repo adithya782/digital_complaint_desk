@@ -34,49 +34,49 @@ document.querySelector(".msg-btn").addEventListener("click", () => {
   alert("Opening Emergency Message");
 });
 
-localcomplaints = {
-  user_id: 42,
-  fullname: "Sriram Kumar",
-  phone: "+91 98765 43210",
-  complaints: [
-    {
-      title: "Street Light Not Working",
-      description:
-        "The street light near the main intersection has been flickering and completely turned off since last night.",
-      category: "Electrical",
-      status: "In Progress",
-      created_at: "2026-05-20T21:30:00",
-      updated_at: "2026-05-21T09:15:22",
-    },
-    {
-      title: "Garbage Overflow",
-      description:
-        "The public dustbin outside the community park is overflowing. Stray animals are scattering the waste on the road.",
-      category: "Sanitation",
-      status: "Resolved",
-      created_at: "2026-05-18T08:00:12",
-      updated_at: "2026-05-19T14:45:00",
-    },
-    {
-      title: "Water Leakage",
-      description:
-        "A main water pipeline broke near the sector 3 commercial block. Significant amounts of water are flooding the street.",
-      category: "Water Supply",
-      status: "pending",
-      created_at: "2026-05-22T16:20:05",
-      updated_at: "2026-05-22T16:20:05",
-    },
-    {
-      title: "Pothole on Main Road",
-      description:
-        "A deep pothole has opened up right after the flyover down-ramp. It is extremely dangerous for two-wheelers at night.",
-      category: "Road Infrastructure",
-      status: "pending",
-      created_at: "2026-05-22T11:10:00",
-      updated_at: "2026-05-22T11:10:00",
-    },
-  ],
-};
+// localcomplaints = {
+//   user_id: 42,
+//   fullname: "Sriram Kumar",
+//   phone: "+91 98765 43210",
+//   complaints: [
+//     {
+//       title: "Street Light Not Working",
+//       description:
+//         "The street light near the main intersection has been flickering and completely turned off since last night.",
+//       category: "Electrical",
+//       status: "In Progress",
+//       created_at: "2026-05-20T21:30:00",
+//       updated_at: "2026-05-21T09:15:22",
+//     },
+//     {
+//       title: "Garbage Overflow",
+//       description:
+//         "The public dustbin outside the community park is overflowing. Stray animals are scattering the waste on the road.",
+//       category: "Sanitation",
+//       status: "Resolved",
+//       created_at: "2026-05-18T08:00:12",
+//       updated_at: "2026-05-19T14:45:00",
+//     },
+//     {
+//       title: "Water Leakage",
+//       description:
+//         "A main water pipeline broke near the sector 3 commercial block. Significant amounts of water are flooding the street.",
+//       category: "Water Supply",
+//       status: "pending",
+//       created_at: "2026-05-22T16:20:05",
+//       updated_at: "2026-05-22T16:20:05",
+//     },
+//     {
+//       title: "Pothole on Main Road",
+//       description:
+//         "A deep pothole has opened up right after the flyover down-ramp. It is extremely dangerous for two-wheelers at night.",
+//       category: "Road Infrastructure",
+//       status: "pending",
+//       created_at: "2026-05-22T11:10:00",
+//       updated_at: "2026-05-22T11:10:00",
+//     },
+//   ],
+// };
 let phone = "";
 fetch(`${window.API_BASE_URL}/api/user/dashboard`, {
   method: "GET",
@@ -110,9 +110,7 @@ fetch(`${window.API_BASE_URL}/api/user/dashboard`, {
         complaintsContainer.innerHTML = "";
         const hasBackendComplaints =
           data.complaints && data.complaints.length > 0;
-        const activeList = hasBackendComplaints
-          ? data.complaints
-          : localcomplaints.complaints;
+        const activeList = data.complaints;
         // complaint = data.complaints || localcomplaints
         activeList.forEach((complaint) => {
           let statusClass = "pending";
