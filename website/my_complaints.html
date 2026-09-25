@@ -422,9 +422,7 @@
           .then((data) => {
             const hasBackendComplaints =
               data.complaints && data.complaints.length > 0;
-            masterComplaintsList = hasBackendComplaints
-              ? data.complaints
-              : localcomplaints;
+            masterComplaintsList = data.complaints;
             renderComplaints(masterComplaintsList);
           })
           .catch((err) => {
