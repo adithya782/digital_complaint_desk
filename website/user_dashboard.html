@@ -625,23 +625,23 @@
       buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
           if (btn.tagName.toLowerCase() !== "a" && !btn.parentElement.href) {
-            alert(btn.innerText.split("\n")[0] + " button clicked");
+            // alert(btn.innerText.split("\n")[0] + " button clicked");
             console.log("Real button working:", btn);
           }
         });
       });
 
       // SOS EVENT HANDLERS
-      document.querySelector(".call-btn").addEventListener("click", () => {
-        alert("Calling Emergency Contact, phone: " + phone);
-      });
+      // document.querySelector(".call-btn").addEventListener("click", () => {
+      //   alert("Calling Emergency Contact, phone: " + phone);
+      // });
 
-      document.querySelector(".msg-btn").addEventListener("click", () => {
-        alert("Opening Emergency Message");
-      });
+      // document.querySelector(".msg-btn").addEventListener("click", () => {
+      //   alert("Opening Emergency Message");
+      // });
 
       // LOCAL FALLBACK DATA STRUCT
-      const localcomplaints = {
+      // const localcomplaints = {
         user_id: 42,
         fullname: "Sriram Kumar",
         phone: "+91 98765 43210",
@@ -720,10 +720,7 @@
               complaintsContainer.innerHTML = "";
               const hasBackendComplaints =
                 data.complaints && data.complaints.length > 0;
-              const activeList = hasBackendComplaints
-                ? data.complaints
-                : localcomplaints.complaints;
-
+              const activeList = data.complaints;
               activeList.forEach((complaint) => {
                 let statusClass = "pending";
                 const finalstatus = complaint.status.toLowerCase();
